@@ -1,6 +1,17 @@
+import { HtmlBasePlugin } from "@11ty/eleventy";
 import regions from "./src/_data/regions.js";
 
+// The site is published to a GitHub Pages *project* page, so it lives under
+// /swcp-walk/ rather than at the domain root. Everything internal must carry
+// that prefix or it 404s once deployed.
+const PATH_PREFIX = "/swcp-walk/";
+
 export default function (eleventyConfig) {
+  // Rewrites href/src in built HTML to include pathPrefix. Custom attributes
+  // (data-gpx, data-src) aren't touched by this — those use the `url` filter
+  // in the templates.
+  eleventyConfig.addPlugin(HtmlBasePlugin);
+
   // Copy static things straight through to the built site.
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
   eleventyConfig.addPassthroughCopy({ "src/gpx": "gpx" });
@@ -34,6 +45,7 @@ export default function (eleventyConfig) {
   });
 
   return {
+    pathPrefix: PATH_PREFIX,
     dir: {
       input: "src",
       output: "_site",

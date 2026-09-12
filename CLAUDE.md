@@ -21,12 +21,25 @@ Required section front matter: `title`, `order`, `region`, `start`, `end`,
 `shops`, `eat`, body text) is optional and only renders when present.
 `templates/section-template.md` is the starting point for a new section.
 
+## Paths — IMPORTANT
+
+The site is published to a GitHub Pages **project** page, so it lives under
+`/swcp-walk/`, not at the domain root. `pathPrefix` in `.eleventy.js` handles
+this, and `HtmlBasePlugin` rewrites `href`/`src` in built HTML automatically.
+
+The plugin does **not** rewrite custom attributes or JSON, so anything else
+pointing at an internal path must go through the `url` filter — that means
+`data-gpx`, `data-src`, and the paths inside `api-sections.njk`. A missed one
+works perfectly on the local dev server and 404s only once deployed;
+`npm run check:paths` (part of `npm run check`, and run in CI) catches it.
+
 ## Local development (Docker)
 
 The dev server runs in a container — don't install Node dependencies on the
 host.
 
-- Quick preview: `docker compose up`, then http://localhost:8080
+- Quick preview: `docker compose up`, then http://localhost:8080 — this
+  redirects to http://localhost:8080/swcp-walk/, matching the deployed layout
 - VS Code: "Reopen in Container", then `npm run serve` in the terminal
 - Live-reloads on edit.
 
@@ -35,14 +48,21 @@ host.
 - `npm run serve` — dev server (used inside the container)
 - `npm run validate` — content checks
 - `npm run build` — build to `_site/`
-- `npm run check` — validate then build (run before pushing)
+- `npm run check` — validate, build, then check paths (run before pushing)
+- `npm run check:paths` — verify built paths carry the pathPrefix
 
 ## Testing
 
 `scripts/validate-content.js` fails if a section is missing a required field,
 uses an unknown region, reuses an `order`, or points at a GPX that's missing or
-invalid. It runs in CI (`.github/workflows/deploy.yml`) on every push and PR.
-When you add features, add checks here too.
+invalid.
+
+`scripts/check-paths.js` runs after the build and fails if any internal path in
+the built site is missing the `pathPrefix` — the one class of bug the local dev
+server cannot show you.
+
+Both run in CI (`.github/workflows/deploy.yml`) on every push and PR. When you
+add features, add checks here too.
 
 ## IMPORTANT — privacy
 

@@ -4,12 +4,13 @@ eleventyExcludeFromCollections: true
 ---
 [
 {%- for s in collections.sections -%}
+  {%- set gpxUrl = (s.data.gpx | url) if s.data.gpx else "" -%}
   {
     "title": {{ s.data.title | dump | safe }},
-    "url": {{ s.url | dump | safe }},
+    "url": {{ (s.url | url) | dump | safe }},
     "order": {{ s.data.order or 0 }},
     "region": {{ (s.data.region or "") | dump | safe }},
-    "gpx": {{ (s.data.gpx or "") | dump | safe }}
+    "gpx": {{ gpxUrl | dump | safe }}
   }{% if not loop.last %},{% endif %}
 {%- endfor -%}
 ]

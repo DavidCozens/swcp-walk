@@ -29,6 +29,8 @@ jobs:
         run: npm run validate
       - name: Build site
         run: npm run build
+      - name: Check deployed paths
+        run: npm run check:paths
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

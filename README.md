@@ -24,6 +24,7 @@ src/
   gpx/                      One GPX file per section        <-- and drop these
   assets/                   CSS + the two small map scripts
 scripts/validate-content.js Content checks (run in CI and locally)
+scripts/check-paths.js      Guards against paths that 404 once deployed
 templates/section-template.md  Copy this to start a new section
 ```
 
@@ -52,6 +53,10 @@ The dev server runs in a container, so you don't install Node on your machine.
 docker compose up          # then open http://localhost:8080
 ```
 
+That redirects to http://localhost:8080/swcp-walk/. The site is published to a
+GitHub Pages project page under `/swcp-walk/`, and the dev server mirrors that
+so local preview matches the deployed site.
+
 It live-reloads as you edit. Stop with Ctrl-C.
 
 ### Or in VS Code
@@ -68,15 +73,21 @@ want it in the sidebar.
 npm run serve     # dev server with live reload
 npm run validate  # content checks
 npm run build     # build to _site/
-npm run check     # validate then build — run before pushing
+npm run check     # validate, build, check paths — run before pushing
 ```
 
 ## Testing
 
 `npm run validate` fails if a section is missing a required field, uses an
 unknown region, reuses an `order`, or points at a GPX file that's missing or
-isn't valid XML. It runs on every push and pull request via
-`.github/workflows/deploy.yml`, so a broken section can't reach the live site.
+isn't valid XML.
+
+`npm run check:paths` runs after the build and fails if the built site contains
+an internal path without the `/swcp-walk/` prefix. Such a path works on the dev
+server and 404s only once deployed, so it needs a machine to catch it.
+
+Both run on every push and pull request via `.github/workflows/deploy.yml`, so a
+broken section can't reach the live site.
 Add more checks here as the site grows.
 
 ## Deploy (GitHub Pages)

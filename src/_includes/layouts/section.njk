@@ -13,7 +13,7 @@ layout: layouts/base.njk
   {% if gpx %}
   <div
     class="map map-section"
-    data-gpx="{{ gpx }}"
+    data-gpx="{{ gpx | url }}"
     data-tiles="{{ site.tiles.url }}"
     data-attribution="{{ site.tiles.attribution }}"
     role="img"
