@@ -51,7 +51,7 @@ The plugin does **not** rewrite custom attributes or JSON, so anything else
 pointing at an internal path must go through the `url` filter — that means
 `data-gpx`, `data-src`, and the paths inside `api-sections.njk`. A missed one
 works perfectly on the local dev server and 404s only once deployed;
-`npm run check:paths` (part of `npm run check`, and run in CI) catches it.
+`npm run check:output` (part of `npm run check`, and run in CI) catches it.
 
 ## Local development (Docker)
 
@@ -69,7 +69,7 @@ host.
 - `npm run validate` — content checks
 - `npm run build` — build to `_site/`
 - `npm run check` — validate, build, then check paths (run before pushing)
-- `npm run check:paths` — verify built paths carry the pathPrefix
+- `npm run check:output` — checks on the built site (paths, escaping)
 
 ## Testing
 
@@ -77,9 +77,10 @@ host.
 uses an unknown region, reuses an `order`, or points at a GPX that's missing or
 invalid.
 
-`scripts/check-paths.js` runs after the build and fails if any internal path in
-the built site is missing the `pathPrefix` — the one class of bug the local dev
-server cannot show you.
+`scripts/check-output.js` runs after the build and checks two things the local
+dev server cannot show you: that every internal path carries the `pathPrefix`
+(without it, a path works locally and 404s once deployed), and that nothing is
+escaped twice (`&amp;amp;` renders as the literal text `&amp;`).
 
 Both run in CI (`.github/workflows/deploy.yml`) on every push and PR. When you
 add features, add checks here too.

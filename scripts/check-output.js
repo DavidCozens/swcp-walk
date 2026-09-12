@@ -1,8 +1,11 @@
-// Fails if the built site contains an internal path that doesn't carry the
-// configured pathPrefix. Those paths work fine on the local dev server but
-// 404 once deployed to a GitHub Pages project page, so this is only ever
-// caught after publishing unless something checks for it. Runs after the
-// build, via `npm run check`.
+// Checks on the built site, run after the build via `npm run check`:
+//
+//   1. Every internal path carries the configured pathPrefix. Without it a
+//      path works on the local dev server and 404s once deployed to a
+//      GitHub Pages project page — invisible until published.
+//   2. Nothing is escaped twice. "&amp;amp;" renders as the literal text
+//      "&amp;", which happens when a value is escaped on the way into a
+//      layout and again on the way out.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -26,6 +29,7 @@ if (!fs.existsSync(SITE)) {
 
 let errors = 0;
 const ATTR = /(href|src|data-src|data-gpx)="(\/[^"]*)"/g;
+const DOUBLE_ESCAPED = /&amp;(amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);/g;
 
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -40,12 +44,20 @@ function report(file, value) {
   errors += 1;
 }
 
+function reportEscaping(file, value) {
+  console.error(`  ✗ ${path.relative(ROOT, file)}: "${value}" is escaped twice — it renders literally`);
+  errors += 1;
+}
+
 function check(file) {
   const raw = fs.readFileSync(file, "utf8");
 
   if (file.endsWith(".html")) {
     for (const [, , value] of raw.matchAll(ATTR)) {
       if (!value.startsWith(PREFIX)) report(file, value);
+    }
+    for (const [match] of raw.matchAll(DOUBLE_ESCAPED)) {
+      reportEscaping(file, match);
     }
     return;
   }
@@ -62,7 +74,7 @@ function check(file) {
 walk(SITE);
 
 if (errors) {
-  console.error(`\n${errors} unprefixed path(s) found. They would 404 on the deployed site.`);
+  console.error(`\n${errors} problem(s) found in the built site.`);
   process.exit(1);
 }
-console.log(`✓ all internal paths carry the ${PREFIX} prefix.`);
+console.log(`✓ built output clean: paths carry the ${PREFIX} prefix, nothing double-escaped.`);

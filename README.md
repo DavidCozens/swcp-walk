@@ -24,7 +24,7 @@ src/
   gpx/                      One GPX file per section        <-- and drop these
   assets/                   CSS + the two small map scripts
 scripts/validate-content.js Content checks (run in CI and locally)
-scripts/check-paths.js      Guards against paths that 404 once deployed
+scripts/check-output.js     Guards the built site (paths, double-escaping)
 templates/section-template.md  Copy this to start a new section
 ```
 
@@ -86,7 +86,7 @@ want it in the sidebar.
 npm run serve     # dev server with live reload
 npm run validate  # content checks
 npm run build     # build to _site/
-npm run check     # validate, build, check paths — run before pushing
+npm run check     # validate, build, check output — run before pushing
 ```
 
 ## Testing
@@ -95,9 +95,11 @@ npm run check     # validate, build, check paths — run before pushing
 unknown region, reuses an `order`, or points at a GPX file that's missing or
 isn't valid XML.
 
-`npm run check:paths` runs after the build and fails if the built site contains
-an internal path without the `/swcp-walk/` prefix. Such a path works on the dev
-server and 404s only once deployed, so it needs a machine to catch it.
+`npm run check:output` runs after the build and fails if the built site
+contains an internal path without the `/swcp-walk/` prefix, or anything escaped
+twice (`&amp;amp;`, which renders as the literal text `&amp;`). Both work fine
+on the dev server and only show up once deployed, so they need a machine to
+catch them.
 
 Both run on every push and pull request via `.github/workflows/deploy.yml`, so a
 broken section can't reach the live site.

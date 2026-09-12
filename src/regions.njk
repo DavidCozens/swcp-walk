@@ -6,7 +6,10 @@ pagination:
 permalink: "/regions/{{ region.slug }}/"
 layout: layouts/base.njk
 eleventyComputed:
-  title: "{{ region.name }}"
+  # `safe` stops Nunjucks escaping here: the value is plain text at this point,
+  # and base.njk escapes it once when it renders the <title>. Without it an
+  # ampersand in a region name comes out double-escaped (&amp;amp;).
+  title: "{{ region.name | safe }}"
 ---
 <article class="region-page">
   <h1>{{ region.name }}</h1>
