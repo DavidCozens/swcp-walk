@@ -52,6 +52,13 @@ with the distance and ascent taken from OS's own figures.
 Set `os_url` to the OS Maps link and the section page shows an "Open in OS
 Maps" link under the map. The importer fills this in for you.
 
+`escape_points` records where you can leave the path mid-section — `name`, an
+optional `km` along the route, and a `detail`. A `transport` option can carry a
+`season` when the link is summer-only.
+
+The importer warns if a route doubles back on itself: that looks normal on a
+map but inflates the distance and ascent.
+
 The generated GPX holds the track only — OS waypoints are the shaping points
 you drop while planning, not places worth pinning on a map.
 

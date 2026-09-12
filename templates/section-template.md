@@ -12,7 +12,12 @@ os_url:                             # optional; the OS Maps route link
 transport:                        # optional; repeat the block per option
   - type: bus
     detail: "Operator / route — describe the link"
+    season: ""                    # optional, e.g. "roughly May–October only"
     url: "https://www.travelinesw.com/"
+escape_points:                    # optional; where you can bail out mid-section
+  - name: Place or landmark
+    km:                           # optional: how far along the route it sits
+    detail: "How you get off the path here, and what's there"
 shops:                            # optional
 eat:                              # optional
 ---

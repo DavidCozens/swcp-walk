@@ -68,6 +68,40 @@ for (const file of files) {
     }
   }
 
+  if (data.escape_points !== undefined) {
+    if (!Array.isArray(data.escape_points)) {
+      fail(file, `"escape_points" must be a list`);
+    } else {
+      data.escape_points.forEach((e, i) => {
+        const where = `escape_points[${i}]`;
+        if (!e || typeof e !== "object") {
+          fail(file, `${where} must be a block with at least a name`);
+          return;
+        }
+        if (!e.name) fail(file, `${where} is missing "name"`);
+        // km is how far along the route the escape point sits — optional, but
+        // if given it has to be a number inside the section's length.
+        if (e.km !== undefined && e.km !== null && e.km !== "") {
+          if (typeof e.km !== "number" || Number.isNaN(e.km)) {
+            fail(file, `${where}.km must be a number, got ${JSON.stringify(e.km)}`);
+          } else if (e.km < 0) {
+            fail(file, `${where}.km must not be negative, got ${e.km}`);
+          } else if (typeof data.distance_km === "number" && e.km > data.distance_km) {
+            fail(file, `${where}.km is ${e.km}, beyond the section's ${data.distance_km} km`);
+          }
+        }
+      });
+    }
+  }
+
+  if (Array.isArray(data.transport)) {
+    data.transport.forEach((t, i) => {
+      if (t && typeof t === "object" && !t.detail) {
+        fail(file, `transport[${i}] is missing "detail"`);
+      }
+    });
+  }
+
   for (const key of NUMERIC) {
     const value = data[key];
     if (value === undefined || value === "" || value === null) continue;

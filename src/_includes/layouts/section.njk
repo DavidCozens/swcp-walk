@@ -41,12 +41,27 @@ layout: layouts/base.njk
       <li>
         <span class="t-type">{{ t.type }}</span>
         {% if t.url %}<a href="{{ t.url }}">{{ t.detail }}</a>{% else %}{{ t.detail }}{% endif %}
+        {% if t.season %}<span class="t-season">{{ t.season }}</span>{% endif %}
       </li>
       {% endfor %}
     </ul>
     {% endif %}
     {% if shops %}<p><strong>Shops &amp; dog food:</strong> {{ shops }}</p>{% endif %}
     {% if eat %}<p><strong>Eating out:</strong> {{ eat }}</p>{% endif %}
+  </section>
+  {% endif %}
+
+  {% if escape_points %}
+  <section class="escapes">
+    <h2>Escape points</h2>
+    <ul class="escape-list">
+      {% for e in escape_points %}
+      <li>
+        {% if e.km %}<span class="e-km">{{ e.km }} km</span>{% endif %}
+        <strong>{{ e.name }}</strong>{% if e.detail %} — {{ e.detail }}{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
   </section>
   {% endif %}
 

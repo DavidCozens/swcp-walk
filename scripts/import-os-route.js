@@ -85,6 +85,51 @@ ${points.map(([lon, lat]) => `      <trkpt lat="${lat}" lon="${lon}"></trkpt>`).
 </gpx>
 `;
 
+// A route that doubles back looks perfectly normal drawn on a map — the
+// return leg traces the outward one — but its distance and ascent are both
+// inflated. Warn loudly; a deliberate out-and-back spur is possible, so this
+// doesn't refuse to write the file.
+function metres(a, b) {
+  const R = 6371008.8;
+  const dLat = ((b[1] - a[1]) * Math.PI) / 180;
+  const dLon = ((b[0] - a[0]) * Math.PI) / 180;
+  const la1 = (a[1] * Math.PI) / 180;
+  const la2 = (b[1] * Math.PI) / 180;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(la1) * Math.cos(la2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+const along = [0];
+for (let i = 1; i < points.length; i += 1) {
+  along.push(along[i - 1] + metres(points[i - 1], points[i]));
+}
+
+let overlap = null;
+for (let i = 0; i < points.length; i += 1) {
+  for (let j = i + 1; j < points.length; j += 1) {
+    // Only interesting if the route comes back after going a good way away.
+    if (along[j] - along[i] < 500) continue;
+    if (metres(points[i], points[j]) < 40) {
+      const gap = along[j] - along[i];
+      if (!overlap || gap > overlap.gap) {
+        overlap = { gap, from: along[i], to: along[j] };
+      }
+    }
+  }
+}
+
+if (overlap) {
+  process.stderr.write(
+    `\n  !! This route retraces itself: the point at ${(overlap.from / 1000).toFixed(2)} km\n` +
+      `     is reached again at ${(overlap.to / 1000).toFixed(2)} km — about ` +
+      `${(overlap.gap / 1000).toFixed(2)} km walked twice.\n` +
+      `     Distance and ascent below are inflated by it. Check the route in OS Maps\n` +
+      `     unless the doubling-back is deliberate.\n\n`
+  );
+}
+
 const outPath = path.join(process.cwd(), "src", "gpx", `${slug}.gpx`);
 fs.writeFileSync(outPath, gpx);
 

@@ -18,7 +18,14 @@ Three levels: **overview → region → section**.
 
 Required section front matter: `title`, `order`, `region`, `start`, `end`,
 `gpx`. Everything else (`distance_km`, `ascent_m`, `os_url`, `mode`, `transport`,
-`shops`, `eat`, body text) is optional and only renders when present.
+`escape_points`, `shops`, `eat`, body text) is optional and only renders when
+present.
+
+`escape_points` is a list of places you can leave the path mid-section: `name`
+required, optional `km` (how far along the route it sits, validated against
+`distance_km`) and `detail`. A `transport` entry takes an optional `season` for
+links that don't run year-round — several coast buses are summer-only, which
+decides whether a one-way day is possible at all.
 `templates/section-template.md` is the starting point for a new section.
 
 ## Adding a section from OS Maps
@@ -34,6 +41,10 @@ OS waypoints are shaping points dropped while planning, not places of interest,
 so they're left out rather than drawn as pins. The map scripts also pass
 `parseElements: ["track", "route"]`, so a hand-exported GPX with waypoints in it
 won't sprout pins either.
+
+The importer warns if a route retraces itself. A doubled-back route looks normal
+drawn on a map but reports inflated distance and ascent, so the warning is the
+only sign. It writes the file anyway — a deliberate out-and-back spur is valid.
 
 The importer never copies the route's `createdBy` (an OS account id) or its
 `createdAt`/`modifiedAt` timestamps — see the privacy note below.
