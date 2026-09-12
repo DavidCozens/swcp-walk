@@ -1,13 +1,13 @@
 ---
-title: Minehead to Porlock Weir
+title: Minehead to Porlock
 order: 1
 region: somerset-north-devon
 start: Minehead
-end: Porlock Weir
-distance_mi: 9.0
-ascent_ft: 1500
+end: Porlock
+distance_km: 13.3
+ascent_m: 530
 mode: van base
-gpx: /gpx/01-minehead-porlock-weir.gpx
+gpx: /gpx/01-minehead-porlock.gpx
 transport:
   - type: bus
     detail: "First Bus 10 / Buses of Somerset — Minehead ↔ Porlock (check current timetable)"
@@ -21,5 +21,5 @@ then there's a choice: the rugged coastal alternative or the easier inland
 route through the trees. Gentle first day by SWCP standards — a good shake-down
 for the kit and for Bowie before the harder North Devon sections.
 
-*This is placeholder text and a sample GPX so the skeleton has something real to
-render. Replace the GPX with your OS Maps export and rewrite these notes.*
+*Route is the real OS Maps export (13.3 km, 530 m ascent, both taken from the
+file's own metadata). These notes are still to be written.*

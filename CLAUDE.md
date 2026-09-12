@@ -17,7 +17,7 @@ Three levels: **overview → region → section**.
   logic in the config.
 
 Required section front matter: `title`, `order`, `region`, `start`, `end`,
-`gpx`. Everything else (`distance_mi`, `ascent_ft`, `mode`, `transport`,
+`gpx`. Everything else (`distance_km`, `ascent_m`, `mode`, `transport`,
 `shops`, `eat`, body text) is optional and only renders when present.
 `templates/section-template.md` is the starting point for a new section.
 

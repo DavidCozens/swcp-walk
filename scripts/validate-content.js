@@ -11,6 +11,16 @@ const PUBLIC_ROOT = path.join(ROOT, "src");
 
 const REQUIRED = ["title", "order", "region", "start", "end", "gpx"];
 
+// Optional, but if present they must be positive numbers.
+const NUMERIC = ["distance_km", "ascent_m"];
+
+// Renamed when the site went metric. These render as nothing if left behind,
+// so catch them rather than quietly dropping a section's facts.
+const RETIRED = {
+  distance_mi: "distance_km (miles x 1.609)",
+  ascent_ft: "ascent_m (feet x 0.3048)",
+};
+
 const regionsUrl = new URL("../src/_data/regions.js", import.meta.url);
 const { default: regions } = await import(regionsUrl);
 const regionSlugs = new Set(regions.map((r) => r.slug));
@@ -44,6 +54,22 @@ for (const file of files) {
 
   if (data.region && !regionSlugs.has(data.region)) {
     fail(file, `unknown region "${data.region}" (see src/_data/regions.js)`);
+  }
+
+  for (const [old, replacement] of Object.entries(RETIRED)) {
+    if (data[old] !== undefined) {
+      fail(file, `"${old}" is no longer used — convert it to ${replacement}`);
+    }
+  }
+
+  for (const key of NUMERIC) {
+    const value = data[key];
+    if (value === undefined || value === "" || value === null) continue;
+    if (typeof value !== "number" || Number.isNaN(value)) {
+      fail(file, `"${key}" must be a number, got ${JSON.stringify(value)}`);
+    } else if (value <= 0) {
+      fail(file, `"${key}" must be greater than 0, got ${value}`);
+    }
   }
 
   if (typeof data.order === "number") {

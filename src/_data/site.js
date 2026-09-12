@@ -1,6 +1,6 @@
 export default {
   title: "Walking the South West Coast Path",
-  tagline: "Planning, one section at a time — 630 miles from Minehead to Poole.",
+  tagline: "Planning, one section at a time — 1,014 km (630 miles) from Minehead to Poole.",
   // The published GitHub Pages URL. Because this is a *project* page the site
   // lives under /swcp-walk/ — see pathPrefix in .eleventy.js.
   url: "https://davidcozens.github.io/swcp-walk/",
