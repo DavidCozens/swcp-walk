@@ -2,10 +2,10 @@
 <gpx version="1.1" creator="swcp-walk (imported from OS Maps route 33801498)"
      xmlns="http://www.topografix.com/GPX/1/1">
   <metadata>
-    <name>SWCP01 MineHead-Porlock</name>
+    <name>SWCP01 MineHead-Porlock Weir</name>
   </metadata>
   <trk>
-    <name>SWCP01 MineHead-Porlock</name>
+    <name>SWCP01 MineHead-Porlock Weir</name>
     <trkseg>
       <trkpt lat="51.21104" lon="-3.4736"></trkpt>
       <trkpt lat="51.21127" lon="-3.47372"></trkpt>
@@ -441,6 +441,67 @@
       <trkpt lat="51.21841" lon="-3.59805"></trkpt>
       <trkpt lat="51.21835" lon="-3.59821"></trkpt>
       <trkpt lat="51.21824" lon="-3.59828"></trkpt>
+      <trkpt lat="51.21835" lon="-3.59821"></trkpt>
+      <trkpt lat="51.21841" lon="-3.59805"></trkpt>
+      <trkpt lat="51.21854" lon="-3.59807"></trkpt>
+      <trkpt lat="51.21865" lon="-3.59814"></trkpt>
+      <trkpt lat="51.21869" lon="-3.59823"></trkpt>
+      <trkpt lat="51.21849" lon="-3.59957"></trkpt>
+      <trkpt lat="51.21839" lon="-3.60008"></trkpt>
+      <trkpt lat="51.21814" lon="-3.60053"></trkpt>
+      <trkpt lat="51.21791" lon="-3.60087"></trkpt>
+      <trkpt lat="51.21753" lon="-3.60162"></trkpt>
+      <trkpt lat="51.21751" lon="-3.60167"></trkpt>
+      <trkpt lat="51.2175" lon="-3.60185"></trkpt>
+      <trkpt lat="51.21726" lon="-3.60263"></trkpt>
+      <trkpt lat="51.2169" lon="-3.60332"></trkpt>
+      <trkpt lat="51.21618" lon="-3.60483"></trkpt>
+      <trkpt lat="51.21602" lon="-3.60522"></trkpt>
+      <trkpt lat="51.21589" lon="-3.60568"></trkpt>
+      <trkpt lat="51.21545" lon="-3.60644"></trkpt>
+      <trkpt lat="51.21526" lon="-3.6067"></trkpt>
+      <trkpt lat="51.21495" lon="-3.60701"></trkpt>
+      <trkpt lat="51.21479" lon="-3.60707"></trkpt>
+      <trkpt lat="51.21396" lon="-3.60779"></trkpt>
+      <trkpt lat="51.21368" lon="-3.60799"></trkpt>
+      <trkpt lat="51.21337" lon="-3.60809"></trkpt>
+      <trkpt lat="51.21311" lon="-3.60821"></trkpt>
+      <trkpt lat="51.21308" lon="-3.60827"></trkpt>
+      <trkpt lat="51.21321" lon="-3.60889"></trkpt>
+      <trkpt lat="51.21356" lon="-3.6101"></trkpt>
+      <trkpt lat="51.21356" lon="-3.61015"></trkpt>
+      <trkpt lat="51.21359" lon="-3.61025"></trkpt>
+      <trkpt lat="51.21364" lon="-3.61029"></trkpt>
+      <trkpt lat="51.21402" lon="-3.61121"></trkpt>
+      <trkpt lat="51.21418" lon="-3.6117"></trkpt>
+      <trkpt lat="51.21431" lon="-3.61197"></trkpt>
+      <trkpt lat="51.21465" lon="-3.61354"></trkpt>
+      <trkpt lat="51.21496" lon="-3.61469"></trkpt>
+      <trkpt lat="51.21516" lon="-3.61578"></trkpt>
+      <trkpt lat="51.21527" lon="-3.61623"></trkpt>
+      <trkpt lat="51.21551" lon="-3.6167"></trkpt>
+      <trkpt lat="51.21661" lon="-3.6182"></trkpt>
+      <trkpt lat="51.21661" lon="-3.6196"></trkpt>
+      <trkpt lat="51.21665" lon="-3.61998"></trkpt>
+      <trkpt lat="51.21658" lon="-3.62105"></trkpt>
+      <trkpt lat="51.21661" lon="-3.62196"></trkpt>
+      <trkpt lat="51.21668" lon="-3.62246"></trkpt>
+      <trkpt lat="51.21683" lon="-3.62299"></trkpt>
+      <trkpt lat="51.21687" lon="-3.62318"></trkpt>
+      <trkpt lat="51.217" lon="-3.6234"></trkpt>
+      <trkpt lat="51.21697" lon="-3.62349"></trkpt>
+      <trkpt lat="51.2171" lon="-3.62369"></trkpt>
+      <trkpt lat="51.21735" lon="-3.62421"></trkpt>
+      <trkpt lat="51.21778" lon="-3.62522"></trkpt>
+      <trkpt lat="51.21821" lon="-3.62611"></trkpt>
+      <trkpt lat="51.21834" lon="-3.62644"></trkpt>
+      <trkpt lat="51.21845" lon="-3.62682"></trkpt>
+      <trkpt lat="51.2186" lon="-3.62689"></trkpt>
+      <trkpt lat="51.21865" lon="-3.62703"></trkpt>
+      <trkpt lat="51.21886" lon="-3.62745"></trkpt>
+      <trkpt lat="51.21878" lon="-3.62756"></trkpt>
+      <trkpt lat="51.21908" lon="-3.62794"></trkpt>
+      <trkpt lat="51.21911" lon="-3.62809"></trkpt>
     </trkseg>
   </trk>
 </gpx>
