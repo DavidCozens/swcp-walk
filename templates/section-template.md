@@ -8,6 +8,7 @@ distance_km:                        # optional
 ascent_m:                           # optional
 mode:                              # optional: "van base", "backpack", "undecided"
 gpx: /gpx/02-start-end.gpx          # drop the matching file in src/gpx/
+os_url:                             # optional; the OS Maps route link
 transport:                        # optional; repeat the block per option
   - type: bus
     detail: "Operator / route — describe the link"

@@ -27,6 +27,10 @@
       withGpx.forEach(function (s) {
         new L.GPX(s.gpx, {
           async: true,
+          // Waypoints are just the shaping points dropped while planning in OS Maps,
+          // not places of interest, so parse the line only — otherwise each one
+          // renders as a pin with an empty popup.
+          gpx_options: { parseElements: ["track", "route"] },
           marker_options: {
             startIconUrl: null,
             endIconUrl: null,

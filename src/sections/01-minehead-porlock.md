@@ -8,6 +8,7 @@ distance_km: 13.3
 ascent_m: 530
 mode: van base
 gpx: /gpx/01-minehead-porlock.gpx
+os_url: "https://explore.osmaps.com/route/33801498"
 transport:
   - type: bus
     detail: "First Bus 10 / Buses of Somerset — Minehead ↔ Porlock (check current timetable)"

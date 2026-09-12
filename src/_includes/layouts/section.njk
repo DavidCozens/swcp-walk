@@ -21,6 +21,11 @@ layout: layouts/base.njk
   ></div>
   {% endif %}
 
+  {% if os_url %}
+  {# Plain link, no target: gives the OS Maps app first refusal on a phone. #}
+  <p class="map-link"><a href="{{ os_url }}">Open this route in OS Maps</a></p>
+  {% endif %}
+
   <dl class="facts">
     {% if distance_km %}<dt>Distance</dt><dd>{{ distance_km }} km</dd>{% endif %}
     {% if ascent_m %}<dt>Ascent</dt><dd>{{ ascent_m }} m</dd>{% endif %}

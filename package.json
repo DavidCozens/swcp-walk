@@ -9,7 +9,8 @@
     "validate": "node scripts/validate-content.js",
     "test": "npm run validate",
     "check": "npm run validate && npm run build && npm run check:paths",
-    "check:paths": "node scripts/check-paths.js"
+    "check:paths": "node scripts/check-paths.js",
+    "import:route": "node scripts/import-os-route.js"
   },
   "license": "MIT",
   "devDependencies": {

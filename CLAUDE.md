@@ -17,9 +17,29 @@ Three levels: **overview → region → section**.
   logic in the config.
 
 Required section front matter: `title`, `order`, `region`, `start`, `end`,
-`gpx`. Everything else (`distance_km`, `ascent_m`, `mode`, `transport`,
+`gpx`. Everything else (`distance_km`, `ascent_m`, `os_url`, `mode`, `transport`,
 `shops`, `eat`, body text) is optional and only renders when present.
 `templates/section-template.md` is the starting point for a new section.
+
+## Adding a section from OS Maps
+
+Routes are planned in OS Maps. The route page server-renders the whole route as
+GeoJSON, so the share link is all that's needed — no manual GPX export:
+
+    npm run import:route -- <os-maps-url> <slug>
+
+That writes `src/gpx/<slug>.gpx` and prints the front matter (distance and
+ascent come from OS's own figures). The generated GPX contains the track only:
+OS waypoints are shaping points dropped while planning, not places of interest,
+so they're left out rather than drawn as pins. The map scripts also pass
+`parseElements: ["track", "route"]`, so a hand-exported GPX with waypoints in it
+won't sprout pins either.
+
+The importer never copies the route's `createdBy` (an OS account id) or its
+`createdAt`/`modifiedAt` timestamps — see the privacy note below.
+
+`os_url` is optional front matter holding the OS Maps link; when set, the
+section page shows an "Open in OS Maps" link under the map.
 
 ## Paths — IMPORTANT
 
@@ -67,7 +87,9 @@ add features, add checks here too.
 ## IMPORTANT — privacy
 
 While the repo is public, **no travel dates and no van overnight locations go
-anywhere in it.** That decision is deliberately deferred until such data
+anywhere in it.** An OS Maps route page also exposes the route owner's account
+id and the date it was planned, so the importer copies neither — only geometry
+and the distance/ascent figures. That decision is deliberately deferred until such data
 actually needs to exist. The `_private/` folder is git-ignored for that data;
 do not remove that ignore line, and do not commit dates/locations, without the
 owner deciding the privacy question first.

@@ -34,13 +34,26 @@ region via its `region:` field; regions are defined once in
 
 ## Add a section
 
+Plan the route in OS Maps, then hand the link to the importer:
+
+```
+npm run import:route -- https://explore.osmaps.com/route/12345678/my-route 02-porlock-lynmouth
+```
+
+It writes `src/gpx/02-porlock-lynmouth.gpx` and prints a front matter block
+with the distance and ascent taken from OS's own figures.
+
 1. Copy `templates/section-template.md` into `src/sections/`, e.g.
-   `02-porlock-weir-lynmouth.md`.
-2. Fill in the front matter. `region` must match a slug in
-   `src/_data/regions.js`. `order` sets its place in the whole-route sequence.
-3. Export the route from OS Maps as GPX and save it in `src/gpx/` at the path
-   you put in the `gpx:` field.
-4. `npm run check` (validates, then builds). Push.
+   `02-porlock-lynmouth.md`.
+2. Paste in the imported front matter and fill in `title`, `start`, `end`,
+   `region` and `order`. `region` must match a slug in `src/_data/regions.js`.
+3. `npm run check` (validates, then builds). Push.
+
+Set `os_url` to the OS Maps link and the section page shows an "Open in OS
+Maps" link under the map. The importer fills this in for you.
+
+The generated GPX holds the track only — OS waypoints are the shaping points
+you drop while planning, not places worth pinning on a map.
 
 Required fields: `title`, `order`, `region`, `start`, `end`, `gpx`.
 Everything else is optional and only shows when present.

@@ -62,6 +62,12 @@ for (const file of files) {
     }
   }
 
+  if (data.os_url !== undefined && data.os_url !== "" && data.os_url !== null) {
+    if (!/^https:\/\/explore\.osmaps\.com\/route\/\d+/.test(data.os_url)) {
+      fail(file, `"os_url" should look like https://explore.osmaps.com/route/<id>, got ${JSON.stringify(data.os_url)}`);
+    }
+  }
+
   for (const key of NUMERIC) {
     const value = data[key];
     if (value === undefined || value === "" || value === null) continue;

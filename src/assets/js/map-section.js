@@ -16,6 +16,10 @@
 
   new L.GPX(gpx, {
     async: true,
+    // Waypoints are just the shaping points dropped while planning in OS Maps,
+    // not places of interest, so parse the line only — otherwise each one
+    // renders as a pin with an empty popup.
+    gpx_options: { parseElements: ["track", "route"] },
     marker_options: { startIconUrl: null, endIconUrl: null, shadowUrl: null },
     polyline_options: { color: "#e0a010", weight: 4, opacity: 0.9 },
   })

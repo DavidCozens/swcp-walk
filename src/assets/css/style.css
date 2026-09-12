@@ -104,6 +104,13 @@ main {
 }
 
 /* Maps */
+.map-link {
+  margin: 0.4rem 0 0;
+  font-family: var(--cond);
+  font-size: 0.95rem;
+  text-align: right;
+}
+
 .map {
   width: 100%;
   border: 1px solid var(--line);
