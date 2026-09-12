@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% if title %}{{ title }} · {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ description or site.tagline }}" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="acorn" aria-hidden="true">&#9679;</span>
+        <span class="brand-text">South West Coast Path</span>
+      </a>
+      <nav class="regions" aria-label="Regions">
+        {% for region in regions %}
+        <a href="/regions/{{ region.slug }}/">{{ region.name }}</a>
+        {% endfor %}
+      </nav>
+    </header>
+
+    <main id="main">{{ content | safe }}</main>
+
+    <footer class="site-footer">
+      <p>A walk in the planning. Built with Eleventy.</p>
+    </footer>
+  </body>
+</html>

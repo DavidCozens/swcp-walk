@@ -1,0 +1,15 @@
+---
+permalink: "/api/sections.json"
+eleventyExcludeFromCollections: true
+---
+[
+{%- for s in collections.sections -%}
+  {
+    "title": {{ s.data.title | dump | safe }},
+    "url": {{ s.url | dump | safe }},
+    "order": {{ s.data.order or 0 }},
+    "region": {{ (s.data.region or "") | dump | safe }},
+    "gpx": {{ (s.data.gpx or "") | dump | safe }}
+  }{% if not loop.last %},{% endif %}
+{%- endfor -%}
+]

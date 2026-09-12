@@ -1,0 +1,28 @@
+---
+pagination:
+  data: collections.regionsWithSections
+  size: 1
+  alias: region
+permalink: "/regions/{{ region.slug }}/"
+layout: layouts/base.njk
+eleventyComputed:
+  title: "{{ region.name }}"
+---
+<article class="region-page">
+  <h1>{{ region.name }}</h1>
+  {% if region.sections | length %}
+  <ol class="section-list">
+    {% for s in region.sections %}
+    <li>
+      <a href="{{ s.url }}">
+        <span class="n">{{ s.data.order }}</span>
+        <span class="ttl">{{ s.data.title }}</span>
+        <span class="rt">{{ s.data.start }} &rarr; {{ s.data.end }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty">No sections planned here yet. Add one and it appears automatically.</p>
+  {% endif %}
+</article>

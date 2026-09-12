@@ -1,0 +1,22 @@
+{
+  "name": "swcp-walk",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  // Keep the container running so VS Code gives you a shell; you start the
+  // dev server yourself (npm run serve) or let Claude Code do it.
+  "overrideCommand": true,
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "Site preview",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode"]
+    }
+  }
+}

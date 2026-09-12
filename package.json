@@ -1,0 +1,19 @@
+{
+  "name": "swcp-walk",
+  "version": "0.1.0",
+  "description": "A planning and journal site for walking the South West Coast Path.",
+  "type": "module",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "validate": "node scripts/validate-content.js",
+    "test": "npm run validate",
+    "check": "npm run validate && npm run build"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "fast-xml-parser": "^4.5.0",
+    "gray-matter": "^4.0.3"
+  }
+}

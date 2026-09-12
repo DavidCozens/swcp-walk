@@ -1,0 +1,15 @@
+# Build output
+_site/
+
+# Dependencies
+node_modules/
+
+# Reserved for sensitive planning data (real dates, van overnight spots,
+# anything you don't want in a public repo). Nothing here is committed or
+# published while this line stays in place. See README "Keeping private
+# things private" before you remove it.
+_private/
+
+# OS / editor noise
+.DS_Store
+*.log

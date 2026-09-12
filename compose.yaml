@@ -1,0 +1,17 @@
+# Run the site as a local container:
+#   docker compose up
+# then open http://localhost:8080  (live-reloads as you edit).
+services:
+  site:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      # Your working copy, live-mounted so edits show up immediately.
+      - .:/app
+      # Keep the container's node_modules separate from the host so the
+      # bind-mount above doesn't hide the dependencies installed in the image.
+      - node_modules:/app/node_modules
+
+volumes:
+  node_modules:

@@ -1,0 +1,45 @@
+---
+layout: layouts/base.njk
+title: false
+---
+<section class="hero">
+  <div
+    class="map map-overview"
+    data-src="/api/sections.json"
+    data-tiles="{{ site.tiles.url }}"
+    data-attribution="{{ site.tiles.attribution }}"
+    role="img"
+    aria-label="Map of the whole South West Coast Path route"
+  ></div>
+  <div class="hero-text">
+    <h1>{{ site.title }}</h1>
+    <p class="lede">{{ site.tagline }}</p>
+  </div>
+</section>
+
+<section class="overview">
+  {% for region in collections.regionsWithSections %}
+  {% if region.sections | length %}
+  <div class="region-block">
+    <h2><a href="/regions/{{ region.slug }}/">{{ region.name }}</a></h2>
+    <ol class="section-list">
+      {% for s in region.sections %}
+      <li>
+        <a href="{{ s.url }}">
+          <span class="n">{{ s.data.order }}</span>
+          <span class="ttl">{{ s.data.title }}</span>
+          <span class="rt">{{ s.data.start }} &rarr; {{ s.data.end }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+  {% endfor %}
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-gpx@1.7.0/gpx.js"></script>
+<script src="/assets/js/map-overview.js"></script>

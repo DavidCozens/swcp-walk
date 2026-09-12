@@ -1,0 +1,57 @@
+---
+layout: layouts/base.njk
+---
+<article class="section">
+  <div class="section-head">
+    <p class="section-meta">
+      Section {{ order }}{% if region %} · {{ region | regionName }}{% endif %}
+    </p>
+    <h1>{{ title }}</h1>
+    <p class="section-route">{{ start }} &rarr; {{ end }}</p>
+  </div>
+
+  {% if gpx %}
+  <div
+    class="map map-section"
+    data-gpx="{{ gpx }}"
+    data-tiles="{{ site.tiles.url }}"
+    data-attribution="{{ site.tiles.attribution }}"
+    role="img"
+    aria-label="Route map from {{ start }} to {{ end }}"
+  ></div>
+  {% endif %}
+
+  <dl class="facts">
+    {% if distance_mi %}<dt>Distance</dt><dd>{{ distance_mi }} miles</dd>{% endif %}
+    {% if ascent_ft %}<dt>Ascent</dt><dd>{{ ascent_ft }} ft</dd>{% endif %}
+    {% if mode %}<dt>Approach</dt><dd>{{ mode }}</dd>{% endif %}
+  </dl>
+
+  {% if transport or shops or eat %}
+  <section class="logistics">
+    <h2>Getting there &amp; back</h2>
+    {% if transport %}
+    <ul class="transport">
+      {% for t in transport %}
+      <li>
+        <span class="t-type">{{ t.type }}</span>
+        {% if t.url %}<a href="{{ t.url }}">{{ t.detail }}</a>{% else %}{{ t.detail }}{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if shops %}<p><strong>Shops &amp; dog food:</strong> {{ shops }}</p>{% endif %}
+    {% if eat %}<p><strong>Eating out:</strong> {{ eat }}</p>{% endif %}
+  </section>
+  {% endif %}
+
+  {% if content %}
+  <section class="notes">{{ content | safe }}</section>
+  {% endif %}
+</article>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-gpx@1.7.0/gpx.js"></script>
+<script src="/assets/js/map-section.js"></script>
