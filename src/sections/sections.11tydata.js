@@ -27,7 +27,22 @@ export default {
         end: lookup(data.locations, data.end),
         nearby: nearbyByKind(data, data.locations, data.site.nearby),
         transport: data.transport,
+        locations: data.locations,
+        walk: data.site.walk,
       }),
+    // Whether anything reaches both ends within the usual walking reach. If
+    // nothing does, a longer walk isn't a compromise — it's the only way, and
+    // shouldn't be presented apologetically. (Computed here: Nunjucks `set`
+    // inside a for-loop doesn't escape the loop.)
+    anyServiceLinksEnds: (data) =>
+      routesForSection({
+        start: lookup(data.locations, data.start),
+        end: lookup(data.locations, data.end),
+        nearby: nearbyByKind(data, data.locations, data.site.nearby),
+        transport: data.transport,
+        locations: data.locations,
+        walk: data.site.walk,
+      }).some((r) => r.linksEnds),
     // One link covering every public transport option between the two ends.
     transitLink: (data) =>
       transitUrl(lookup(data.locations, data.start), lookup(data.locations, data.end)),

@@ -122,6 +122,16 @@ route calls with the locations a section touches — endpoints, escape points,
 nearby stops — and offers what matches, flagging whether a service reaches both
 ends of the day. Enter the coast bus once and it appears wherever it's relevant.
 
+A service doesn't have to stop at the exact spot to be useful — it has to be
+within a walk of it. Each route reports how far you'd walk from each end of the
+section to its nearest calling point, so the coast bus is usable for the price
+of 2.8 km rather than simply unusable. `site.js` sets `walk.reachKm` (2.5,
+normal reach) and `walk.maxReachKm` (5, beyond which a route is only kept if it
+serves an escape point). A longer walk reads as "further out" when something
+better exists, and as "a walk at one end" when it's the only option — a sole
+option shouldn't be presented apologetically. Distances are straight-line, and
+the page says so.
+
 `transitLink` is a generated Google Maps transit link between a section's two
 endpoints: every bus, train and ferry option, nothing typed, opens the app on a
 phone. It is the primary answer to "how do I get back", because it's built from

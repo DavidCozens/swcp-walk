@@ -29,6 +29,13 @@ export default {
     stop: { endpointKm: 5, routeKm: 3 },
   },
 
+  // How far you'd walk to reach a service. A stop doesn't have to be at the
+  // spot to be useful — Porlock is 2.4 km from Porlock Weir, which makes the
+  // coast bus usable for the price of the walk. Beyond reachKm a service is
+  // still offered, but flagged as a stretch; beyond maxReachKm it's only kept
+  // if it serves an escape point.
+  walk: { reachKm: 2.5, maxReachKm: 5 },
+
   // How the route is drawn. The casing is a wider line underneath: on a
   // contour map the halo does more for legibility than the colour does.
   // Violet because nothing on OpenTopoMap's brown-and-green palette is violet.
