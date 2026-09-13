@@ -99,6 +99,12 @@ Two fields carry their weight:
   the old one.
 - `dogs` — `true`, `false`, or `null` for unknown. Never guess it.
 
+Each type has a glyph in `lib/stay-icons.js`, rendered into a coloured badge
+used in three places — the list row, the map pin and the map popup. It's
+defined once and handed to the map as markup inside `data-stays`, so the list
+and the pins can't drift apart. Colours stay in `style.css`
+(`.stay-pin-<type>`); the glyph names the type, the colour groups it.
+
 Each section map shows the nearby places as pins, coloured by type from
 `style.css` (`.stay-pin-<type>`). They're `divIcon`s rather than Leaflet's
 default marker, so nothing is fetched from a CDN and the colours stay with the

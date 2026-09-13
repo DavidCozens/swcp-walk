@@ -65,15 +65,17 @@
       if (typeof s.lat !== "number" || typeof s.lon !== "number") return;
       var marker = L.marker([s.lat, s.lon], {
         title: s.name,
+        // Same badge markup the list uses, so the two always match.
         icon: L.divIcon({
-          className: "stay-pin stay-pin-" + s.type,
-          iconSize: [16, 16],
-          iconAnchor: [8, 8],
-          popupAnchor: [0, -8],
-          html: "",
+          className: "stay-marker",
+          iconSize: [24, 24],
+          iconAnchor: [12, 12],
+          popupAnchor: [0, -12],
+          html: s.badge || "",
         }),
       });
       marker.bindPopup(
+        (s.badge || "") +
         '<strong>' + escapeHtml(s.name) + "</strong><br>" +
         escapeHtml(s.label) + " &middot; " + escapeHtml(s.where) +
         (s.url ? '<br><a href="' + encodeURI(s.url) + '">website</a>' : "") +

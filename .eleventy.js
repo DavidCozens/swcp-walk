@@ -1,5 +1,6 @@
 import { HtmlBasePlugin } from "@11ty/eleventy";
 import regions from "./src/_data/regions.js";
+import { badge as stayBadge } from "./lib/stay-icons.js";
 
 // The site is published to a GitHub Pages *project* page, so it lives under
 // /swcp-walk/ rather than at the domain root. Everything internal must carry
@@ -37,6 +38,7 @@ export default function (eleventyConfig) {
     hostel: "Hostel",
   };
   eleventyConfig.addFilter("stayType", (t) => STAY_TYPES[t] || t || "");
+  eleventyConfig.addFilter("stayBadge", (t) => stayBadge(t));
 
   const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -74,6 +76,7 @@ export default function (eleventyConfig) {
       name: s.name,
       type: s.type,
       label: STAY_TYPES[s.type] || s.type,
+      badge: stayBadge(s.type),
       lat: s.lat,
       lon: s.lon,
       url: s.url || "",

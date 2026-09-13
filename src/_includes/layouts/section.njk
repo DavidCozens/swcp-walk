@@ -98,7 +98,7 @@ layout: layouts/base.njk
       <li>
         <details class="stay">
         <summary>
-          <span class="stay-dot stay-pin-{{ s.type }}" aria-hidden="true"></span>
+          {{ s.type | stayBadge | safe }}
           <span class="stay-name">{{ s.name }}</span>
           <span class="stay-kind">{{ s.type | stayType }}</span>
           <span class="stay-dist">{{ s.nearest }} km from the {% if s.atEnd %}finish{% else %}start{% endif %}{% if s.toRoute <= 0.25 %}, on the route{% elif s.toRoute < (s.nearest - 0.3) %}, {{ s.toRoute }} km off the path{% endif %}</span>

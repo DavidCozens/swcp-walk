@@ -289,12 +289,9 @@ main {
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--line);
 }
-.stay-pin {
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
-  background: var(--ink-soft);
-}
+/* Leaflet's divIcon wrapper: the badge inside provides the visuals. */
+.stay-marker { background: none; border: 0; }
+.stay-pin { background: var(--ink-soft); }
 .stay-pin-campsite   { background: #1f6f3f; }
 .stay-pin-britstop   { background: #0057d9; }
 .stay-pin-park4night { background: #d97706; }
@@ -302,6 +299,10 @@ main {
 .stay-pin-inn        { background: #7c4a03; }
 .stay-pin-cl         { background: #6b7280; }
 .stay-pin-hostel     { background: #b91c1c; }
+
+.leaflet-popup-content .stay-badge {
+  margin-bottom: 0.3rem;
+}
 
 .stay-focus {
   margin-left: 0.5rem;
@@ -354,15 +355,26 @@ details.stay > summary {
 }
 details.stay > summary::marker { color: var(--ink-soft); }
 
-/* The dot matches the pin colour on the map, so the list and map read as one. */
-.stay-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
+/* One badge, used in the list, as the map pin, and in the map popup, so the
+   three always agree. Colour still codes the type; the glyph names it. */
+.stay-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.35);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
   flex: none;
   align-self: center;
+  color: #fff;
+}
+.stay-badge svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  fill: currentColor;
 }
 .stay-name {
   font-weight: 600;
