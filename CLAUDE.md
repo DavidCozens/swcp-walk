@@ -145,7 +145,8 @@ the route, since leaving the path partway is the whole point of it.
 `verified` is the date details were last checked against the owner's own site;
 null shows on the page as unconfirmed. `stay.dogs` is true/false/null and never
 guessed — an unconfirmed yes is worse than an honest unknown when you arrive
-with a dog. Details go stale quietly: porlockcaravanpark.co.uk now resolves to
+with a dog. A `hotel` is only recorded if it takes dogs, which
+`npm run validate` enforces. Details go stale quietly: porlockcaravanpark.co.uk now resolves to
 a differently-named park at a different address while directories still list
 the old one.
 

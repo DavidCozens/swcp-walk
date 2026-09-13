@@ -31,7 +31,7 @@ const locUrl = new URL("../src/_data/locations.js", import.meta.url);
 const { default: locations } = await import(locUrl);
 const { distanceKm, trackPoints, crossesWater } = await import(new URL("../lib/nearby.js", import.meta.url));
 const { default: water } = await import(new URL("../lib/water.js", import.meta.url));
-const STAY_TYPES = ["campsite", "britstop", "park4night", "aire", "cl", "bnb", "inn", "hostel"];
+const STAY_TYPES = ["campsite", "britstop", "park4night", "aire", "cl", "bnb", "inn", "hotel", "hostel"];
 const KINDS = ["endpoint", "escape", "stay", "poi", "stop", "hospital", "vet", "food", "shop"];
 const HOSPITAL_TYPES = ["ae", "utc", "minor"];
 const bySlug = new Map(locations.map((l) => [l.slug, l]));
@@ -97,6 +97,11 @@ for (const a of locations) {
   const stay = a.stay || {};
   if (stay.dogs !== true && stay.dogs !== false && stay.dogs !== null && stay.dogs !== undefined) {
     fail("locations", `${where} stay.dogs must be true, false or null, got ${JSON.stringify(stay.dogs)}`);
+  }
+  // Hotels are only worth recording for this walk if they take dogs; a hotel
+  // that doesn't, or might not, is left out rather than listed.
+  if (stay.type === "hotel" && stay.dogs !== true) {
+    fail("locations", `${where} is a hotel but stay.dogs isn't true: hotels are only recorded if they take dogs`);
   }
   // season: "all-year" | { from: "MM-DD", to: "MM-DD" } | null
   if (stay.season !== null && stay.season !== undefined && stay.season !== "all-year") {

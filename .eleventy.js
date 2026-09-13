@@ -85,6 +85,7 @@ export default function (eleventyConfig) {
     cl: "CL / CS",
     bnb: "B&B",
     inn: "Inn",
+    hotel: "Hotel",
     hostel: "Hostel",
   };
   eleventyConfig.addFilter("stayType", (t) => STAY_TYPES[t] || t || "");
