@@ -17,8 +17,8 @@ export default {
       const near = nearbyByKind(data, data.locations, data.site.nearby);
       // Everything gets a pin. Hospitals far off don't widen the view: the
       // map fits the route's bounds, never the markers.
-      return [...near.stay, ...near.escape, ...near.food, ...near.shop,
-              ...near.hospital, ...near.vet];
+      return [...near.stay, ...near.escape, ...near.poi, ...near.food,
+              ...near.shop, ...near.hospital, ...near.vet];
     },
     // Shipped in the sections feed so a browser can work out which section
     // it's nearest to.

@@ -174,7 +174,7 @@ main {
 .section-jump:empty { display: none; }
 
 /* Anchors must not land underneath the sticky bar. */
-.notes, .logistics, .escapes, .food, .shops, .stays, .emergency { scroll-margin-top: 3rem; }
+.notes, .logistics, .escapes, .poi, .food, .shops, .stays, .emergency { scroll-margin-top: 3rem; }
 .stays-head h2 { scroll-margin-top: 3rem; }
 
 .section-nav {
@@ -383,6 +383,7 @@ main {
 /* Services aren't places, so these never appear as pins — only as list badges. */
 .stay-pin-bus        { background: #0369a1; }
 .stay-pin-stop       { background: #155e75; }
+.stay-pin-poi        { background: #86198f; }
 .stay-pin-train      { background: #7e22ce; }
 .stay-pin-ferry      { background: #0f766e; }
 .stay-pin-taxi,

@@ -52,6 +52,7 @@ export default function (eleventyConfig) {
 
   // Human labels for accommodation types.
   const STAY_TYPES = {
+    poi: "Worth a look",
     bus: "Bus",
     train: "Train",
     ferry: "Ferry",

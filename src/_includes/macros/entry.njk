@@ -7,7 +7,7 @@
     <summary>
       {{ loc | locBadge | safe }}
       <span class="stay-name">{{ loc.name }}</span>
-      <span class="stay-kind">{{ label }}</span>
+{% if label %}<span class="stay-kind">{{ label }}</span>{% endif %}
       <span class="stay-dist">{{ fact }}</span>
       {% if loc.slug %}<button type="button" class="stay-focus" data-stay="{{ loc.slug }}">Show on map</button>{% endif %}
     </summary>

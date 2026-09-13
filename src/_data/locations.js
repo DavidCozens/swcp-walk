@@ -24,8 +24,9 @@ import stays from "../../lib/locations/stays.js";
 import stops from "../../lib/locations/stops.js";
 import medical from "../../lib/locations/medical.js";
 import food from "../../lib/locations/food.js";
+import poi from "../../lib/locations/poi.js";
 
-const all = [...endpoints, ...escapes, ...stays, ...stops, ...medical, ...food];
+const all = [...endpoints, ...escapes, ...stays, ...stops, ...medical, ...food, ...poi];
 
 // Slugs are the reference from sections and, later, from transport legs. A
 // duplicate would silently shadow; fail the build instead.
