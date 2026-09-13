@@ -53,6 +53,13 @@ export default function (eleventyConfig) {
   // Human labels for accommodation types.
   const STAY_TYPES = {
     poi: "Worth a look",
+    ancient: "Ancient site",
+    viewpoint: "Viewpoint",
+    monument: "Monument",
+    church: "Church",
+    lighthouse: "Lighthouse",
+    nature: "Landscape",
+    machine: "Feat of engineering",
     bus: "Bus",
     train: "Train",
     ferry: "Ferry",
@@ -88,6 +95,8 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("locBadge", (loc) => {
     if (!loc) return stayBadge("");
     if (loc.kind === "stay") return stayBadge((loc.stay || {}).type);
+    // Points of interest vary the glyph but keep the one colour.
+    if (loc.kind === "poi") return stayBadge((loc.poi || {}).type || "poi", "poi");
     return stayBadge(loc.kind || loc.type || "");
   });
   // What to call this location in a given list: a pub with rooms is an "Inn"

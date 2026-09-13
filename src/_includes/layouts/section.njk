@@ -30,9 +30,9 @@ layout: layouts/base.njk
 
   <nav class="section-jump" aria-label="On this page">
     {% if content %}<a href="#notes">Notes</a>{% endif %}
+    {% if nearby.poi.length %}<a href="#poi">Worth a look</a>{% endif %}
     {% if services.length or transfers.length or transitLink %}<a href="#transport">Transport</a>{% endif %}
     {% if nearby.escape.length %}<a href="#escapes">Escapes</a>{% endif %}
-    {% if nearby.poi.length %}<a href="#poi">Worth a look</a>{% endif %}
     {% if nearby.food.length %}<a href="#food">Food</a>{% endif %}
     {% if nearby.shop.length %}<a href="#shops">Shops</a>{% endif %}
     {% if nearby.stay.length %}<a href="#stays">Stays</a>{% endif %}
@@ -66,6 +66,23 @@ layout: layouts/base.njk
 
   {% if content %}
   <section class="notes" id="notes">{{ content | safe }}</section>
+  {% endif %}
+
+  {% if nearby.poi.length %}
+  <section class="poi">
+    {{ heading("Worth a look", "poi") }}
+    <ul class="entry-list">
+      {% for p in nearby.poi %}
+      {% call row(p, "poi", p | roleLabel("poi"), p.kmAlong + " km in · " + p.toRoute + " km off the path") %}
+        <dl class="stay-facts">
+          {{ contact(p) }}
+        </dl>
+        {% if p.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ p.notes }}</p>{% endif %}
+        {{ checked(p) }}
+      {% endcall %}
+      {% endfor %}
+    </ul>
+  </section>
   {% endif %}
 
   {% if services.length or transfers.length or transitLink %}
@@ -141,23 +158,6 @@ layout: layouts/base.njk
           {% if e.escape.detail %}<dt>Getting out</dt><dd>{{ e.escape.detail }}</dd>{% endif %}
           {{ contact(e) }}
         </dl>
-      {% endcall %}
-      {% endfor %}
-    </ul>
-  </section>
-  {% endif %}
-
-  {% if nearby.poi.length %}
-  <section class="poi">
-    {{ heading("Worth a look", "poi") }}
-    <ul class="entry-list">
-      {% for p in nearby.poi %}
-      {% call row(p, "poi", "", p.kmAlong + " km in · " + p.toRoute + " km off the path") %}
-        <dl class="stay-facts">
-          {{ contact(p) }}
-        </dl>
-        {% if p.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ p.notes }}</p>{% endif %}
-        {{ checked(p) }}
       {% endcall %}
       {% endfor %}
     </ul>
