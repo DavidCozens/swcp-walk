@@ -77,7 +77,8 @@
             endIconUrl: null,
             shadowUrl: null,
           },
-          polyline_options: line,
+          // A ferry isn't walked, so it's dashed.
+          polyline_options: s.crossing ? Object.assign({}, line, { dashArray: "2 10" }) : line,
         })
           .on("loaded", function (e) {
             // Safe here: the map got a default view before the fetch, so the

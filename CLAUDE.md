@@ -7,8 +7,9 @@ Coast Path. Built with **Eleventy**. Sections in, map pages out.
 
 Three levels: **overview → region → section**.
 
-- A **section** is one file in `src/sections/*.md` plus a matching GPX in
-  `src/gpx/`. Front matter drives everything; the GPX draws the route.
+- A **section** is one file in `src/sections/*.md`, plus a matching GPX in
+  `src/gpx/` once its route is plotted. Front matter drives everything; the
+  GPX draws the route.
 - **Regions** are defined once in `src/_data/regions.js`. A section joins one
   via its `region:` slug.
 - The overview map is fed by `/api/sections.json`, generated from all sections.
@@ -16,10 +17,31 @@ Three levels: **overview → region → section**.
   templates — Nunjucks `selectattr` was unreliable for this, so keep grouping
   logic in the config.
 
-Required section front matter: `title`, `order`, `region`, `start`, `end`,
-`gpx`. Everything else (`distance_km`, `ascent_m`, `os_url`, `mode`, `transport`,
-`escape_points`, `shops`, `eat`, body text) is optional and only renders when
-present.
+Required section front matter: `title`, `order`, `region`, `start`, `end`.
+Everything else (`gpx`, `distance_km`, `ascent_m`, `os_url`, `mode`,
+`transport`, `escape_points`, `shops`, `eat`, body text) is optional and only
+renders when present.
+
+All 52 SWCPA stages exist as pages, most without a route. `order` is the SWCPA
+stage number; OSM's stage relations (super-relation 2376086) match that list.
+A page without a GPX says "Route not plotted yet", still maps its two ends, and
+lists only what's found by radius from them — places to stay and stops. What's
+found *along* a route waits for one, and so do hospitals and vets: "the nearest
+few" is only true once that stretch has been researched, which happens with its
+route. Before that, the nearest A&E on record for Exmouth is in Taunton. Each
+unplotted section is listed on `/todo/`.
+
+**The path is one unbroken chain.** `npm run validate` checks that every
+section starts at the very endpoint the previous one finished at, and that
+stages run 1–52 with none missing. Where water separates two sections — only
+the Yealm, between 36 and 37 — the ferry is a **crossing**: a section file with
+`crossing: true` and a fractional `order` (36.5), its own GPX taken from the
+OSM ferry way, and a page for the ferry's details. It sits in prev/next and on
+the overview, drawn dashed, but not in the count: the path is still 52
+sections. Two endpoints on either bank, rather than one at the ferry, because
+the banks are 180 m apart on foot and a long way round by road. Section 49
+(Portland) is a circuit: `start` and `end` are the same, and it gets no transit
+link, since there's no journey to plan.
 
 `escape_points` is a list of places you can leave the path mid-section: `name`
 required, optional `km` (how far along the route it sits, validated against
@@ -70,7 +92,8 @@ sits in a nested block.
 Hospitals and vets (`lib/locations/medical.js`) are matched differently: not by
 radius but by *nearest few, however far* (`site.js` → `nearby.hospital.nearest`).
 A radius is the wrong rule when the nearest A&E is 42 km away and you still need
-to know which it is. They get pins in the same "Show pins" layer as everything else, but never widen
+to know which it is. `maxKm` in `site.js` is a ceiling on "however far", for a
+route plotted before its stretch is researched. They get pins in the same "Show pins" layer as everything else, but never widen
 the map: the
 starting view comes from the route's bounds alone, so a hospital 42 km away
 simply waits off-screen until you zoom out or press "Show on map". Each also
@@ -84,6 +107,12 @@ coordinates, a section discovers what it passes (`lib/nearby.js`), and how far
 along the route each one falls is computed. County Gate was recorded by hand as
 11.4 km along section 2; it is actually 8.8 km, and nobody would ever have
 caught that.
+
+Endpoint coordinates beyond Lynmouth are the node where OSM's relations for
+the two stages meet, not a town centre — the boundary as the path itself draws
+it. The Yealm is the exception: the ends of the ferry way. Endpoints aren't on
+`/todo/` for want of a `verified` date; there's no owner to confirm a harbour
+with.
 
 Sections name their endpoints by slug (`start: porlock-weir`), so the finish of
 one section and the start of the next are the same record. `npm run validate`
@@ -265,7 +294,9 @@ host.
 
 `scripts/validate-content.js` fails if a section is missing a required field,
 uses an unknown region, reuses an `order`, or points at a GPX that's missing or
-invalid.
+invalid. It also fails on a gap in the chain (a section not starting where the
+last one ended), a gap in the stage numbers, or a crossing with a whole-number
+order.
 
 `scripts/check-output.js` runs after the build and checks two things the local
 dev server cannot show you: that every internal path carries the `pathPrefix`

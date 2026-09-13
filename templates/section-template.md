@@ -2,12 +2,12 @@
 title: Start Place to End Place
 order: 2
 region: somerset-north-devon        # must match a slug in src/_data/regions.js
-start: Start Place
-end: End Place
+start: start-place                 # endpoint slug, lib/locations/endpoints.js
+end: end-place
 distance_km:                        # optional
 ascent_m:                           # optional
 mode:                              # optional: "van base", "backpack", "undecided"
-gpx: /gpx/02-start-end.gpx          # drop the matching file in src/gpx/
+gpx: /gpx/02-start-end.gpx          # optional until plotted; drop the file in src/gpx/
 os_url:                             # optional; the OS Maps route link
 transport:                        # optional; repeat the block per option
   - type: bus

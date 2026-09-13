@@ -174,6 +174,13 @@ export default function (eleventyConfig) {
     return url;
   });
 
+  // The two ends of a section, for framing a map that has no route to fit.
+  eleventyConfig.addFilter("endsForMap", (places) =>
+    (places || [])
+      .filter((p) => p && typeof p.lat === "number" && typeof p.lon === "number")
+      .map((p) => ({ name: p.name, lat: p.lat, lon: p.lon }))
+  );
+
   eleventyConfig.addFilter("staysForMap", (stays) =>
     (stays || []).map((s) => ({
       slug: s.slug,
@@ -205,20 +212,23 @@ export default function (eleventyConfig) {
     const list = [...(sections || [])].sort(
       (a, b) => (a.data.order || 0) - (b.data.order || 0)
     );
+    // A crossing sits between two stages without being one, so it takes a
+    // place in prev/next but not in the count: the path is still 52 sections.
+    const stages = list.filter((s) => !s.data.crossing);
     const i = list.findIndex((s) => s.url === url);
-    if (i === -1) return { prev: null, next: null, position: 0, total: list.length };
+    if (i === -1) return { prev: null, next: null, position: 0, total: stages.length };
     const brief = (s) =>
-      s ? { url: s.url, title: s.data.title, order: s.data.order } : null;
+      s ? { url: s.url, title: s.data.title, number: s.data.crossing ? null : s.data.order } : null;
     return {
       prev: brief(list[i - 1]),
       next: brief(list[i + 1]),
-      position: i + 1,
-      total: list.length,
+      position: list[i].data.crossing ? null : stages.indexOf(list[i]) + 1,
+      total: stages.length,
     };
   });
 
-  eleventyConfig.addFilter("todo", (locations, transport) =>
-    todoList(locations, (transport || {}).routes, (transport || {}).providers)
+  eleventyConfig.addFilter("todo", (locations, transport, sections) =>
+    todoList(locations, (transport || {}).routes, (transport || {}).providers, sections)
   );
 
   const byOrder = (a, b) => (a.data.order || 0) - (b.data.order || 0);

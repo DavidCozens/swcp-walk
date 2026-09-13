@@ -4,7 +4,7 @@ title: To do
 permalink: /todo/
 eleventyExcludeFromCollections: true
 ---
-{% set list = locations | todo(transport) %}
+{% set list = locations | todo(transport, collections.sections) %}
 <article class="todo">
   <h1>To do</h1>
   <p class="lede">
@@ -49,6 +49,16 @@ eleventyExcludeFromCollections: true
       </p>
       <p class="todo-missing">{% for m in row.missing %}{{ m }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
     </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if list.unplotted.length %}
+  <h2>Routes to plot</h2>
+  <p class="todo-missing">{{ list.unplotted.length }} sections have no route yet. Plot one in OS Maps and import it.</p>
+  <ul class="todo-routes">
+    {% for s in list.unplotted %}
+    <li><a href="{{ s.url }}">{{ s.data.order }} · {{ s.data.title }}</a></li>
     {% endfor %}
   </ul>
   {% endif %}

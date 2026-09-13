@@ -11,19 +11,12 @@ eleventyComputed:
   # ampersand in a region name comes out double-escaped (&amp;amp;).
   title: "{{ region.name | safe }}"
 ---
+{% from "macros/section-row.njk" import sectionRow %}
 <article class="region-page">
   <h1>{{ region.name }}</h1>
   {% if region.sections | length %}
   <ol class="section-list">
-    {% for s in region.sections %}
-    <li>
-      <a href="{{ s.url }}">
-        <span class="n">{{ s.data.order }}</span>
-        <span class="ttl">{{ s.data.title }}</span>
-        <span class="rt">{{ s.data.startPlace.name or s.data.start }} &rarr; {{ s.data.endPlace.name or s.data.end }}</span>
-      </a>
-    </li>
-    {% endfor %}
+    {% for s in region.sections %}{{ sectionRow(s) }}{% endfor %}
   </ol>
   {% else %}
   <p class="empty">No sections planned here yet. Add one and it appears automatically.</p>

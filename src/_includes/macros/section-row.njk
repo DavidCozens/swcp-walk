@@ -1,0 +1,12 @@
+{# One row in a list of sections, shared by the overview and region pages. A
+   crossing gets a wave for a number: it sits between two stages rather than
+   being one. #}
+{% macro sectionRow(s) %}
+<li{% if s.data.crossing %} class="crossing"{% endif %}>
+  <a href="{{ s.url }}">
+    {% if s.data.crossing %}<span class="n" aria-label="Crossing">≈</span>{% else %}<span class="n">{{ s.data.order }}</span>{% endif %}
+    <span class="ttl">{{ s.data.title }}</span>
+    <span class="rt">{{ s.data.startPlace.name or s.data.start }} &rarr; {{ s.data.endPlace.name or s.data.end }}{% if not s.data.gpx %} <span class="unplotted">· no route yet</span>{% endif %}</span>
+  </a>
+</li>
+{% endmacro %}

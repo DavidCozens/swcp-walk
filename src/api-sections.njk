@@ -9,6 +9,7 @@ eleventyExcludeFromCollections: true
     "title": {{ s.data.title | dump | safe }},
     "url": {{ (s.url | url) | dump | safe }},
     "order": {{ s.data.order or 0 }},
+    "crossing": {{ "true" if s.data.crossing else "false" }},
     "region": {{ (s.data.region or "") | dump | safe }},
     "gpx": {{ gpxUrl | dump | safe }},
     "points": {{ (s.data.samplePoints or []) | dump | safe }}

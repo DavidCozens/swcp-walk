@@ -9,7 +9,9 @@ const ROOT = process.cwd();
 const SECTIONS_DIR = path.join(ROOT, "src", "sections");
 const PUBLIC_ROOT = path.join(ROOT, "src");
 
-const REQUIRED = ["title", "order", "region", "start", "end", "gpx"];
+// `gpx` isn't required: every stage exists as a page before its route is
+// plotted, and a page without one says so.
+const REQUIRED = ["title", "order", "region", "start", "end"];
 
 // Optional, but if present they must be positive numbers.
 const NUMERIC = ["distance_km", "ascent_m"];
@@ -44,6 +46,9 @@ const SERVICES = ["passenger", "baggage"];
 
 let errors = 0;
 const seenOrders = new Map();
+// Every section, for the checks that look across them: numbering and whether
+// each one starts where the last one finished.
+const chain = [];
 
 // Accommodation is matched to sections by position, so a missing or wrong
 // coordinate doesn't error — it just silently fails to appear anywhere.
@@ -260,6 +265,23 @@ for (const file of files) {
     }
   }
 
+  // A crossing (a ferry between two sections) sits between two numbered stages
+  // rather than being one, so it takes a fractional order and a numbered
+  // stage takes a whole one. Mixing the two would miscount "36 of 52".
+  if (data.crossing !== undefined && data.crossing !== true) {
+    fail(file, `"crossing" should be true or left out, got ${JSON.stringify(data.crossing)}`);
+  }
+  if (typeof data.order !== "number" && data.order !== undefined && data.order !== "") {
+    fail(file, `"order" must be a number, got ${JSON.stringify(data.order)}`);
+  } else if (typeof data.order === "number") {
+    if (data.crossing && Number.isInteger(data.order)) {
+      fail(file, `a crossing sits between two sections, so its order can't be a whole number (try ${data.order + 0.5})`);
+    } else if (!data.crossing && !(Number.isInteger(data.order) && data.order > 0)) {
+      fail(file, `"order" must be a whole number from 1 — only a crossing takes a fraction, got ${data.order}`);
+    }
+    chain.push({ file, order: data.order, crossing: data.crossing === true, start: data.start, end: data.end });
+  }
+
   if (typeof data.order === "number") {
     if (seenOrders.has(data.order)) {
       fail(file, `duplicate order ${data.order} (also in ${seenOrders.get(data.order)})`);
@@ -311,6 +333,32 @@ for (const file of files) {
         fail(file, "GPX has no track or route points");
       }
     }
+  }
+}
+
+// The path is one continuous line, so each section has to start at the very
+// place the previous one ended — the same endpoint record, not merely the same
+// town. Where the path crosses water between two sections, the ferry is a
+// crossing with its own entry, and that is what keeps the chain unbroken.
+chain.sort((a, b) => a.order - b.order);
+for (let i = 1; i < chain.length; i += 1) {
+  const prev = chain[i - 1];
+  const next = chain[i];
+  if (prev.end && next.start && prev.end !== next.start) {
+    fail(next.file, `starts at "${next.start}", but ${prev.file} ends at "${prev.end}" — the path would have a gap. If there's water between them, add a crossing`);
+  }
+}
+// Numbered stages run 1, 2, 3… with none missing; a gap is a lost file.
+const numbered = chain.filter((c) => !c.crossing);
+// Reported once, at the first gap, rather than once per section after it.
+const gap = numbered.findIndex((c, i) => c.order !== i + 1);
+if (gap !== -1) {
+  fail(numbered[gap].file, `is numbered ${numbered[gap].order} where section ${gap + 1} was expected — one is missing or duplicated`);
+}
+// A crossing only makes sense between two sections.
+for (const c of chain.filter((x) => x.crossing)) {
+  if (c === chain[0] || c === chain[chain.length - 1]) {
+    fail(c.file, "is a crossing, but has no section on one side of it");
   }
 }
 

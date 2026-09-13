@@ -5,7 +5,7 @@ layout: layouts/base.njk
 <article class="section">
   <div class="section-head">
     <p class="section-meta">
-      Section {{ order }}{% if region %} · {{ region | regionName }}{% endif %}
+      {% if crossing %}Crossing{% else %}Section {{ order }}{% endif %}{% if region %} · {{ region | regionName }}{% endif %}
     </p>
     <h1>{{ title }}</h1>
     <p class="section-route">{{ startPlace.name or start }} &rarr; {{ endPlace.name or end }}</p>
@@ -16,13 +16,13 @@ layout: layouts/base.njk
     {% if nav.prev %}
     <a class="nav-prev" href="{{ nav.prev.url }}">
       <span class="nav-arrow" aria-hidden="true">&larr;</span>
-      <span class="nav-label">{{ nav.prev.order }} · {{ nav.prev.title }}</span>
+      <span class="nav-label">{% if nav.prev.number %}{{ nav.prev.number }} · {% endif %}{{ nav.prev.title }}</span>
     </a>
     {% else %}<span class="nav-none"></span>{% endif %}
-    <span class="nav-count">{{ nav.position }} of {{ nav.total }}</span>
+    <span class="nav-count">{% if nav.position %}{{ nav.position }} of {{ nav.total }}{% else %}Crossing{% endif %}</span>
     {% if nav.next %}
     <a class="nav-next" href="{{ nav.next.url }}">
-      <span class="nav-label">{{ nav.next.order }} · {{ nav.next.title }}</span>
+      <span class="nav-label">{% if nav.next.number %}{{ nav.next.number }} · {% endif %}{{ nav.next.title }}</span>
       <span class="nav-arrow" aria-hidden="true">&rarr;</span>
     </a>
     {% else %}<span class="nav-none"></span>{% endif %}
@@ -39,10 +39,13 @@ layout: layouts/base.njk
     {% if nearby.hospital.length or nearby.vet.length %}<a href="#emergencies">Emergencies</a>{% endif %}
   </nav>
 
-  {% if gpx %}
+  {# Mapped with or without a route: before one is plotted the map frames the
+     two ends, so "Show on map" on a nearby entry still has somewhere to go. #}
   <div
     class="map map-section"
-    data-gpx="{{ gpx | url }}"
+    {% if gpx %}data-gpx="{{ gpx | url }}"{% endif %}
+    data-ends="{{ [startPlace, endPlace] | endsForMap | dump }}"
+    {% if crossing %}data-crossing{% endif %}
     data-tiles="{{ site.tiles.url }}"
     data-attribution="{{ site.tiles.attribution }}"
     data-maxzoom="{{ site.tiles.maxZoom }}"
@@ -51,7 +54,7 @@ layout: layouts/base.njk
     role="img"
     aria-label="Route map from {{ startPlace.name or start }} to {{ endPlace.name or end }}"
   ></div>
-  {% endif %}
+  {% if not gpx %}<p class="no-route">Route not plotted yet.</p>{% endif %}
 
   {% if os_url %}
   {# Plain link, no target: gives the OS Maps app first refusal on a phone. #}
@@ -115,6 +118,7 @@ layout: layouts/base.njk
           <dd>{% if r.season %}{{ r.season | seasonText }}{% if r.frequency %} · {{ r.frequency }}{% endif %}{% else %}<span class="unsure">Not confirmed</span>{% endif %}</dd>
           {% if r.servesEscape %}<dt>Bail-out</dt><dd>Calls at escape points on this section</dd>{% endif %}
           {% if r.url %}<dt>Timetable</dt><dd><a href="{{ r.url }}">{{ r.provider.name }}</a></dd>{% endif %}
+          {% if r.provider.phone %}<dt>Phone</dt><dd><a href="tel:{{ r.provider.phone | replace(" ", "") }}">{{ r.provider.phone }}</a></dd>{% endif %}
         </dl>
         {% if r.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ r.notes }}</p>{% endif %}
         {{ checked(r) }}

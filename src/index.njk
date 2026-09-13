@@ -2,6 +2,7 @@
 layout: layouts/base.njk
 title: false
 ---
+{% from "macros/section-row.njk" import sectionRow %}
 <section class="hero">
   <div
     class="map map-overview"
@@ -25,15 +26,7 @@ title: false
   <div class="region-block">
     <h2><a href="/regions/{{ region.slug }}/">{{ region.name }}</a></h2>
     <ol class="section-list">
-      {% for s in region.sections %}
-      <li>
-        <a href="{{ s.url }}">
-          <span class="n">{{ s.data.order }}</span>
-          <span class="ttl">{{ s.data.title }}</span>
-          <span class="rt">{{ s.data.startPlace.name or s.data.start }} &rarr; {{ s.data.endPlace.name or s.data.end }}</span>
-        </a>
-      </li>
-      {% endfor %}
+      {% for s in region.sections %}{{ sectionRow(s) }}{% endfor %}
     </ol>
   </div>
   {% endif %}

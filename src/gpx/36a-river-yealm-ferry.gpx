@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="swcp-walk (OpenStreetMap way 30417569, the Yealm ferry)"
+     xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>River Yealm ferry</name>
+  </metadata>
+  <trk>
+    <name>River Yealm ferry</name>
+    <trkseg>
+      <trkpt lat="50.31249" lon="-4.05343"></trkpt>
+      <trkpt lat="50.31233" lon="-4.05316"></trkpt>
+      <trkpt lat="50.31219" lon="-4.05096"></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -305,6 +305,20 @@ main {
   color: var(--ink-soft);
   font-size: 0.95rem;
 }
+.section-list .unplotted { font-style: italic; }
+/* A crossing sits between two stages: quieter than either. */
+.section-list .crossing .n { color: var(--sea); }
+.section-list .crossing .ttl { font-weight: 400; }
+.todo-routes {
+  columns: 16rem;
+  padding-left: 1.2rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.no-route {
+  color: var(--ink-soft);
+  font-style: italic;
+  margin: 0.5rem 0 0;
+}
 
 /* Section page */
 .section-meta {

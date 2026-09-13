@@ -28,8 +28,10 @@ export default {
     // walk or take a taxi to one.
     stop: { endpointKm: 5, routeKm: 3 },
     // Not a radius: the nearest A&E may be an hour away and you still need it.
-    hospital: { nearest: 3 },
-    vet: { nearest: 3 },
+    // maxKm is only a guard for a route plotted ahead of its research, where
+    // the nearest one on record could be in another county.
+    hospital: { nearest: 3, maxKm: 60 },
+    vet: { nearest: 3, maxKm: 60 },
     // Ranked by isolation, not distance: a remote café earns its place, the
     // fortieth in Minehead doesn't.
     food: { routeKm: 1.5, nearest: 6 },

@@ -22,6 +22,8 @@
     lineCap: "round",
     lineJoin: "round",
   };
+  // A ferry isn't walked, so it's drawn dashed — the same as on the overview.
+  if (el.hasAttribute("data-crossing")) line.dashArray = "2 10";
 
   // Draw a wider line underneath the route so it stays legible over contours.
   // leaflet-gpx has no casing option, so trace the loaded track again and push
@@ -127,7 +129,24 @@
 
   var gpx = el.dataset.gpx;
   if (!gpx) {
-    map.setView([50.6, -3.8], 8);
+    // No route yet: frame the two ends and mark them, but draw no line
+    // between — a straight one would look like a route and isn't.
+    var ends = [];
+    try { ends = JSON.parse(el.dataset.ends || "[]"); } catch (e) { /* none */ }
+    if (ends.length) {
+      ends.forEach(function (p) {
+        L.circleMarker([p.lat, p.lon], {
+          radius: 7, color: style.casing ? style.casing.color : "#ffffff", weight: 2,
+          fillColor: line.color, fillOpacity: 1,
+        }).bindTooltip(p.name).addTo(map);
+      });
+      var bounds = L.latLngBounds(ends.map(function (p) { return [p.lat, p.lon]; }));
+      // A circuit starts and ends in one spot, which has no extent to fit.
+      if (bounds.getNorthEast().equals(bounds.getSouthWest())) map.setView(bounds.getCenter(), 12);
+      else map.fitBounds(bounds, { padding: [40, 40] });
+    } else {
+      map.setView([50.6, -3.8], 8);
+    }
     addStays(map);
     return;
   }
