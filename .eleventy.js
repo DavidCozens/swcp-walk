@@ -30,6 +30,8 @@ export default function (eleventyConfig) {
 
   // Human labels for accommodation types.
   const STAY_TYPES = {
+    hospital: "Hospital",
+    vet: "Vet",
     escape: "Escape point",
     endpoint: "Start / finish",
     campsite: "Campsite",
@@ -106,7 +108,10 @@ export default function (eleventyConfig) {
       where:
         s.kind === "escape"
           ? `${s.kmAlong} km along the route`
-          : `${s.nearest} km from the ${s.atEnd ? "finish" : "start"}`,
+          : s.kind === "hospital" || s.kind === "vet"
+            ? `${s.nearest} km from this section`
+            : `${s.nearest} km from the ${s.atEnd ? "finish" : "start"}`,
+      phone: s.phone || "",
     }))
   );
 

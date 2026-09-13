@@ -38,6 +38,7 @@ layout: layouts/base.njk
     data-maxzoom="{{ site.tiles.maxZoom }}"
     data-route="{{ site.route | dump }}"
     data-stays="{{ mapPins | staysForMap | dump }}"
+    data-emergency="{{ emergencyPins | staysForMap | dump }}"
     role="img"
     aria-label="Route map from {{ startPlace.name or start }} to {{ endPlace.name or end }}"
   ></div>
@@ -247,7 +248,9 @@ layout: layouts/base.njk
       few, however far away they happen to be — they're kept off the map because
       the nearest A&amp;E would zoom the route out to nothing. Distances are
       straight-line from this section and the times are rough; the map link gives
-      the real answer, and routes from wherever you actually are.
+      the real answer, and routes from wherever you actually are. They do have
+      pins — the map just doesn't zoom out to them, so pinch out or use "Show on
+      map" to find one.
     </p>
 
     {% if nearby.hospital.length %}
@@ -259,6 +262,7 @@ layout: layouts/base.njk
           <span class="emergency-kind {% if h.hospital.type == 'ae' %}is-ae{% endif %}">{% if h.hospital.type == "ae" %}A&amp;E{% else %}Urgent care{% endif %}</span>
           <strong>{{ h.name }}</strong>
           <span class="stay-dist">{{ h.nearest }} km · {{ h.nearest | driveTime }}</span>
+          <button type="button" class="stay-focus" data-stay="{{ h.slug }}">Show on map</button>
         </p>
         <dl class="stay-facts">
           {% if h.address %}<dt>Address</dt><dd>{{ h.address }}</dd>{% endif %}
@@ -281,6 +285,7 @@ layout: layouts/base.njk
           <span class="emergency-kind{% if v.vet.emergency %} is-ae{% endif %}">{% if v.vet.emergency %}24 hr{% else %}Vet{% endif %}</span>
           <strong>{% if v.url %}<a href="{{ v.url }}">{{ v.name }}</a>{% else %}{{ v.name }}{% endif %}</strong>
           <span class="stay-dist">{{ v.nearest }} km · {{ v.nearest | driveTime }}</span>
+          <button type="button" class="stay-focus" data-stay="{{ v.slug }}">Show on map</button>
         </p>
         <dl class="stay-facts">
           {% if v.address %}<dt>Address</dt><dd>{{ v.address }}</dd>{% endif %}

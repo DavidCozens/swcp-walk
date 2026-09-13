@@ -53,13 +53,14 @@
   // Every nearby location as a pin — places to stay and escape points alike.
   // Uses divIcons rather than Leaflet's default marker so there are no image
   // requests to a CDN and each kind can be coloured from the stylesheet.
-  function addStays(map) {
+  var byslug = {};
+
+  function buildLayer(json) {
     var stays = [];
-    try { stays = JSON.parse(el.dataset.stays || "[]"); } catch (e) { return null; }
+    try { stays = JSON.parse(json || "[]"); } catch (e) { return null; }
     if (!stays.length) return null;
 
     var group = L.layerGroup();
-    var byslug = {};
 
     stays.forEach(function (s) {
       if (typeof s.lat !== "number" || typeof s.lon !== "number") return;
@@ -78,16 +79,33 @@
         (s.badge || "") +
         '<strong>' + escapeHtml(s.name) + "</strong><br>" +
         escapeHtml(s.label) + " &middot; " + escapeHtml(s.where) +
+        (s.phone ? '<br><a href="tel:' + encodeURI(s.phone.replace(/ /g, "")) + '">' + escapeHtml(s.phone) + "</a>" : "") +
         (s.url ? '<br><a href="' + encodeURI(s.url) + '">website</a>' : "") +
         (s.directions ? (s.url ? " &middot; " : "<br>") +
           '<a href="' + encodeURI(s.directions) + '">directions</a>' : "")
       );
       marker.addTo(group);
-      byslug[s.slug] = marker;
+      byslug[s.slug] = { marker: marker, group: group };
     });
 
-    group.addTo(map);
-    L.control.layers(null, { "Show pins": group }, { collapsed: false }).addTo(map);
+    return group;
+  }
+
+  function addStays(map) {
+    var near = buildLayer(el.dataset.stays);
+    // Hospitals and vets are often far enough away to be off-screen. They're
+    // added all the same and simply wait there: the map's starting view comes
+    // from the route's bounds alone, so nothing here widens it. Zoom out and
+    // they appear.
+    var emergency = buildLayer(el.dataset.emergency);
+
+    var overlays = {};
+    if (near) { near.addTo(map); overlays["Show pins"] = near; }
+    if (emergency) { emergency.addTo(map); overlays["Emergency"] = emergency; }
+    if (!near && !emergency) return null;
+    L.control.layers(null, overlays, { collapsed: false }).addTo(map);
+
+    var groups = [near, emergency].filter(Boolean);
 
     // "Show on map" next to an entry in the list.
     document.addEventListener("click", function (ev) {
@@ -96,15 +114,16 @@
       // The button lives in a <summary>; don't open/close the entry as well.
       ev.preventDefault();
       ev.stopPropagation();
-      var marker = byslug[btn.getAttribute("data-stay")];
-      if (!marker) return;
-      if (!map.hasLayer(group)) group.addTo(map);
+      var entry = byslug[btn.getAttribute("data-stay")];
+      if (!entry) return;
+      var marker = entry.marker;
+      if (!map.hasLayer(entry.group)) entry.group.addTo(map);
       map.setView(marker.getLatLng(), Math.min(15, map.getMaxZoom()));
       marker.openPopup();
       el.scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
-    return group;
+    return groups.length ? groups : null;
   }
 
   function escapeHtml(t) {

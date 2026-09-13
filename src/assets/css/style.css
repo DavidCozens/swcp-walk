@@ -337,6 +337,8 @@ main {
 .stay-pin-hostel     { background: #b91c1c; }
 .stay-pin-escape     { background: #b45309; }
 .stay-pin-endpoint   { background: var(--sea); }
+.stay-pin-hospital   { background: #a11221; }
+.stay-pin-vet        { background: #0f766e; }
 
 .leaflet-popup-content .stay-badge {
   margin-bottom: 0.3rem;
