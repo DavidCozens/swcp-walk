@@ -50,9 +50,9 @@
   }
 
 
-  // Places to stay, as pins. Uses divIcons rather than Leaflet's default
-  // marker so there are no image requests to a CDN and each type can be
-  // coloured from the stylesheet.
+  // Every nearby location as a pin — places to stay and escape points alike.
+  // Uses divIcons rather than Leaflet's default marker so there are no image
+  // requests to a CDN and each kind can be coloured from the stylesheet.
   function addStays(map) {
     var stays = [];
     try { stays = JSON.parse(el.dataset.stays || "[]"); } catch (e) { return null; }
@@ -87,7 +87,7 @@
     });
 
     group.addTo(map);
-    L.control.layers(null, { "Places to stay": group }, { collapsed: false }).addTo(map);
+    L.control.layers(null, { "Show pins": group }, { collapsed: false }).addTo(map);
 
     // "Show on map" next to an entry in the list.
     document.addEventListener("click", function (ev) {
