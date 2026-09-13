@@ -55,6 +55,10 @@ layout: layouts/base.njk
     {% if mode %}<dt>Approach</dt><dd>{{ mode }}</dd>{% endif %}
   </dl>
 
+  {% if content %}
+  <section class="notes">{{ content | safe }}</section>
+  {% endif %}
+
   {% if services.length or transfers.length or shops or eat or transitLink %}
   <section class="logistics">
     <h2>Getting there &amp; back</h2>
@@ -302,9 +306,6 @@ layout: layouts/base.njk
   </section>
   {% endif %}
 
-  {% if content %}
-  <section class="notes">{{ content | safe }}</section>
-  {% endif %}
 </article>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
