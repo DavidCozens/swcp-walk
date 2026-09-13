@@ -29,6 +29,14 @@ layout: layouts/base.njk
     {% else %}<span class="nav-none"></span>{% endif %}
   </nav>
 
+  <nav class="section-jump" aria-label="On this page">
+    {% if content %}<a href="#notes">Notes</a>{% endif %}
+    {% if services.length or transfers.length or shops or eat or transitLink %}<a href="#transport">Transport</a>{% endif %}
+    {% if nearby.escape.length %}<a href="#escapes">Escapes</a>{% endif %}
+    {% if nearby.stay.length %}<a href="#stays">Stays</a>{% endif %}
+    {% if nearby.hospital.length or nearby.vet.length %}<a href="#emergency">Emergency</a>{% endif %}
+  </nav>
+
   {% if gpx %}
   <div
     class="map map-section"
@@ -56,11 +64,11 @@ layout: layouts/base.njk
   </dl>
 
   {% if content %}
-  <section class="notes">{{ content | safe }}</section>
+  <section class="notes" id="notes">{{ content | safe }}</section>
   {% endif %}
 
   {% if services.length or transfers.length or shops or eat or transitLink %}
-  <section class="logistics">
+  <section class="logistics" id="transport">
     <h2>Getting there &amp; back</h2>
 
     {% if transitLink %}
@@ -148,7 +156,7 @@ layout: layouts/base.njk
   {% endif %}
 
   {% if nearby.escape and nearby.escape.length %}
-  <section class="escapes">
+  <section class="escapes" id="escapes">
     <h2>Escape points</h2>
     <ul class="escape-list">
       {% for e in nearby.escape %}
@@ -170,7 +178,7 @@ layout: layouts/base.njk
 
   {% set stays = nearby.stay %}
   {% if stays and stays.length %}
-  <section class="stays">
+  <section class="stays" id="stays">
     <div class="stays-head">
       <h2>Staying nearby</h2>
       <button type="button" class="stays-toggle" data-expand-all>Expand all</button>
@@ -245,7 +253,7 @@ layout: layouts/base.njk
   {% endif %}
 
   {% if nearby.hospital.length or nearby.vet.length %}
-  <section class="emergency">
+  <section class="emergency" id="emergency">
     <h2>If something goes wrong</h2>
     <p class="emergency-lead">
       In a real emergency it's 999, wherever you are. What follows is the nearest

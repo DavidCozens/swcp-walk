@@ -140,6 +140,42 @@ main {
 }
 
 /* Maps */
+/* A contents list that stays put: at the top of a long page it only helps
+   while you're at the top. Scrolls sideways rather than wrapping, so it stays
+   one line on a phone. */
+.section-jump {
+  position: sticky;
+  top: 0;
+  /* Above Leaflet's own controls, which sit at 1000 — otherwise the map's
+     zoom and layer buttons paint over the bar as the map scrolls past it. */
+  z-index: 1200;
+  display: flex;
+  gap: 0.4rem;
+  margin: 0 0 0.6rem;
+  padding: 0.4rem 0;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--cond);
+  font-size: 0.9rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.section-jump::-webkit-scrollbar { display: none; }
+.section-jump a {
+  flex: none;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  text-decoration: none;
+  background: #fff;
+  white-space: nowrap;
+}
+.section-jump a:hover { border-color: var(--sea); }
+.section-jump:empty { display: none; }
+
+/* Anchors must not land underneath the sticky bar. */
+.notes, .logistics, .escapes, .stays, .emergency { scroll-margin-top: 3rem; }
+
 .section-nav {
   display: flex;
   align-items: center;
