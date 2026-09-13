@@ -20,8 +20,9 @@
 import endpoints from "../../lib/locations/endpoints.js";
 import escapes from "../../lib/locations/escapes.js";
 import stays from "../../lib/locations/stays.js";
+import stops from "../../lib/locations/stops.js";
 
-const all = [...endpoints, ...escapes, ...stays];
+const all = [...endpoints, ...escapes, ...stays, ...stops];
 
 // Slugs are the reference from sections and, later, from transport legs. A
 // duplicate would silently shadow; fail the build instead.

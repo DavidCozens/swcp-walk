@@ -9,10 +9,6 @@ ascent_m: 538
 mode: van base
 gpx: /gpx/01-minehead-porlock-weir.gpx
 os_url: "https://explore.osmaps.com/route/33801498"
-transport:
-  - type: bus
-    detail: "First Bus 10 / Buses of Somerset — Minehead ↔ Porlock (check current timetable)"
-    url: "https://www.travelinesw.com/"
 shops: "Minehead has full-size supermarkets — stock up here. Porlock village (inland of the Weir) has a Spar and butcher; Porlock Weir itself is tiny."
 eat: "The Bottom Ship at Porlock Weir; several cafés and pubs in Porlock."
 ---

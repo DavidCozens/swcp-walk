@@ -24,6 +24,9 @@ export default {
     // An escape point is only useful if it's near the path you're on.
     escape: { routeKm: 1.5 },
     poi: { routeKm: 1 },
+    // A transport stop is worth knowing about a little further out — you'd
+    // walk or take a taxi to one.
+    stop: { endpointKm: 5, routeKm: 3 },
   },
 
   // How the route is drawn. The casing is a wider line underneath: on a

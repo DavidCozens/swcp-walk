@@ -54,20 +54,46 @@ layout: layouts/base.njk
     {% if mode %}<dt>Approach</dt><dd>{{ mode }}</dd>{% endif %}
   </dl>
 
-  {% if transport or shops or eat %}
+  {% if services.length or shops or eat or transitLink %}
   <section class="logistics">
     <h2>Getting there &amp; back</h2>
-    {% if transport %}
-    <ul class="transport">
-      {% for t in transport %}
+
+    {% if transitLink %}
+    <p class="transit-all">
+      <a class="stay-directions" href="{{ transitLink }}">All public transport from {{ startPlace.name }} to {{ endPlace.name }}</a>
+      <span class="transit-note">buses, trains and ferries, live in Google Maps</span>
+    </p>
+    {% endif %}
+
+    {% if services.length %}
+    <ul class="service-list">
+      {% for r in services %}
       <li>
-        <span class="t-type">{{ t.type }}</span>
-        {% if t.url %}<a href="{{ t.url }}">{{ t.detail }}</a>{% else %}{{ t.detail }}{% endif %}
-        {% if t.season %}<span class="t-season">{{ t.season }}</span>{% endif %}
+        <p class="service-head">
+          <span class="service-number">{{ r.number }}</span>
+          <strong>{% if r.url %}<a href="{{ r.url }}">{{ r.name }}</a>{% else %}{{ r.name }}{% endif %}</strong>
+          {% if r.provider %}<span class="service-op">{{ r.provider.name }}</span>{% endif %}
+          {% if r.connectsEnds %}<span class="stay-flag yes">links both ends</span>{% endif %}
+        </p>
+        <dl class="stay-facts">
+          <dt>Calls at</dt>
+          <dd>{% for c in r.calling %}{{ c.name }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+          <dt>Season</dt>
+          <dd>{% if r.season %}{{ r.season | seasonText }}{% if r.frequency %} · {{ r.frequency }}{% endif %}{% else %}<span class="unsure">Not confirmed</span>{% endif %}</dd>
+          {% if not r.connectsEnds %}
+          <dt>Note</dt>
+          <dd><span class="unsure">Doesn't reach both ends of this section on its own</span></dd>
+          {% endif %}
+        </dl>
+        {% if r.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ r.notes }}</p>{% endif %}
+        <p class="stay-checked">
+          {% if r.verified %}Details checked {{ r.verified }}{% else %}<span class="unsure">Service details not confirmed — check before relying on them</span>{% endif %}
+        </p>
       </li>
       {% endfor %}
     </ul>
     {% endif %}
+
     {% if shops %}<p><strong>Shops &amp; dog food:</strong> {{ shops }}</p>{% endif %}
     {% if eat %}<p><strong>Eating out:</strong> {{ eat }}</p>{% endif %}
   </section>

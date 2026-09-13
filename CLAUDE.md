@@ -102,6 +102,35 @@ Each nearby place collapses to one line and opens for the detail; "Expand all"
 is in `assets/js/stays.js`. The "Show on map" button sits inside the
 `<summary>`, so `map-section.js` stops its click toggling the disclosure.
 
+## Transport
+
+`src/_data/transport.js` merges `lib/transport/{providers,routes}.js`.
+
+- **providers** — an operator's contact details, entered once.
+- **routes** — a service and the *set* of location slugs it calls at. A set, not
+  an ordered list: it answers "can I get from here to there on one service",
+  which is the question a section asks. Ordering would add direction and
+  journey time at a lot more maintenance.
+
+`season` sits on the **route**, not the provider — an operator can run all year
+while one service is summer-only, which is exactly the case on Exmoor. Note a
+bus season is set afresh each year, unlike a campsite's, so it needs rechecking
+annually rather than assumed to recur.
+
+Sections don't list their transport. `lib/transport.js` intersects where a
+route calls with the locations a section touches — endpoints, escape points,
+nearby stops — and offers what matches, flagging whether a service reaches both
+ends of the day. Enter the coast bus once and it appears wherever it's relevant.
+
+`transitLink` is a generated Google Maps transit link between a section's two
+endpoints: every bus, train and ferry option, nothing typed, opens the app on a
+phone. It is the primary answer to "how do I get back", because it's built from
+coordinates we already hold and so can't go stale — which a stored timetable
+link demonstrably can. The bustimes.org URL for the Exmoor Coaster, captured
+from a search result, already redirects to an operator page because the service
+slug changed. Treat a route's `url` as a dated fact, like anything else with
+`verified`.
+
 ## Paths — IMPORTANT
 
 The site is published to a GitHub Pages **project** page, so it lives under

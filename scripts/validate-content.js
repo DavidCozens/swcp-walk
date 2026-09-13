@@ -35,6 +35,10 @@ const bySlug = new Map(locations.map((l) => [l.slug, l]));
 // How far a section's GPX may begin or end from the location it names.
 const ENDPOINT_TOLERANCE_KM = 1;
 
+const transportUrl = new URL("../src/_data/transport.js", import.meta.url);
+const { default: transport } = await import(transportUrl);
+const ROUTE_TYPES = ["bus", "train", "ferry", "taxi", "baggage", "walk"];
+
 let errors = 0;
 const seenOrders = new Map();
 
@@ -102,6 +106,38 @@ for (const a of locations) {
 function fail(file, msg) {
   console.error(`  ✗ ${file}: ${msg}`);
   errors += 1;
+}
+
+// Transport: a route reaching a place that doesn't exist would simply never be
+// offered, so check the references rather than let them fail silently.
+const providerSlugs = new Set(transport.providers.map((p) => p.slug));
+const seenRoutes = new Set();
+for (const r of transport.routes) {
+  const where = `route "${r.slug || r.name || "?"}"`;
+  if (!r.slug) fail("transport", `${where} has no slug`);
+  else if (seenRoutes.has(r.slug)) fail("transport", `duplicate route slug "${r.slug}"`);
+  else seenRoutes.add(r.slug);
+
+  if (!ROUTE_TYPES.includes(r.type)) {
+    fail("transport", `${where} has unknown type "${r.type}" (expected one of ${ROUTE_TYPES.join(", ")})`);
+  }
+  if (!providerSlugs.has(r.provider)) {
+    fail("transport", `${where} names provider "${r.provider}", which isn't in providers.js`);
+  }
+  if (!Array.isArray(r.serves) || r.serves.length < 2) {
+    fail("transport", `${where} must serve at least two locations`);
+  } else {
+    for (const slug of r.serves) {
+      if (!bySlug.has(slug)) fail("transport", `${where} serves "${slug}", which isn't a known location`);
+    }
+  }
+  if (r.season !== null && r.season !== undefined) {
+    const ok =
+      r.season && typeof r.season === "object" &&
+      /^\d{2}-\d{2}$/.test(r.season.from || "") &&
+      /^\d{2}-\d{2}$/.test(r.season.to || "");
+    if (!ok) fail("transport", `${where} season must be null or { from: "MM-DD", to: "MM-DD" }`);
+  }
 }
 
 const files = fs
