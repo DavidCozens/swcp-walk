@@ -3,6 +3,10 @@
 //   1. Every internal path carries the configured pathPrefix. Without it a
 //      path works on the local dev server and 404s once deployed to a
 //      GitHub Pages project page — invisible until published.
+//   1b. And carries it only once — "/p/p/x" still starts with "/p/" so the
+//       check above waves it through, but it 404s just the same. This is what
+//       applying the `url` filter to an href or src looks like, when
+//       HtmlBasePlugin has already rewritten it.
 //   2. Nothing is escaped twice. "&amp;amp;" renders as the literal text
 //      "&amp;", which happens when a value is escaped on the way into a
 //      layout and again on the way out.
@@ -44,6 +48,11 @@ function report(file, value) {
   errors += 1;
 }
 
+function reportDoubled(file, value) {
+  console.error(`  ✗ ${path.relative(ROOT, file)}: "${value}" carries the ${PREFIX} prefix twice`);
+  errors += 1;
+}
+
 function reportEscaping(file, value) {
   console.error(`  ✗ ${path.relative(ROOT, file)}: "${value}" is escaped twice — it renders literally`);
   errors += 1;
@@ -55,6 +64,7 @@ function check(file) {
   if (file.endsWith(".html")) {
     for (const [, , value] of raw.matchAll(ATTR)) {
       if (!value.startsWith(PREFIX)) report(file, value);
+      else if (value.startsWith(PREFIX + PREFIX.slice(1))) reportDoubled(file, value);
     }
     for (const [match] of raw.matchAll(DOUBLE_ESCAPED)) {
       reportEscaping(file, match);
@@ -65,7 +75,8 @@ function check(file) {
   // JSON feeds are read by the map scripts, so their paths need the prefix too.
   const seen = [];
   JSON.parse(raw, (_k, v) => {
-    if (typeof v === "string" && v.startsWith("/") && !v.startsWith(PREFIX)) seen.push(v);
+    if (typeof v === "string" && v.startsWith("/") &&
+        (!v.startsWith(PREFIX) || v.startsWith(PREFIX + PREFIX.slice(1)))) seen.push(v);
     return v;
   });
   for (const value of seen) report(file, value);
