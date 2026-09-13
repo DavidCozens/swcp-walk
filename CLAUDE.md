@@ -181,6 +181,16 @@ of guessing: the blanks are only useful if they're easy to find. Phone numbers
 are shown inline so the page is workable as a call list. It's a public page like
 any other; it contains no personal data, only gaps in the research.
 
+## Asset caching
+
+GitHub Pages serves assets with a ten-minute cache, so a phone can keep running
+the previous CSS or JS well after a deploy — which looks exactly like a fix that
+didn't work. The `asset` filter stamps each stylesheet and script with a short
+hash of its contents (`/assets/js/map-section.js?v=ba76e52f`), so a changed file
+gets a new URL and an unchanged one stays cached. Use it for every asset the
+site serves itself; don't combine it with `url`, since `HtmlBasePlugin` still
+adds the prefix.
+
 ## Paths — IMPORTANT
 
 The site is published to a GitHub Pages **project** page, so it lives under

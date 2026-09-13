@@ -2,13 +2,35 @@ import { HtmlBasePlugin } from "@11ty/eleventy";
 import regions from "./src/_data/regions.js";
 import { badge as stayBadge } from "./lib/stay-icons.js";
 import { todoList } from "./lib/todo.js";
+import fs from "node:fs";
+import crypto from "node:crypto";
+import path from "node:path";
 
 // The site is published to a GitHub Pages *project* page, so it lives under
 // /swcp-walk/ rather than at the domain root. Everything internal must carry
 // that prefix or it 404s once deployed.
 const PATH_PREFIX = "/swcp-walk/";
 
+// Assets are served with a ten-minute cache, so a phone can keep running the
+// previous CSS or JS well after a deploy — which looks exactly like a change
+// not working. Stamping each asset with a hash of its contents means a changed
+// file gets a new URL and an unchanged one stays cached.
+const assetHashes = new Map();
+function assetVersion(urlPath) {
+  if (assetHashes.has(urlPath)) return assetHashes.get(urlPath);
+  const file = path.join(process.cwd(), "src", urlPath.replace(/^\//, ""));
+  let stamped = urlPath;
+  if (fs.existsSync(file)) {
+    const hash = crypto.createHash("sha1").update(fs.readFileSync(file)).digest("hex").slice(0, 8);
+    stamped = `${urlPath}?v=${hash}`;
+  }
+  assetHashes.set(urlPath, stamped);
+  return stamped;
+}
+
 export default function (eleventyConfig) {
+  eleventyConfig.addFilter("asset", assetVersion);
+
   // Rewrites href/src in built HTML to include pathPrefix. Custom attributes
   // (data-gpx, data-src) aren't touched by this — those use the `url` filter
   // in the templates.
