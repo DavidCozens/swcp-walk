@@ -217,7 +217,7 @@ layout: layouts/base.njk
     {{ heading("Staying nearby", "stays") }}
     <ul class="entry-list">
       {% for s in nearby.stay %}
-      {% call row(s, "stay", s.stay.type | stayType, s.nearest + " km from the " + (s.atEnd and "finish" or "start")) %}
+      {% call row(s, "stay", s.stay.type | stayType, (s.nearest != null) and (s.nearest + " km from the " + (s.atEnd and "finish" or "start")) or (s.toRoute + " km off the path")) %}
         <dl class="stay-facts">
           <dt>Dogs</dt>
           <dd>

@@ -29,7 +29,8 @@ const regionSlugs = new Set(regions.map((r) => r.slug));
 
 const locUrl = new URL("../src/_data/locations.js", import.meta.url);
 const { default: locations } = await import(locUrl);
-const { distanceKm, trackPoints } = await import(new URL("../lib/nearby.js", import.meta.url));
+const { distanceKm, trackPoints, crossesWater } = await import(new URL("../lib/nearby.js", import.meta.url));
+const { default: water } = await import(new URL("../lib/water.js", import.meta.url));
 const STAY_TYPES = ["campsite", "britstop", "park4night", "aire", "cl", "bnb", "inn", "hostel"];
 const KINDS = ["endpoint", "escape", "stay", "poi", "stop", "hospital", "vet", "food", "shop"];
 const HOSPITAL_TYPES = ["ae", "utc", "minor"];
@@ -126,6 +127,30 @@ for (const a of locations) {
 function fail(file, msg) {
   console.error(`  ✗ ${file}: ${msg}`);
   errors += 1;
+}
+
+// Water: a malformed line wouldn't error, it would just silently stop
+// excluding anything across its estuary.
+const seenWater = new Set();
+for (const w of water) {
+  const where = `water "${w.slug || w.name || "?"}"`;
+  if (!w.slug) fail("water", `${where} has no slug`);
+  else if (seenWater.has(w.slug)) fail("water", `duplicate slug "${w.slug}"`);
+  else seenWater.add(w.slug);
+  if (!w.source) fail("water", `${where} has no source`);
+  if (!Array.isArray(w.lines) || !w.lines.length) {
+    fail("water", `${where} has no lines`);
+    continue;
+  }
+  for (const line of w.lines) {
+    const ok =
+      Array.isArray(line) &&
+      line.length >= 2 &&
+      line.every(
+        (p) => Array.isArray(p) && p.length === 2 && Math.abs(p[0]) <= 90 && Math.abs(p[1]) <= 180
+      );
+    if (!ok) fail("water", `${where} has a line that isn't a list of at least two [lat, lon] points`);
+  }
 }
 
 // Transport: a route reaching a place that doesn't exist would simply never be
@@ -314,6 +339,20 @@ for (const file of files) {
         const d = distanceKm(place.lat, place.lon, point[0], point[1]);
         if (d > ENDPOINT_TOLERANCE_KM) {
           fail(file, `route ${label}s ${d.toFixed(2)} km from ${place.name} — further than the ${ENDPOINT_TOLERANCE_KM} km tolerance`);
+        }
+      }
+    }
+
+    // A walked route never crosses an estuary line, because the line stops
+    // short of the lowest bridge. If one does, the line runs on past a bridge
+    // the path uses, and everything across that bridge is wrongly cut off.
+    // Only a ferry crossing is meant to.
+    if (!data.crossing) {
+      for (let i = 1; i < points.length; i += 1) {
+        const [a, b] = [points[i - 1], points[i]];
+        if (crossesWater(a[0], a[1], b[0], b[1])) {
+          fail(file, `route crosses water near ${a[0].toFixed(5)}, ${a[1].toFixed(5)} — does a line in lib/water.js run past a bridge?`);
+          break;
         }
       }
     }

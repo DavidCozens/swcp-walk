@@ -206,7 +206,9 @@ export default function (eleventyConfig) {
           ? `${s.kmAlong} km along the route`
           : s.kind === "hospital" || s.kind === "vet"
             ? `${s.nearest} km from this section`
-            : `${s.nearest} km from the ${s.atEnd ? "finish" : "start"}`,
+            : s.nearest != null
+              ? `${s.nearest} km from the ${s.atEnd ? "finish" : "start"}`
+              : `${s.toRoute} km off the path`,
       phone: s.phone || "",
     }))
   );

@@ -111,6 +111,22 @@ along the route each one falls is computed. County Gate was recorded by hand as
 11.4 km along section 2; it is actually 8.8 km, and nobody would ever have
 caught that.
 
+**Nothing across water counts as near.** Straight-line distance is fine on a
+coast until the line crosses an estuary: Crow Point car park is 1 km from
+Instow Sands and a day's walk round by Barnstaple. `lib/water.js` draws each
+estuary once, as its channel from the sea up to the lowest bridge you can walk
+over, and `crossesWater()` in `lib/nearby.js` refuses any proximity whose
+straight line crosses one — escape points, sights, food, stays (by either end
+or the route) and the walk to a bus stop. Food isolation ignores a café across
+the water. Hospitals and vets are exempt: you'd drive, and the nearest vet is
+still the nearest, though its rough drive time understates. Add a river's line
+when the path first reaches it, from OSM's `waterway=river` ways, and stop it
+short of the lowest bridge with a footway; `npm run validate` fails if a
+plotted route crosses a line, which is how a line running past a bridge shows
+up. Only a `crossing` section may. A straight line can also clip a bend where
+both ends are on the same bank; that's rare and errs towards leaving something
+out.
+
 Endpoint coordinates beyond Lynmouth are the node where OSM's relations for
 the two stages meet, not a town centre — the boundary as the path itself draws
 it. The Yealm is the exception: the ends of the ferry way. Endpoints aren't on
@@ -302,8 +318,8 @@ host.
 `scripts/validate-content.js` fails if a section is missing a required field,
 uses an unknown region, reuses an `order`, or points at a GPX that's missing or
 invalid. It also fails on a gap in the chain (a section not starting where the
-last one ended), a gap in the stage numbers, or a crossing with a whole-number
-order.
+last one ended), a gap in the stage numbers, a crossing with a whole-number
+order, or a walked route crossing a line in `lib/water.js`.
 
 `scripts/check-output.js` runs after the build and checks two things the local
 dev server cannot show you: that every internal path carries the `pathPrefix`
