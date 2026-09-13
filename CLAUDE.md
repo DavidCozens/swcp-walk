@@ -108,6 +108,11 @@ one renders as a white ring around an invisible glyph: a blank disc, with
 nothing in the build to say so. That's exactly how the bus and taxi badges
 first shipped.
 
+`badgeParts()` in `.eleventy.js` decides which glyph and which colour a
+location gets, and both the page and the map data go through it. Keep it that
+way: two copies of that decision is exactly how the list came to show category
+glyphs for points of interest while the map still showed stars.
+
 Each kind has a glyph in `lib/stay-icons.js`, rendered into a coloured badge
 used in the list row, the map pin and the map popup. It's generated once and
 handed to the map as markup inside `data-stays`, so they can't drift apart.

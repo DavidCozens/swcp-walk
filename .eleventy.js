@@ -92,12 +92,31 @@ export default function (eleventyConfig) {
   // its kind, so an escape point gets its own glyph.
   // A badge for anything a list holds. Routes have no `kind` — they're not
   // places — so fall back to their type: a bus gets a bus.
-  eleventyConfig.addFilter("locBadge", (loc) => {
-    if (!loc) return stayBadge("");
-    if (loc.kind === "stay") return stayBadge((loc.stay || {}).type);
+  // Which glyph and which colour a location gets. Used by the page *and* by
+  // the map data, because having two copies of this is exactly how the list
+  // ended up showing category glyphs while the map showed stars.
+  function badgeParts(loc) {
+    if (!loc) return { glyph: "", colour: "" };
+    if (loc.kind === "stay") {
+      const t = (loc.stay || {}).type;
+      return { glyph: t, colour: t };
+    }
     // Points of interest vary the glyph but keep the one colour.
-    if (loc.kind === "poi") return stayBadge((loc.poi || {}).type || "poi", "poi");
-    return stayBadge(loc.kind || loc.type || "");
+    if (loc.kind === "poi") {
+      return { glyph: (loc.poi || {}).type || "poi", colour: "poi" };
+    }
+    const k = loc.kind || loc.type || "";
+    return { glyph: k, colour: k };
+  }
+
+  function labelFor(loc) {
+    const parts = badgeParts(loc);
+    return STAY_TYPES[parts.glyph] || parts.glyph || "";
+  }
+
+  eleventyConfig.addFilter("locBadge", (loc) => {
+    const { glyph, colour } = badgeParts(loc);
+    return stayBadge(glyph, colour);
   });
   // What to call this location in a given list: a pub with rooms is an "Inn"
   // under Staying nearby and a "Pub" under Food.
@@ -159,9 +178,9 @@ export default function (eleventyConfig) {
     (stays || []).map((s) => ({
       slug: s.slug,
       name: s.name,
-      type: s.kind === "stay" ? (s.stay || {}).type : s.kind,
-      label: STAY_TYPES[(s.stay || {}).type || s.kind] || (s.stay || {}).type || s.kind,
-      badge: stayBadge(s.kind === "stay" ? (s.stay || {}).type : s.kind),
+      type: badgeParts(s).colour,
+      label: labelFor(s),
+      badge: eleventyConfig.getFilter("locBadge")(s),
       lat: s.lat,
       lon: s.lon,
       url: s.url || "",
