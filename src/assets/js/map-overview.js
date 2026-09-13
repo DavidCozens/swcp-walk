@@ -3,9 +3,11 @@
   if (!el || typeof L === "undefined") return;
 
   var map = L.map(el, { scrollWheelZoom: false });
+  // maxZoom comes from site.js — basemaps differ, and asking beyond a
+  // provider's top zoom just requests tiles that aren't there.
   L.tileLayer(el.dataset.tiles, {
     attribution: el.dataset.attribution,
-    maxZoom: 19,
+    maxZoom: Number(el.dataset.maxzoom) || 19,
   }).addTo(map);
 
   // Sensible default view over the South West while data loads / if it fails.
