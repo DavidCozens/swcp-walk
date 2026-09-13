@@ -81,6 +81,7 @@ export default function (eleventyConfig) {
     campsite: "Campsite",
     britstop: "Brit Stops",
     park4night: "park4night",
+    aire: "Motorhome parking",
     cl: "CL / CS",
     bnb: "B&B",
     inn: "Inn",
