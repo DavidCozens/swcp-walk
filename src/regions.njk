@@ -20,7 +20,7 @@ eleventyComputed:
       <a href="{{ s.url }}">
         <span class="n">{{ s.data.order }}</span>
         <span class="ttl">{{ s.data.title }}</span>
-        <span class="rt">{{ s.data.start }} &rarr; {{ s.data.end }}</span>
+        <span class="rt">{{ s.data.startPlace.name or s.data.start }} &rarr; {{ s.data.endPlace.name or s.data.end }}</span>
       </a>
     </li>
     {% endfor %}

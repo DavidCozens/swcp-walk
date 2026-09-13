@@ -25,9 +25,15 @@ const regionsUrl = new URL("../src/_data/regions.js", import.meta.url);
 const { default: regions } = await import(regionsUrl);
 const regionSlugs = new Set(regions.map((r) => r.slug));
 
-const stayUrl = new URL("../src/_data/accommodation.js", import.meta.url);
-const { default: accommodation } = await import(stayUrl);
+const locUrl = new URL("../src/_data/locations.js", import.meta.url);
+const { default: locations } = await import(locUrl);
+const { distanceKm, trackPoints } = await import(new URL("../lib/nearby.js", import.meta.url));
 const STAY_TYPES = ["campsite", "britstop", "park4night", "cl", "bnb", "inn", "hostel"];
+const KINDS = ["endpoint", "escape", "stay", "poi", "stop"];
+const bySlug = new Map(locations.map((l) => [l.slug, l]));
+
+// How far a section's GPX may begin or end from the location it names.
+const ENDPOINT_TOLERANCE_KM = 1;
 
 let errors = 0;
 const seenOrders = new Map();
@@ -35,51 +41,61 @@ const seenOrders = new Map();
 // Accommodation is matched to sections by position, so a missing or wrong
 // coordinate doesn't error — it just silently fails to appear anywhere.
 const seenSlugs = new Set();
-for (const a of accommodation) {
-  const where = `accommodation "${a.slug || a.name || "?"}"`;
-  if (!a.slug) fail("accommodation.js", `${where} has no slug`);
-  else if (seenSlugs.has(a.slug)) fail("accommodation.js", `duplicate slug "${a.slug}"`);
+for (const a of locations) {
+  const where = `location "${a.slug || a.name || "?"}"`;
+  if (!a.slug) fail("locations", `${where} has no slug`);
+  else if (seenSlugs.has(a.slug)) fail("locations", `duplicate slug "${a.slug}"`);
   else seenSlugs.add(a.slug);
 
-  if (!a.name) fail("accommodation.js", `${where} has no name`);
-  if (!STAY_TYPES.includes(a.type)) {
-    fail("accommodation.js", `${where} has unknown type "${a.type}" (expected one of ${STAY_TYPES.join(", ")})`);
+  if (!a.name) fail("locations", `${where} has no name`);
+  if (!KINDS.includes(a.kind)) {
+    fail("locations", `${where} has unknown kind "${a.kind}" (expected one of ${KINDS.join(", ")})`);
+  }
+  if (a.kind === "stay") {
+    if (!a.stay) fail("locations", `${where} is a stay but has no stay block`);
+    else if (!STAY_TYPES.includes(a.stay.type)) {
+      fail("locations", `${where} has unknown stay.type "${a.stay.type}" (expected one of ${STAY_TYPES.join(", ")})`);
+    }
+  }
+  if (a.kind === "escape" && !(a.escape && a.escape.detail)) {
+    fail("locations", `${where} is an escape point but has no escape.detail saying how you get off the path`);
   }
   for (const [key, lo, hi] of [["lat", 49.8, 56], ["lon", -6.5, 2]]) {
     const v = a[key];
     if (typeof v !== "number" || Number.isNaN(v)) {
-      fail("accommodation.js", `${where} needs a numeric ${key}`);
+      fail("locations", `${where} needs a numeric ${key}`);
     } else if (v < lo || v > hi) {
-      fail("accommodation.js", `${where} ${key} ${v} is outside Great Britain`);
+      fail("locations", `${where} ${key} ${v} is outside Great Britain`);
     }
   }
   // true / false / null only — "probably" helps nobody standing in the rain.
-  if (a.dogs !== true && a.dogs !== false && a.dogs !== null && a.dogs !== undefined) {
-    fail("accommodation.js", `${where} dogs must be true, false or null, got ${JSON.stringify(a.dogs)}`);
+  const stay = a.stay || {};
+  if (stay.dogs !== true && stay.dogs !== false && stay.dogs !== null && stay.dogs !== undefined) {
+    fail("locations", `${where} stay.dogs must be true, false or null, got ${JSON.stringify(stay.dogs)}`);
   }
   // season: "all-year" | { from: "MM-DD", to: "MM-DD" } | null
-  if (a.season !== null && a.season !== undefined && a.season !== "all-year") {
+  if (stay.season !== null && stay.season !== undefined && stay.season !== "all-year") {
     const ok =
-      a.season && typeof a.season === "object" &&
-      /^\d{2}-\d{2}$/.test(a.season.from || "") &&
-      /^\d{2}-\d{2}$/.test(a.season.to || "");
+      stay.season && typeof stay.season === "object" &&
+      /^\d{2}-\d{2}$/.test(stay.season.from || "") &&
+      /^\d{2}-\d{2}$/.test(stay.season.to || "");
     if (!ok) {
-      fail("accommodation.js", `${where} season must be "all-year", null, or { from: "MM-DD", to: "MM-DD" }`);
+      fail("locations", `${where} stay.season must be "all-year", null, or { from: "MM-DD", to: "MM-DD" }`);
     }
   }
 
-  if (a.price_per_night !== null && a.price_per_night !== undefined) {
-    if (typeof a.price_per_night !== "number" || Number.isNaN(a.price_per_night) || a.price_per_night < 0) {
-      fail("accommodation.js", `${where} price_per_night must be a positive number or null, got ${JSON.stringify(a.price_per_night)}`);
+  if (stay.price_per_night !== null && stay.price_per_night !== undefined) {
+    if (typeof stay.price_per_night !== "number" || Number.isNaN(stay.price_per_night) || stay.price_per_night < 0) {
+      fail("locations", `${where} stay.price_per_night must be a positive number or null, got ${JSON.stringify(stay.price_per_night)}`);
     }
   }
 
   if (a.maps_url && !/^https:\/\//.test(a.maps_url)) {
-    fail("accommodation.js", `${where} maps_url must be an https link`);
+    fail("locations", `${where} maps_url must be an https link`);
   }
 
   if (a.verified && !/^\d{4}-\d{2}-\d{2}$/.test(a.verified)) {
-    fail("accommodation.js", `${where} verified should be YYYY-MM-DD, got ${JSON.stringify(a.verified)}`);
+    fail("locations", `${where} verified should be YYYY-MM-DD, got ${JSON.stringify(a.verified)}`);
   }
 }
 
@@ -172,6 +188,35 @@ for (const file of files) {
       fail(file, `duplicate order ${data.order} (also in ${seenOrders.get(data.order)})`);
     } else {
       seenOrders.set(data.order, file);
+    }
+  }
+
+  for (const end of ["start", "end"]) {
+    const slug = data[end];
+    if (!slug) continue;
+    const place = bySlug.get(slug);
+    if (!place) {
+      fail(file, `${end} "${slug}" is not a known location (see src/_data/locations.js)`);
+    } else if (place.kind !== "endpoint") {
+      fail(file, `${end} "${slug}" is a ${place.kind}, not an endpoint`);
+    }
+  }
+
+  // The GPX should actually begin and finish where the section says it does.
+  if (data.gpx && (data.start || data.end)) {
+    const points = trackPoints(data.gpx);
+    if (points.length) {
+      const ends = [
+        ["start", bySlug.get(data.start), points[0]],
+        ["end", bySlug.get(data.end), points[points.length - 1]],
+      ];
+      for (const [label, place, point] of ends) {
+        if (!place || !point) continue;
+        const d = distanceKm(place.lat, place.lon, point[0], point[1]);
+        if (d > ENDPOINT_TOLERANCE_KM) {
+          fail(file, `route ${label}s ${d.toFixed(2)} km from ${place.name} — further than the ${ENDPOINT_TOLERANCE_KM} km tolerance`);
+        }
+      }
     }
   }
 

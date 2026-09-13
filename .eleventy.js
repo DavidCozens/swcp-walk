@@ -29,6 +29,8 @@ export default function (eleventyConfig) {
 
   // Human labels for accommodation types.
   const STAY_TYPES = {
+    escape: "Escape point",
+    endpoint: "Start / finish",
     campsite: "Campsite",
     britstop: "Brit Stops",
     park4night: "park4night",
@@ -39,6 +41,11 @@ export default function (eleventyConfig) {
   };
   eleventyConfig.addFilter("stayType", (t) => STAY_TYPES[t] || t || "");
   eleventyConfig.addFilter("stayBadge", (t) => stayBadge(t));
+  // A location's badge: a stay is badged by its stay.type, everything else by
+  // its kind, so an escape point gets its own glyph.
+  eleventyConfig.addFilter("locBadge", (loc) =>
+    stayBadge(loc && loc.kind === "stay" ? (loc.stay || {}).type : (loc || {}).kind)
+  );
 
   const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -74,9 +81,9 @@ export default function (eleventyConfig) {
     (stays || []).map((s) => ({
       slug: s.slug,
       name: s.name,
-      type: s.type,
-      label: STAY_TYPES[s.type] || s.type,
-      badge: stayBadge(s.type),
+      type: s.kind === "stay" ? (s.stay || {}).type : s.kind,
+      label: STAY_TYPES[(s.stay || {}).type || s.kind] || (s.stay || {}).type || s.kind,
+      badge: stayBadge(s.kind === "stay" ? (s.stay || {}).type : s.kind),
       lat: s.lat,
       lon: s.lon,
       url: s.url || "",
@@ -84,7 +91,12 @@ export default function (eleventyConfig) {
         (typeof s.lat === "number" && typeof s.lon === "number"
           ? `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}`
           : ""),
-      where: `${s.nearest} km from the ${s.atEnd ? "finish" : "start"}`,
+      // An escape point is measured by how far into the day it is; somewhere
+      // to sleep by how far it is from either end of it.
+      where:
+        s.kind === "escape"
+          ? `${s.kmAlong} km along the route`
+          : `${s.nearest} km from the ${s.atEnd ? "finish" : "start"}`,
     }))
   );
 

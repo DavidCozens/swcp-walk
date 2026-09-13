@@ -52,70 +52,55 @@ The importer never copies the route's `createdBy` (an OS account id) or its
 `os_url` is optional front matter holding the OS Maps link; when set, the
 section page shows an "Open in OS Maps" link under the map.
 
-## Accommodation
+## Locations
 
-`src/_data/accommodation.js` holds places to stay as points on the map, not as
-entries against a section. Each section works out what's near it at build time
-(`lib/nearby.js`, wired in via `eleventyComputed` in
-`src/sections/sections.11tydata.js`), so one entry covers every section it
-suits — the Porlock sites serve the end of section 1 and the start of section 2
-without being listed twice, and a base on a peninsula will cover several days.
+Everything the site knows about a place lives in `src/_data/locations.js`,
+merged from `lib/locations/{endpoints,escapes,stays}.js`. Endpoints, escape
+points and places to stay used to be three different shapes answering the same
+questions — where is it, what's it called, how far along the route, how do I
+drive there — so they're now one record with a `kind`, and only what differs
+sits in a nested block.
 
-Thresholds live in `site.js` under `stays`: `endpointKm` (from where the day
-starts or finishes — drivable) and `routeKm` (from the route itself — reachable
-mid-walk). A place qualifies on either, and the page shows both distances.
+    slug, name, kind        endpoint | escape | stay | poi | stop
+    lat, lon                every location has a position
+    address, url, phone, email, notes, maps_url, verified
+    stay: { ... }           kind "stay" only   — see lib/locations/stays.js
+    escape: { detail }      kind "escape" only — how you get off the path
 
-The split between field and free text: anything we'd want to check, filter or
-sort on later is a field; colour and caveats are text. Each fact lives in one
-place only — don't restate a field inside `notes`.
+**Nothing near a section is listed by hand.** Because every location has
+coordinates, a section discovers what it passes (`lib/nearby.js`), and how far
+along the route each one falls is computed. County Gate was recorded by hand as
+11.4 km along section 2; it is actually 8.8 km, and nobody would ever have
+caught that.
 
-    dogs             true | false | null      null = not confirmed, never guessed
-    season           "all-year" | { from: "MM-DD", to: "MM-DD" } | null
-    price_per_night  number (GBP) | null
-    hookup           true | false | null
-    maps_url         optional override for the generated directions link
+Sections name their endpoints by slug (`start: porlock-weir`), so the finish of
+one section and the start of the next are the same record. `npm run validate`
+checks the slug exists, that it's an endpoint rather than some other kind, and
+that the GPX really does begin and end within 1 km of the places named.
 
-Dogs, season and price always render, including their unknown state — an
-unconfirmed field is a to-do, so hiding it would hide the work.
+How near counts is in `site.js` under `nearby`, per kind: a stay qualifies near
+either end of the day (drivable) or near the route; an escape point only near
+the route, since leaving the path partway is the whole point of it.
 
-A Google Maps directions link is generated from lat/lon (`directions` filter),
-so there's no address to type when driving. Google routes to the coordinate
-correctly but labels the destination with whatever named business is nearest,
-which at somewhere like Porlock Weir — six within 60 m — looks alarming even
-though the navigation is right. Set `maps_url` to override; a Plus Code
-resolves to the point itself and is what the car park uses.
+`verified` is the date details were last checked against the owner's own site;
+null shows on the page as unconfirmed. `stay.dogs` is true/false/null and never
+guessed — an unconfirmed yes is worse than an honest unknown when you arrive
+with a dog. Details go stale quietly: porlockcaravanpark.co.uk now resolves to
+a differently-named park at a different address while directories still list
+the old one.
 
-Each nearby place collapses to one line — coloured dot matching its map pin,
-name, type, distance, dog status — and opens for the detail. "Expand all" is in
-`assets/js/stays.js`. The "Show on map" button sits inside the `<summary>`, so
-`map-section.js` stops its click toggling the disclosure.
+Each kind has a glyph in `lib/stay-icons.js`, rendered into a coloured badge
+used in the list row, the map pin and the map popup. It's generated once and
+handed to the map as markup inside `data-stays`, so they can't drift apart.
+Coordinates come from postcodes via `api.postcodes.io` (free, no key), or from
+OpenStreetMap for things like car parks. A Google Maps directions link is
+generated from lat/lon; Google routes correctly but labels the destination with
+whatever business is nearest, so set `maps_url` to override — a Plus Code
+resolves to the point itself, as the Porlock Weir car park does.
 
-Two fields carry their weight:
-
-- `verified` — the date the details were last checked against the business's
-  own site. `null` means they came from a directory and are shown as
-  unconfirmed. These go stale quietly: porlockcaravanpark.co.uk now resolves to
-  a differently-named park at a different address while directories still list
-  the old one.
-- `dogs` — `true`, `false`, or `null` for unknown. Never guess it.
-
-Each type has a glyph in `lib/stay-icons.js`, rendered into a coloured badge
-used in three places — the list row, the map pin and the map popup. It's
-defined once and handed to the map as markup inside `data-stays`, so the list
-and the pins can't drift apart. Colours stay in `style.css`
-(`.stay-pin-<type>`); the glyph names the type, the colour groups it.
-
-Each section map shows the nearby places as pins, coloured by type from
-`style.css` (`.stay-pin-<type>`). They're `divIcon`s rather than Leaflet's
-default marker, so nothing is fetched from a CDN and the colours stay with the
-stylesheet. A layers control toggles them, and "Show on map" beside a list
-entry pans to its pin. The data reaches the script trimmed, as JSON in
-`data-stays` — the `staysForMap` filter resolves the type label server-side so
-the browser doesn't need a second copy of the mapping.
-
-Coordinates come from postcodes via `api.postcodes.io` (free, no key). A wrong
-one doesn't error, it just silently stops the place appearing anywhere, so
-`npm run validate` range-checks them.
+Each nearby place collapses to one line and opens for the detail; "Expand all"
+is in `assets/js/stays.js`. The "Show on map" button sits inside the
+`<summary>`, so `map-section.js` stops its click toggling the disclosure.
 
 ## Paths — IMPORTANT
 

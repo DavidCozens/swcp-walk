@@ -119,19 +119,27 @@ Add more checks here as the site grows.
 3. Push to `main`. The workflow validates, builds, and deploys.
 4. Set `url` in `src/_data/site.js` to your Pages URL.
 
-## Places to stay
+## Locations
 
-`src/_data/accommodation.js` lists campsites, Brit Stops, park4night spots,
-B&Bs and inns as points on the map. Sections don't reference them — each
-section works out what's within reach and lists it, so adding a site once
-covers every section near it.
+Endpoints, escape points and places to stay are all *locations*: one record
+with a `kind`, coordinates, and a nested block for whatever is specific to that
+kind. They live in `lib/locations/` and merge into `src/_data/locations.js`.
 
-Set `lat`/`lon` (postcode → coordinates via api.postcodes.io), `dogs` as
-`true`/`false`/`null`, and `verified` to the date you last checked the details
-against the owner's own website. Anything unverified is labelled as such on the
-page rather than presented as fact.
+Sections don't list what's near them — every location has coordinates, so each
+section works out what it passes and how far along the route it falls. Add a
+campsite once and it appears on every section near it; add an escape point and
+its distance into the day is computed rather than typed.
 
-How near counts is set in `src/_data/site.js` under `stays`.
+A section names its endpoints by slug (`start: porlock-weir`), so the end of
+one section and the start of the next are the same record. `npm run validate`
+checks the GPX really does start and finish where the section says.
+
+Set `lat`/`lon` (postcode → coordinates via api.postcodes.io), `stay.dogs` as
+`true`/`false`/`null`, and `verified` to the date you last checked against the
+owner's own website. Anything unverified is labelled as such rather than
+presented as fact.
+
+How near counts is set in `src/_data/site.js` under `nearby`.
 
 ## Maps
 

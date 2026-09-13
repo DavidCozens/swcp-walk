@@ -2,8 +2,8 @@
 title: Minehead to Porlock Weir
 order: 1
 region: somerset-north-devon
-start: Minehead
-end: Porlock Weir
+start: minehead
+end: porlock-weir
 distance_km: 16.0
 ascent_m: 538
 mode: van base

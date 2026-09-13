@@ -2,8 +2,8 @@
 title: Porlock Weir to Lynmouth
 order: 2
 region: somerset-north-devon
-start: Porlock Weir
-end: Lynmouth
+start: porlock-weir
+end: lynmouth
 distance_km: 18.8
 ascent_m: 1117
 gpx: /gpx/02-porlock-weir-lynmouth.gpx
@@ -13,13 +13,6 @@ transport:
     detail: "Seasonal coast bus along the A39, Porlock ↔ Lynmouth (confirm before relying on it)"
     season: "roughly May–October only"
     url: "https://www.travelinesw.com/"
-escape_points:
-  - name: County Gate
-    km: 11.4
-    detail: "Climb inland to the A39 — visitor centre, car park and a bus stop. Not a village."
-  - name: Countisbury
-    km: 16.7
-    detail: "Path passes the hamlet; pub just off-route and the A39."
 shops: "Nothing on the route. Stock up at Porlock Weir or Porlock before starting; next shops are in Lynmouth."
 eat: "Nothing between Porlock Weir and Countisbury. Pub off-route at Countisbury; choice in Lynmouth and Lynton."
 ---

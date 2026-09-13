@@ -7,7 +7,7 @@ layout: layouts/base.njk
       Section {{ order }}{% if region %} · {{ region | regionName }}{% endif %}
     </p>
     <h1>{{ title }}</h1>
-    <p class="section-route">{{ start }} &rarr; {{ end }}</p>
+    <p class="section-route">{{ startPlace.name or start }} &rarr; {{ endPlace.name or end }}</p>
   </div>
 
   {% set nav = collections.sections | sectionNav(page.url) %}
@@ -37,9 +37,9 @@ layout: layouts/base.njk
     data-attribution="{{ site.tiles.attribution }}"
     data-maxzoom="{{ site.tiles.maxZoom }}"
     data-route="{{ site.route | dump }}"
-    data-stays="{{ stays | staysForMap | dump }}"
+    data-stays="{{ mapPins | staysForMap | dump }}"
     role="img"
-    aria-label="Route map from {{ start }} to {{ end }}"
+    aria-label="Route map from {{ startPlace.name or start }} to {{ endPlace.name or end }}"
   ></div>
   {% endif %}
 
@@ -73,20 +73,28 @@ layout: layouts/base.njk
   </section>
   {% endif %}
 
-  {% if escape_points %}
+  {% if nearby.escape and nearby.escape.length %}
   <section class="escapes">
     <h2>Escape points</h2>
     <ul class="escape-list">
-      {% for e in escape_points %}
+      {% for e in nearby.escape %}
       <li>
-        {% if e.km %}<span class="e-km">{{ e.km }} km</span>{% endif %}
-        <strong>{{ e.name }}</strong>{% if e.detail %} — {{ e.detail }}{% endif %}
+        <p class="escape-head">
+          {{ e | locBadge | safe }}
+          <span class="e-km">{{ e.kmAlong }} km in</span>
+          <strong>{{ e.name }}</strong>
+          <span class="stay-dist">{{ e.toRoute }} km off the path</span>
+          <button type="button" class="stay-focus" data-stay="{{ e.slug }}">Show on map</button>
+        </p>
+        {% if e.escape.detail %}<p class="escape-detail">{{ e.escape.detail }}</p>{% endif %}
+        {% if e | directions %}<p class="escape-detail"><a class="stay-directions" href="{{ e | directions }}">Navigate with Google Maps</a></p>{% endif %}
       </li>
       {% endfor %}
     </ul>
   </section>
   {% endif %}
 
+  {% set stays = nearby.stay %}
   {% if stays and stays.length %}
   <section class="stays">
     <div class="stays-head">
@@ -98,12 +106,12 @@ layout: layouts/base.njk
       <li>
         <details class="stay">
         <summary>
-          {{ s.type | stayBadge | safe }}
+          {{ s | locBadge | safe }}
           <span class="stay-name">{{ s.name }}</span>
-          <span class="stay-kind">{{ s.type | stayType }}</span>
+          <span class="stay-kind">{{ s.stay.type | stayType }}</span>
           <span class="stay-dist">{{ s.nearest }} km from the {% if s.atEnd %}finish{% else %}start{% endif %}{% if s.toRoute <= 0.25 %}, on the route{% elif s.toRoute < (s.nearest - 0.3) %}, {{ s.toRoute }} km off the path{% endif %}</span>
-          {% if s.dogs === true %}<span class="stay-flag yes" title="Dogs welcome">dogs</span>
-          {% elif s.dogs === false %}<span class="stay-flag no" title="No dogs">no dogs</span>
+          {% if s.stay.dogs === true %}<span class="stay-flag yes" title="Dogs welcome">dogs</span>
+          {% elif s.stay.dogs === false %}<span class="stay-flag no" title="No dogs">no dogs</span>
           {% else %}<span class="stay-flag unsure" title="Dog policy not confirmed">dogs?</span>{% endif %}
           <button type="button" class="stay-focus" data-stay="{{ s.slug }}">Show on map</button>
         </summary>
@@ -120,19 +128,19 @@ layout: layouts/base.njk
 
           <dt>Dogs</dt>
           <dd>
-            {% if s.dogs === true %}<span class="yes">Welcome</span>
-            {% elif s.dogs === false %}<span class="no">Not allowed</span>
+            {% if s.stay.dogs === true %}<span class="yes">Welcome</span>
+            {% elif s.stay.dogs === false %}<span class="no">Not allowed</span>
             {% else %}<span class="unsure">Not confirmed</span>{% endif %}
-            {% if s.dogs_note %} — {{ s.dogs_note }}{% endif %}
+            {% if s.stay.dogs_note %} — {{ s.stay.dogs_note }}{% endif %}
           </dd>
 
           <dt>Season</dt>
-          <dd>{% if s.season %}{{ s.season | seasonText }}{% else %}<span class="unsure">{{ s.season | seasonText }}</span>{% endif %}</dd>
+          <dd>{% if s.stay.season %}{{ s.stay.season | seasonText }}{% else %}<span class="unsure">{{ s.stay.season | seasonText }}</span>{% endif %}</dd>
 
           <dt>Price</dt>
-          <dd>{% if s.price_per_night %}{{ s.price_per_night | priceText(s.price_note) }}{% else %}<span class="unsure">{{ s.price_per_night | priceText(s.price_note) }}</span>{% endif %}</dd>
+          <dd>{% if s.stay.price_per_night %}{{ s.stay.price_per_night | priceText(s.stay.price_note) }}{% else %}<span class="unsure">{{ s.stay.price_per_night | priceText(s.stay.price_note) }}</span>{% endif %}</dd>
 
-          {% if s.hookup %}
+          {% if s.stay.hookup %}
           <dt>Hook-up</dt>
           <dd>Electric hook-up available</dd>
           {% endif %}
