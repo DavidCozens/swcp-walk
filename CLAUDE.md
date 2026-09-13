@@ -195,8 +195,12 @@ of 2.8 km rather than simply unusable. `site.js` sets `walk.reachKm` (2.5,
 normal reach) and `walk.maxReachKm` (5, beyond which a route is only kept if it
 serves an escape point). A longer walk reads as "further out" when something
 better exists, and as "a walk at one end" when it's the only option — a sole
-option shouldn't be presented apologetically. Distances are straight-line, and
-the page says so.
+option shouldn't be presented apologetically. A stop within `walk.onRouteKm`
+(1.5) of the route, and the section's own far end, are measured along the path;
+anything further off is straight-line, and the page says so. Straight-line
+alone called the Instow bus "a walk at one end" of section 6, because Fremington
+is 4.3 km from Braunton — across the Taw. Along the path it's 13.9 km. Measuring
+by the path overstates where a road cuts a headland, which is the safer error.
 
 `transitLink` is a generated Google Maps transit link between a section's two
 endpoints: every bus, train and ferry option, nothing typed, opens the app on a
