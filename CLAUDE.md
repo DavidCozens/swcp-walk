@@ -92,7 +92,9 @@ sits in a nested block.
 Hospitals and vets (`lib/locations/medical.js`) are matched differently: not by
 radius but by *nearest few, however far* (`site.js` → `nearby.hospital.nearest`).
 A radius is the wrong rule when the nearest A&E is 42 km away and you still need
-to know which it is. `maxKm` in `site.js` is a ceiling on "however far", for a
+to know which it is. For the same reason the nearest `ae` is always listed, after
+the nearest few, when they don't already include one: three GP minor-injury
+services fill Hartland Quay's top three and would otherwise push Barnstaple off. `maxKm` in `site.js` is a ceiling on "however far", for a
 route plotted before its stretch is researched. They get pins in the same "Show pins" layer as everything else, but never widen
 the map: the
 starting view comes from the route's bounds alone, so a hospital 42 km away
