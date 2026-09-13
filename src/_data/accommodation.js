@@ -1,16 +1,28 @@
 // Places to stay, as points on the map rather than entries against a section.
 // Each section works out for itself what's nearby (see lib/nearby.js), so one
-// entry serves every section it happens to be close to — the Porlock sites
-// cover the end of section 1 and the start of section 2 without being listed
-// twice, and a base on a peninsula will cover several days.
+// entry serves every section it's close to — the Porlock sites cover the end of
+// section 1 and the start of section 2 without being listed twice, and a base
+// on a peninsula will cover several days.
 //
-// `verified` is the date the details were last checked against the business's
-// own website. Null means the details came from a directory and haven't been
-// confirmed — these go stale quietly: porlockcaravanpark.co.uk now resolves to
-// a differently-named park at a different address, while directories still
-// list the old name.
+// STRUCTURED FIELDS carry anything we'd want to check, filter or sort on later.
+// Each fact lives in exactly one place; don't restate a field in `note`.
 //
-// `dogs`: true / false / null where it isn't confirmed. Don't guess this one.
+//   dogs             true | false | null   null = not confirmed. Never guess.
+//   season           "all-year" | { from: "MM-DD", to: "MM-DD" } | null
+//   price_per_night  number (GBP) | null   null = unknown
+//   hookup           true | false | null
+//   verified         "YYYY-MM-DD" | null   when the details were last checked
+//                                          against the owner's own website
+//   maps_url         optional. A Google Maps directions link is generated from
+//                    lat/lon; set this only to override it — a campsite
+//                    entrance the postcode centroid doesn't land on, say.
+//
+// FREE TEXT is for colour and caveats that don't fit a field: `dogs_note`,
+// `price_note`, `notes`.
+//
+// Unconfirmed details go stale quietly — porlockcaravanpark.co.uk now resolves
+// to a differently-named park at a different address while directories still
+// list the old name and season. Hence `verified`.
 export default [
   {
     slug: "burrowhayes-farm",
@@ -21,9 +33,11 @@ export default [
     phone: "01643 862463",
     url: "https://burrowhayes.co.uk/",
     dogs: true,
-    dogs_note: "Welcome under strict control; exercised off site",
+    dogs_note: "Strict control; exercised off site",
+    season: null,
+    price_per_night: null,
     hookup: true,
-    note: "National Trust land, a mile east of Porlock",
+    notes: "National Trust land, a mile east of Porlock",
     verified: "2026-09-13",
   },
   {
@@ -36,7 +50,9 @@ export default [
     email: "info@porlockholidaypark.co.uk",
     url: "https://www.porlockcaravanpark.co.uk/",
     dogs: true,
-    note: "Formerly Porlock Caravan Park. Directories still show the old name and a 15 Mar–31 Oct season — unconfirmed",
+    season: null,
+    price_per_night: null,
+    notes: "Formerly Porlock Caravan Park. Directories still list the old name and a 15 Mar–31 Oct season",
     verified: "2026-09-13",
   },
   {
@@ -48,9 +64,11 @@ export default [
     phone: "01598 753349",
     url: "https://coastandcountryparks.co.uk/our-parks/lynmouth-holiday-retreat-north-devon/",
     dogs: true,
-    dogs_note: "Up to two dogs; short lead, not left unattended",
+    dogs_note: "Up to two; short lead, not left unattended. Dog-walking meadow on site",
+    season: null,
+    price_per_night: null,
     hookup: true,
-    note: "Max unit 9 m. Dog-walking meadow; the coast path runs past it",
+    notes: "Maximum unit length 9 m. The coast path runs past it",
     verified: "2026-09-13",
   },
   {
@@ -63,8 +81,10 @@ export default [
     email: "info@sunnylyn.co.uk",
     url: "https://www.sunnylyn.co.uk/",
     dogs: true,
+    season: null,
+    price_per_night: null,
     hookup: true,
-    note: "Nine electric touring pitches, by the West Lyn river",
+    notes: "Nine electric touring pitches, by the West Lyn river. Lodges run year-round; the touring season isn't stated",
     verified: "2026-09-13",
   },
   {
@@ -78,9 +98,25 @@ export default [
     url: "https://www.blueballinn.com/",
     dogs: true,
     dogs_note: "£15 per dog per night; welcome throughout except the main restaurant",
-    season: "Year round",
-    note: "Brit Stops member — overnight motorhome parking. Also fourteen en-suite rooms. Stands on the section 2 route at Countisbury",
+    season: "all-year",
+    price_per_night: null,
+    notes: "Brit Stops member — overnight motorhome parking. Also fourteen en-suite rooms. Stands on the section 2 route at Countisbury",
     verified: "2026-09-13",
+  },
+  {
+    slug: "porlock-weir-car-park",
+    name: "Porlock Weir car park",
+    type: "park4night",
+    lat: 51.21878, lon: -3.62691,
+    address: "B3225, Porlock Weir, TA24",
+    url: "https://park4night.com/en/place/87299",
+    dogs: true,
+    season: null,
+    price_per_night: 15,
+    price_note: "per 24 hours, ticket machine or QR code",
+    notes: "Public car park with public toilets; bars and restaurants alongside. Reported quiet overnight",
+    // A park4night listing is user-reported, not the operator.
+    verified: null,
   },
   {
     slug: "hoburne-blue-anchor",
@@ -90,21 +126,9 @@ export default [
     address: "Blue Anchor, Minehead, TA24 6JT",
     phone: "01643 821360",
     dogs: null,
-    note: "Around 100 touring pitches, but four miles east of Minehead — a drive, not a walk",
-    verified: null,
-  },
-  {
-    slug: "porlock-weir-car-park",
-    name: "Porlock Weir car park",
-    type: "park4night",
-    lat: 51.21878, lon: -3.62691,
-    address: "B3225, Porlock Weir, TA24",
-    url: "https://park4night.com/en/place/87299",
-    price: "£15 per 24 hours",
-    dogs: true,
-    note: "Public car park, pay by ticket machine or QR code. Public toilets; bars and restaurants alongside. Reported quiet overnight",
-    // A park4night listing is user-reported, not the operator — hence no
-    // verified date, even though the details look right.
+    season: null,
+    price_per_night: null,
+    notes: "Around 100 touring pitches, but four miles east of Minehead — a drive, not a walk",
     verified: null,
   },
   {
@@ -115,7 +139,9 @@ export default [
     address: "5 Anchor Road, Porlock Weir, TA24 8PB",
     phone: "01643 863288",
     dogs: true,
-    note: "Dog-friendly rooms, on the path at Porlock Weir",
+    season: null,
+    price_per_night: null,
+    notes: "Rooms above the pub, on the path at Porlock Weir",
     verified: null,
   },
   {
@@ -126,7 +152,9 @@ export default [
     address: "High Street, Porlock, TA24 8PU",
     url: "https://myrtleporlock.co.uk/",
     dogs: true,
-    note: "Walkers welcome, drying facilities; reported open all year",
+    season: null,
+    price_per_night: null,
+    notes: "Walkers welcome, drying facilities. Reported open all year",
     verified: null,
   },
   {
@@ -137,7 +165,9 @@ export default [
     address: "7 Tregonwell Road, Minehead, TA24 5DT",
     url: "https://kenellahouse.co.uk/",
     dogs: null,
-    note: "About 500 m from the path. Dog policy not confirmed",
+    season: null,
+    price_per_night: null,
+    notes: "About 500 m from the path",
     verified: null,
   },
 ];

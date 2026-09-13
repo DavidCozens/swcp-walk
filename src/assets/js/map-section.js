@@ -76,7 +76,9 @@
       marker.bindPopup(
         '<strong>' + escapeHtml(s.name) + "</strong><br>" +
         escapeHtml(s.label) + " &middot; " + escapeHtml(s.where) +
-        (s.url ? '<br><a href="' + encodeURI(s.url) + '">website</a>' : "")
+        (s.url ? '<br><a href="' + encodeURI(s.url) + '">website</a>' : "") +
+        (s.directions ? (s.url ? " &middot; " : "<br>") +
+          '<a href="' + encodeURI(s.directions) + '">directions</a>' : "")
       );
       marker.addTo(group);
       byslug[s.slug] = marker;

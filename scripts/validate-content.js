@@ -57,6 +57,27 @@ for (const a of accommodation) {
   if (a.dogs !== true && a.dogs !== false && a.dogs !== null && a.dogs !== undefined) {
     fail("accommodation.js", `${where} dogs must be true, false or null, got ${JSON.stringify(a.dogs)}`);
   }
+  // season: "all-year" | { from: "MM-DD", to: "MM-DD" } | null
+  if (a.season !== null && a.season !== undefined && a.season !== "all-year") {
+    const ok =
+      a.season && typeof a.season === "object" &&
+      /^\d{2}-\d{2}$/.test(a.season.from || "") &&
+      /^\d{2}-\d{2}$/.test(a.season.to || "");
+    if (!ok) {
+      fail("accommodation.js", `${where} season must be "all-year", null, or { from: "MM-DD", to: "MM-DD" }`);
+    }
+  }
+
+  if (a.price_per_night !== null && a.price_per_night !== undefined) {
+    if (typeof a.price_per_night !== "number" || Number.isNaN(a.price_per_night) || a.price_per_night < 0) {
+      fail("accommodation.js", `${where} price_per_night must be a positive number or null, got ${JSON.stringify(a.price_per_night)}`);
+    }
+  }
+
+  if (a.maps_url && !/^https:\/\//.test(a.maps_url)) {
+    fail("accommodation.js", `${where} maps_url must be an https link`);
+  }
+
   if (a.verified && !/^\d{4}-\d{2}-\d{2}$/.test(a.verified)) {
     fail("accommodation.js", `${where} verified should be YYYY-MM-DD, got ${JSON.stringify(a.verified)}`);
   }

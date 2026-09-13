@@ -65,6 +65,23 @@ Thresholds live in `site.js` under `stays`: `endpointKm` (from where the day
 starts or finishes — drivable) and `routeKm` (from the route itself — reachable
 mid-walk). A place qualifies on either, and the page shows both distances.
 
+The split between field and free text: anything we'd want to check, filter or
+sort on later is a field; colour and caveats are text. Each fact lives in one
+place only — don't restate a field inside `notes`.
+
+    dogs             true | false | null      null = not confirmed, never guessed
+    season           "all-year" | { from: "MM-DD", to: "MM-DD" } | null
+    price_per_night  number (GBP) | null
+    hookup           true | false | null
+    maps_url         optional override for the generated directions link
+
+Dogs, season and price always render, including their unknown state — an
+unconfirmed field is a to-do, so hiding it would hide the work.
+
+A Google Maps directions link is generated from lat/lon (`directions` filter),
+so there's no address to type when driving. Set `maps_url` only where the
+postcode centroid isn't where you'd actually drive to.
+
 Two fields carry their weight:
 
 - `verified` — the date the details were last checked against the business's

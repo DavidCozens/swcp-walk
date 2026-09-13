@@ -38,6 +38,36 @@ export default function (eleventyConfig) {
   };
   eleventyConfig.addFilter("stayType", (t) => STAY_TYPES[t] || t || "");
 
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  // season: "all-year" | { from: "MM-DD", to: "MM-DD" } | null
+  eleventyConfig.addFilter("seasonText", (season) => {
+    if (season === "all-year") return "Open all year";
+    if (season && season.from && season.to) {
+      const show = (md) => {
+        const [m, d] = String(md).split("-").map(Number);
+        return `${d} ${MONTHS[m - 1] || "?"}`;
+      };
+      return `${show(season.from)} to ${show(season.to)}`;
+    }
+    return "Season not confirmed";
+  });
+
+  eleventyConfig.addFilter("priceText", (amount, note) => {
+    if (typeof amount !== "number") return "Price not known";
+    const money = `£${Number.isInteger(amount) ? amount : amount.toFixed(2)} per night`;
+    return note ? `${money} (${note})` : money;
+  });
+
+  // Tap-to-navigate: opens the Google Maps app on a phone and routes from
+  // wherever the van currently is, so there's no address to type.
+  eleventyConfig.addFilter("directions", (stay) => {
+    if (!stay) return "";
+    if (stay.maps_url) return stay.maps_url;
+    if (typeof stay.lat !== "number" || typeof stay.lon !== "number") return "";
+    return `https://www.google.com/maps/dir/?api=1&destination=${stay.lat},${stay.lon}`;
+  });
+
   eleventyConfig.addFilter("staysForMap", (stays) =>
     (stays || []).map((s) => ({
       slug: s.slug,
@@ -47,6 +77,10 @@ export default function (eleventyConfig) {
       lat: s.lat,
       lon: s.lon,
       url: s.url || "",
+      directions: s.maps_url ||
+        (typeof s.lat === "number" && typeof s.lon === "number"
+          ? `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}`
+          : ""),
       where: `${s.nearest} km from the ${s.atEnd ? "finish" : "start"}`,
     }))
   );

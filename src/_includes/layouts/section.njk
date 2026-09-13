@@ -99,21 +99,49 @@ layout: layouts/base.njk
           <span class="stay-dist">{{ s.nearest }} km from the {% if s.atEnd %}finish{% else %}start{% endif %}{% if s.toRoute <= 0.25 %}, on the route{% elif s.toRoute < (s.nearest - 0.3) %}, {{ s.toRoute }} km off the path{% endif %}</span>
           <button type="button" class="stay-focus" data-stay="{{ s.slug }}">Show on map</button>
         </p>
-        <p class="stay-meta">
-          {% if s.address %}{{ s.address }}{% endif %}
-          {% if s.phone %} · <a href="tel:{{ s.phone | replace(" ", "") }}">{{ s.phone }}</a>{% endif %}
-          {% if s.email %} · <a href="mailto:{{ s.email }}">{{ s.email }}</a>{% endif %}
-        </p>
-        <p class="stay-meta">
-          {% if s.dogs === true %}<span class="yes">Dogs welcome</span>{% elif s.dogs === false %}<span class="no">No dogs</span>{% else %}<span class="unsure">Dog policy unconfirmed</span>{% endif %}
-          {% if s.dogs_note %} — {{ s.dogs_note }}{% endif %}
-          {% if s.hookup %} · Electric hook-up{% endif %}
-          {% if s.price %} · {{ s.price }}{% endif %}
-          {% if s.season %} · {{ s.season }}{% endif %}
-        </p>
-        {% if s.note %}<p class="stay-meta">{{ s.note }}</p>{% endif %}
-        <p class="stay-meta">
-          {% if s.verified %}<span class="checked">Checked {{ s.verified }}</span>{% else %}<span class="unsure">Details not yet confirmed with the owner</span>{% endif %}
+
+        <dl class="stay-facts">
+          {% if s.address %}
+          <dt>Address</dt>
+          <dd>{{ s.address }}</dd>
+          {% endif %}
+
+          <dt>Dogs</dt>
+          <dd>
+            {% if s.dogs === true %}<span class="yes">Welcome</span>
+            {% elif s.dogs === false %}<span class="no">Not allowed</span>
+            {% else %}<span class="unsure">Not confirmed</span>{% endif %}
+            {% if s.dogs_note %} — {{ s.dogs_note }}{% endif %}
+          </dd>
+
+          <dt>Season</dt>
+          <dd>{% if s.season %}{{ s.season | seasonText }}{% else %}<span class="unsure">{{ s.season | seasonText }}</span>{% endif %}</dd>
+
+          <dt>Price</dt>
+          <dd>{% if s.price_per_night %}{{ s.price_per_night | priceText(s.price_note) }}{% else %}<span class="unsure">{{ s.price_per_night | priceText(s.price_note) }}</span>{% endif %}</dd>
+
+          {% if s.hookup %}
+          <dt>Hook-up</dt>
+          <dd>Electric hook-up available</dd>
+          {% endif %}
+
+          {% if s.phone %}
+          <dt>Phone</dt>
+          <dd><a href="tel:{{ s.phone | replace(" ", "") }}">{{ s.phone }}</a></dd>
+          {% endif %}
+
+          {% if s | directions %}
+          <dt>Drive there</dt>
+          <dd><a class="stay-directions" href="{{ s | directions }}">Navigate with Google Maps</a></dd>
+          {% endif %}
+        </dl>
+
+        {% if s.notes %}
+        <p class="stay-notes"><span class="notes-label">Notes</span> {{ s.notes }}</p>
+        {% endif %}
+
+        <p class="stay-checked">
+          {% if s.verified %}Details checked {{ s.verified }}{% else %}<span class="unsure">Details not yet confirmed with the owner</span>{% endif %}
         </p>
       </li>
       {% endfor %}
