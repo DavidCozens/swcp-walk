@@ -1,7 +1,7 @@
 // Everything in this folder is a "section": it gets the section layout,
 // joins the `sections` collection, and lives under /sections/<slug>/.
 import { nearbyByKind, lookup, samplePoints } from "../../lib/nearby.js";
-import { routesForSection, transitUrl } from "../../lib/transport.js";
+import { routesForSection, transitUrl, transfersForSection } from "../../lib/transport.js";
 
 export default {
   layout: "layouts/section.njk",
@@ -46,6 +46,13 @@ export default {
         locations: data.locations,
         walk: data.site.walk,
       }).some((r) => r.linksEnds),
+    // Taxis and luggage firms that reach this section.
+    transfers: (data) =>
+      transfersForSection({
+        start: lookup(data.locations, data.start),
+        end: lookup(data.locations, data.end),
+        transport: data.transport,
+      }),
     // One link covering every public transport option between the two ends.
     transitLink: (data) =>
       transitUrl(lookup(data.locations, data.start), lookup(data.locations, data.end)),

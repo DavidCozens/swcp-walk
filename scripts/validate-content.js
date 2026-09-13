@@ -38,6 +38,8 @@ const ENDPOINT_TOLERANCE_KM = 1;
 const transportUrl = new URL("../src/_data/transport.js", import.meta.url);
 const { default: transport } = await import(transportUrl);
 const ROUTE_TYPES = ["bus", "train", "ferry", "taxi", "baggage", "walk"];
+const PROVIDER_KINDS = ["operator", "transfer"];
+const SERVICES = ["passenger", "baggage"];
 
 let errors = 0;
 const seenOrders = new Map();
@@ -111,6 +113,32 @@ function fail(file, msg) {
 // Transport: a route reaching a place that doesn't exist would simply never be
 // offered, so check the references rather than let them fail silently.
 const providerSlugs = new Set(transport.providers.map((p) => p.slug));
+for (const p of transport.providers) {
+  const where = `provider "${p.slug || p.name || "?"}"`;
+  if (!PROVIDER_KINDS.includes(p.kind)) {
+    fail("transport", `${where} has unknown kind "${p.kind}" (expected ${PROVIDER_KINDS.join(" or ")})`);
+  }
+  if (p.kind === "transfer") {
+    // Offered by coverage rather than timetable, so bad coverage means it
+    // silently never appears anywhere.
+    const c = p.covers || {};
+    const ok = c.everywhere === true ||
+      (typeof c.lat === "number" && typeof c.lon === "number" && typeof c.radiusKm === "number" && c.radiusKm > 0);
+    if (!ok) {
+      fail("transport", `${where} needs covers: { everywhere: true } or { lat, lon, radiusKm }`);
+    }
+    if (!Array.isArray(p.services) || !p.services.length) {
+      fail("transport", `${where} must list services (${SERVICES.join(", ")})`);
+    } else {
+      for (const svc of p.services) {
+        if (!SERVICES.includes(svc)) fail("transport", `${where} has unknown service "${svc}"`);
+      }
+    }
+    if (p.dogs !== true && p.dogs !== false && p.dogs !== null && p.dogs !== undefined) {
+      fail("transport", `${where} dogs must be true, false or null`);
+    }
+  }
+}
 const seenRoutes = new Set();
 for (const r of transport.routes) {
   const where = `route "${r.slug || r.name || "?"}"`;

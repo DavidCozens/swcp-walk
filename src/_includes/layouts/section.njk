@@ -54,7 +54,7 @@ layout: layouts/base.njk
     {% if mode %}<dt>Approach</dt><dd>{{ mode }}</dd>{% endif %}
   </dl>
 
-  {% if services.length or shops or eat or transitLink %}
+  {% if services.length or transfers.length or shops or eat or transitLink %}
   <section class="logistics">
     <h2>Getting there &amp; back</h2>
 
@@ -99,6 +99,38 @@ layout: layouts/base.njk
         {% if r.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ r.notes }}</p>{% endif %}
         <p class="stay-checked">
           {% if r.verified %}Details checked {{ r.verified }}{% else %}<span class="unsure">Service details not confirmed — check before relying on them</span>{% endif %}
+        </p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if transfers.length %}
+    <h3>Lifts &amp; luggage</h3>
+    <ul class="service-list">
+      {% for t in transfers %}
+      <li>
+        <p class="service-head">
+          <strong>{% if t.url %}<a href="{{ t.url }}">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}</strong>
+          {% if "passenger" in t.services %}<span class="stay-flag yes">lifts</span>{% endif %}
+          {% if "baggage" in t.services %}<span class="stay-flag">luggage</span>{% endif %}
+        </p>
+        <dl class="stay-facts">
+          <dt>Covers</dt>
+          <dd>{% if t.distanceKm == null %}{{ t.reaches }}{% else %}Based {{ t.distanceKm }} km from {{ t.reaches }}{% endif %}</dd>
+          {% if t.hours %}<dt>Hours</dt><dd>{{ t.hours }}</dd>{% endif %}
+          <dt>Dogs</dt>
+          <dd>
+            {% if t.dogs === true %}<span class="yes">Welcome</span>
+            {% elif t.dogs === false %}<span class="no">Not allowed</span>
+            {% else %}<span class="unsure">Not confirmed</span>{% endif %}
+            {% if t.dogs_note %} — {{ t.dogs_note }}{% endif %}
+          </dd>
+          {% if t.phone %}<dt>Phone</dt><dd><a href="tel:{{ t.phone | replace(" ", "") }}">{{ t.phone }}</a></dd>{% endif %}
+        </dl>
+        {% if t.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ t.notes }}</p>{% endif %}
+        <p class="stay-checked">
+          {% if t.verified %}Details checked {{ t.verified }}{% else %}<span class="unsure">Details not confirmed</span>{% endif %}
         </p>
       </li>
       {% endfor %}

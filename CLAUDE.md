@@ -122,6 +122,16 @@ route calls with the locations a section touches — endpoints, escape points,
 nearby stops — and offers what matches, flagging whether a service reaches both
 ends of the day. Enter the coast bus once and it appears wherever it's relevant.
 
+Providers come in two kinds. `operator` runs the scheduled routes in
+`routes.js` and is named by them. `transfer` will drive you or your bags on
+request — no timetable, so these are offered by coverage instead: either
+`{ everywhere: true }` for a firm working the whole path, or
+`{ lat, lon, radiusKm }` for a local one, matched against a section's endpoints.
+`services` is `["passenger", "baggage"]` — worth keeping the baggage firms,
+because several of them will carry people too. A transfer with broken coverage
+would silently never appear anywhere, so `npm run validate` checks the shape,
+and `/todo/` flags a taxi with no phone number, since that's how you book one.
+
 A service doesn't have to stop at the exact spot to be useful — it has to be
 within a walk of it. Each route reports how far you'd walk from each end of the
 section to its nearest calling point, so the coast bus is usable for the price
