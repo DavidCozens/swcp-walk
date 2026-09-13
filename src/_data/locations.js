@@ -5,7 +5,8 @@
 // the route, how do I drive there. They're now one record with a `kind`, and
 // only what differs sits in a nested block.
 //
-//   slug, name, kind          kind: endpoint | escape | stay | poi | stop
+//   slug, name, kind          endpoint | escape | stay | poi | stop |
+//                             hospital | vet
 //   lat, lon                  every location has a position; distances and
 //                             map pins are computed, never typed
 //   address, url, phone,      optional, and meaningful for any kind
@@ -21,8 +22,9 @@ import endpoints from "../../lib/locations/endpoints.js";
 import escapes from "../../lib/locations/escapes.js";
 import stays from "../../lib/locations/stays.js";
 import stops from "../../lib/locations/stops.js";
+import medical from "../../lib/locations/medical.js";
 
-const all = [...endpoints, ...escapes, ...stays, ...stops];
+const all = [...endpoints, ...escapes, ...stays, ...stops, ...medical];
 
 // Slugs are the reference from sections and, later, from transport legs. A
 // duplicate would silently shadow; fail the build instead.

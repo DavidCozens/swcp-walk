@@ -27,6 +27,9 @@ export default {
     // A transport stop is worth knowing about a little further out — you'd
     // walk or take a taxi to one.
     stop: { endpointKm: 5, routeKm: 3 },
+    // Not a radius: the nearest A&E may be an hour away and you still need it.
+    hospital: { nearest: 3 },
+    vet: { nearest: 3 },
   },
 
   // How far you'd walk to reach a service. A stop doesn't have to be at the

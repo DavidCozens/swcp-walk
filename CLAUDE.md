@@ -67,6 +67,16 @@ sits in a nested block.
     stay: { ... }           kind "stay" only   — see lib/locations/stays.js
     escape: { detail }      kind "escape" only — how you get off the path
 
+Hospitals and vets (`lib/locations/medical.js`) are matched differently: not by
+radius but by *nearest few, however far* (`site.js` → `nearby.hospital.nearest`).
+A radius is the wrong rule when the nearest A&E is 42 km away and you still need
+to know which it is. They're deliberately **not** pinned on the map — the
+nearest A&E would zoom a section's route out to nothing — but each carries a
+Google Maps link, which routes from wherever you actually are. `hospital.type`
+separates a full 24/7 `ae` from a `utc` urgent treatment centre, because that
+decides whether you drive ten minutes or an hour. Drive times are estimated
+from straight-line distance and the page says they're rough.
+
 **Nothing near a section is listed by hand.** Because every location has
 coordinates, a section discovers what it passes (`lib/nearby.js`), and how far
 along the route each one falls is computed. County Gate was recorded by hand as

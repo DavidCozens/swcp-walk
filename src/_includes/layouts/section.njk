@@ -239,6 +239,64 @@ layout: layouts/base.njk
   </section>
   {% endif %}
 
+  {% if nearby.hospital.length or nearby.vet.length %}
+  <section class="emergency">
+    <h2>If something goes wrong</h2>
+    <p class="emergency-lead">
+      In a real emergency it's 999, wherever you are. What follows is the nearest
+      few, however far away they happen to be — they're kept off the map because
+      the nearest A&amp;E would zoom the route out to nothing. Distances are
+      straight-line from this section and the times are rough; the map link gives
+      the real answer, and routes from wherever you actually are.
+    </p>
+
+    {% if nearby.hospital.length %}
+    <h3>Hospitals</h3>
+    <ul class="emergency-list">
+      {% for h in nearby.hospital %}
+      <li>
+        <p class="emergency-head">
+          <span class="emergency-kind {% if h.hospital.type == 'ae' %}is-ae{% endif %}">{% if h.hospital.type == "ae" %}A&amp;E{% else %}Urgent care{% endif %}</span>
+          <strong>{{ h.name }}</strong>
+          <span class="stay-dist">{{ h.nearest }} km · {{ h.nearest | driveTime }}</span>
+        </p>
+        <dl class="stay-facts">
+          {% if h.address %}<dt>Address</dt><dd>{{ h.address }}</dd>{% endif %}
+          {% if h.hours %}<dt>Open</dt><dd>{{ h.hours }}</dd>{% endif %}
+          {% if h.phone %}<dt>Phone</dt><dd><a href="tel:{{ h.phone | replace(" ", "") }}">{{ h.phone }}</a></dd>{% endif %}
+          {% if h | directions %}<dt>Map</dt><dd><a class="stay-directions" href="{{ h | directions }}">Open in Google Maps</a></dd>{% endif %}
+        </dl>
+        {% if h.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ h.notes }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if nearby.vet.length %}
+    <h3>Vets</h3>
+    <ul class="emergency-list">
+      {% for v in nearby.vet %}
+      <li>
+        <p class="emergency-head">
+          <span class="emergency-kind{% if v.vet.emergency %} is-ae{% endif %}">{% if v.vet.emergency %}24 hr{% else %}Vet{% endif %}</span>
+          <strong>{% if v.url %}<a href="{{ v.url }}">{{ v.name }}</a>{% else %}{{ v.name }}{% endif %}</strong>
+          <span class="stay-dist">{{ v.nearest }} km · {{ v.nearest | driveTime }}</span>
+        </p>
+        <dl class="stay-facts">
+          {% if v.address %}<dt>Address</dt><dd>{{ v.address }}</dd>{% endif %}
+          {% if v.hours %}<dt>Cover</dt><dd>{{ v.hours }}</dd>{% endif %}
+          <dt>Phone</dt>
+          <dd>{% if v.phone %}<a href="tel:{{ v.phone | replace(" ", "") }}">{{ v.phone }}</a>{% else %}<span class="unsure">Not recorded yet</span>{% endif %}</dd>
+          {% if v | directions %}<dt>Map</dt><dd><a class="stay-directions" href="{{ v | directions }}">Open in Google Maps</a></dd>{% endif %}
+        </dl>
+        {% if v.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ v.notes }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </section>
+  {% endif %}
+
   {% if content %}
   <section class="notes">{{ content | safe }}</section>
   {% endif %}

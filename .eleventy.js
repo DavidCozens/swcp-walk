@@ -71,6 +71,15 @@ export default function (eleventyConfig) {
 
   // Tap-to-navigate: opens the Google Maps app on a phone and routes from
   // wherever the van currently is, so there's no address to type.
+  eleventyConfig.addFilter("driveTime", (km) => {
+    if (typeof km !== "number" || !(km > 0)) return "";
+    const minutes = Math.round(((km * 1.3) / 45) * 60 / 5) * 5;
+    if (minutes < 60) return `roughly ${minutes} min by road`;
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `roughly ${h} hr${m ? " " + m + " min" : ""} by road`;
+  });
+
   eleventyConfig.addFilter("directions", (stay) => {
     if (!stay) return "";
     if (stay.maps_url) return stay.maps_url;

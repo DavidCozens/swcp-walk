@@ -29,7 +29,8 @@ const locUrl = new URL("../src/_data/locations.js", import.meta.url);
 const { default: locations } = await import(locUrl);
 const { distanceKm, trackPoints } = await import(new URL("../lib/nearby.js", import.meta.url));
 const STAY_TYPES = ["campsite", "britstop", "park4night", "cl", "bnb", "inn", "hostel"];
-const KINDS = ["endpoint", "escape", "stay", "poi", "stop"];
+const KINDS = ["endpoint", "escape", "stay", "poi", "stop", "hospital", "vet"];
+const HOSPITAL_TYPES = ["ae", "utc"];
 const bySlug = new Map(locations.map((l) => [l.slug, l]));
 
 // How far a section's GPX may begin or end from the location it names.
@@ -61,6 +62,18 @@ for (const a of locations) {
     if (!a.stay) fail("locations", `${where} is a stay but has no stay block`);
     else if (!STAY_TYPES.includes(a.stay.type)) {
       fail("locations", `${where} has unknown stay.type "${a.stay.type}" (expected one of ${STAY_TYPES.join(", ")})`);
+    }
+  }
+  if (a.kind === "hospital") {
+    // Which sort it is decides whether you drive an hour or ten minutes.
+    if (!a.hospital || !HOSPITAL_TYPES.includes(a.hospital.type)) {
+      fail("locations", `${where} needs hospital.type of ${HOSPITAL_TYPES.join(" or ")}`);
+    }
+  }
+  if (a.kind === "vet") {
+    const e = (a.vet || {}).emergency;
+    if (e !== true && e !== false && e !== null && e !== undefined) {
+      fail("locations", `${where} vet.emergency must be true, false or null`);
     }
   }
   if (a.kind === "escape" && !(a.escape && a.escape.detail)) {
