@@ -328,16 +328,19 @@ main {
 /* Leaflet's divIcon wrapper: the badge inside provides the visuals. */
 .stay-marker { background: none; border: 0; }
 .stay-pin { background: var(--ink-soft); }
-.stay-pin-campsite   { background: #1f6f3f; }
-.stay-pin-britstop   { background: #0057d9; }
-.stay-pin-park4night { background: #d97706; }
-.stay-pin-bnb        { background: #0f766e; }
-.stay-pin-inn        { background: #7c4a03; }
-.stay-pin-cl         { background: #6b7280; }
-.stay-pin-hostel     { background: #b91c1c; }
-.stay-pin-escape     { background: #b45309; }
+/* Deep, saturated fills. The browns and ambers used before sat right in
+   OpenTopoMap's own palette and disappeared into it. The glyph names the type,
+   so these only have to separate from the map and from each other. */
+.stay-pin-campsite   { background: #15803d; }
+.stay-pin-britstop   { background: #1d4ed8; }
+.stay-pin-park4night { background: #c2410c; }
+.stay-pin-bnb        { background: #4338ca; }
+.stay-pin-inn        { background: #9d174d; }
+.stay-pin-cl         { background: #374151; }
+.stay-pin-hostel     { background: #6b21a8; }
+.stay-pin-escape     { background: #0f172a; }
 .stay-pin-endpoint   { background: var(--sea); }
-.stay-pin-hospital   { background: #a11221; }
+.stay-pin-hospital   { background: #b91c1c; }
 .stay-pin-vet        { background: #0f766e; }
 
 .leaflet-popup-content .stay-badge {
@@ -404,18 +407,25 @@ details.stay > summary::marker { color: var(--ink-soft); }
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  /* A thick white ring plus a dark outline: OpenTopoMap is a busy brown and
+     green, and a pin needs both a light and a dark edge to separate from it
+     whichever it happens to land on. */
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.65), 0 1px 4px rgba(0, 0, 0, 0.4);
   flex: none;
   align-self: center;
   color: #fff;
 }
 .stay-badge svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   display: block;
   fill: currentColor;
 }
+
+/* Bigger on the map than in the list — it's competing with contour lines. */
+.stay-marker .stay-badge { width: 28px; height: 28px; }
+.stay-marker .stay-badge svg { width: 16px; height: 16px; }
 .stay-name {
   font-weight: 600;
   color: var(--ink);

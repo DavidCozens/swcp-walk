@@ -70,7 +70,8 @@ sits in a nested block.
 Hospitals and vets (`lib/locations/medical.js`) are matched differently: not by
 radius but by *nearest few, however far* (`site.js` → `nearby.hospital.nearest`).
 A radius is the wrong rule when the nearest A&E is 42 km away and you still need
-to know which it is. They get pins on their own "Emergency" layer, but never widen the map: the
+to know which it is. They get pins in the same "Show pins" layer as everything else, but never widen
+the map: the
 starting view comes from the route's bounds alone, so a hospital 42 km away
 simply waits off-screen until you zoom out or press "Show on map". Each also
 carries a Google Maps link, which routes from wherever you actually are. `hospital.type`

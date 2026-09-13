@@ -85,7 +85,7 @@
           '<a href="' + encodeURI(s.directions) + '">directions</a>' : "")
       );
       marker.addTo(group);
-      byslug[s.slug] = { marker: marker, group: group };
+      byslug[s.slug] = { marker: marker };
     });
 
     return group;
@@ -99,13 +99,14 @@
     // they appear.
     var emergency = buildLayer(el.dataset.emergency);
 
-    var overlays = {};
-    if (near) { near.addTo(map); overlays["Show pins"] = near; }
-    if (emergency) { emergency.addTo(map); overlays["Emergency"] = emergency; }
-    if (!near && !emergency) return null;
-    L.control.layers(null, overlays, { collapsed: false }).addTo(map);
-
+    // One toggle for the lot. The emergency pins are built separately only so
+    // they're excluded from the map's starting bounds; they belong in the same
+    // switch as everything else.
     var groups = [near, emergency].filter(Boolean);
+    if (!groups.length) return null;
+    var all = L.layerGroup(groups);
+    all.addTo(map);
+    L.control.layers(null, { "Show pins": all }, { collapsed: false }).addTo(map);
 
     // "Show on map" next to an entry in the list.
     document.addEventListener("click", function (ev) {
@@ -117,7 +118,7 @@
       var entry = byslug[btn.getAttribute("data-stay")];
       if (!entry) return;
       var marker = entry.marker;
-      if (!map.hasLayer(entry.group)) entry.group.addTo(map);
+      if (!map.hasLayer(all)) all.addTo(map);
       map.setView(marker.getLatLng(), Math.min(15, map.getMaxZoom()));
       marker.openPopup();
       el.scrollIntoView({ behavior: "smooth", block: "center" });
