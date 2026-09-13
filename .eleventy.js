@@ -52,6 +52,11 @@ export default function (eleventyConfig) {
 
   // Human labels for accommodation types.
   const STAY_TYPES = {
+    bus: "Bus",
+    train: "Train",
+    ferry: "Ferry",
+    taxi: "Taxi",
+    transfer: "Taxi & luggage",
     food: "Food",
     cafe: "Café",
     pub: "Pub",
@@ -77,9 +82,13 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("stayBadge", (t) => stayBadge(t));
   // A location's badge: a stay is badged by its stay.type, everything else by
   // its kind, so an escape point gets its own glyph.
-  eleventyConfig.addFilter("locBadge", (loc) =>
-    stayBadge(loc && loc.kind === "stay" ? (loc.stay || {}).type : (loc || {}).kind)
-  );
+  // A badge for anything a list holds. Routes have no `kind` — they're not
+  // places — so fall back to their type: a bus gets a bus.
+  eleventyConfig.addFilter("locBadge", (loc) => {
+    if (!loc) return stayBadge("");
+    if (loc.kind === "stay") return stayBadge((loc.stay || {}).type);
+    return stayBadge(loc.kind || loc.type || "");
+  });
   // What to call this location in a given list: a pub with rooms is an "Inn"
   // under Staying nearby and a "Pub" under Food.
   eleventyConfig.addFilter("roleLabel", (loc, role) => {

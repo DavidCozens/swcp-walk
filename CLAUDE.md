@@ -101,6 +101,13 @@ with a dog. Details go stale quietly: porlockcaravanpark.co.uk now resolves to
 a differently-named park at a different address while directories still list
 the old one.
 
+Services get a badge too, though they never become pins — a bus route isn't a
+place. `locBadge` falls back to a route's `type` when it has no `kind`. The
+output check fails on any badge type with no colour rule, because an unstyled
+one renders as a white ring around an invisible glyph: a blank disc, with
+nothing in the build to say so. That's exactly how the bus and taxi badges
+first shipped.
+
 Each kind has a glyph in `lib/stay-icons.js`, rendered into a coloured badge
 used in the list row, the map pin and the map popup. It's generated once and
 handed to the map as markup inside `data-stays`, so they can't drift apart.

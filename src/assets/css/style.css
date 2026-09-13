@@ -380,6 +380,13 @@ main {
 .stay-pin-hospital   { background: #b91c1c; }
 .stay-pin-food       { background: #7c2d12; }
 .stay-pin-shop       { background: #1e40af; }
+/* Services aren't places, so these never appear as pins — only as list badges. */
+.stay-pin-bus        { background: #0369a1; }
+.stay-pin-stop       { background: #155e75; }
+.stay-pin-train      { background: #7e22ce; }
+.stay-pin-ferry      { background: #0f766e; }
+.stay-pin-taxi,
+.stay-pin-transfer   { background: #a16207; }
 .stay-pin-vet        { background: #0f766e; }
 
 .leaflet-popup-content .stay-badge {

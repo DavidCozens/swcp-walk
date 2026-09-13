@@ -82,6 +82,34 @@ function check(file) {
   for (const value of seen) report(file, value);
 }
 
+// 3. Every badge has a colour. A type with no rule renders as a white ring
+//    around an invisible glyph — a blank disc, with nothing in the build to
+//    say so. This is how the bus and taxi badges shipped blank.
+const cssFile = path.join(SITE, "assets", "css", "style.css");
+if (fs.existsSync(cssFile)) {
+  const css = fs.readFileSync(cssFile, "utf8");
+  const styled = new Set(
+    [...css.matchAll(/\.stay-pin-([a-z0-9]+)\s*[,{]/g)].map((m) => m[1])
+  );
+  const used = new Map();
+  (function scan(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) scan(full);
+      else if (entry.name.endsWith(".html")) {
+        const raw = fs.readFileSync(full, "utf8");
+        for (const m of raw.matchAll(/stay-badge stay-pin-([a-z0-9]+)/g)) {
+          if (!styled.has(m[1]) && !used.has(m[1])) used.set(m[1], full);
+        }
+      }
+    }
+  })(SITE);
+  for (const [type, file] of used) {
+    console.error(`  ✗ ${path.relative(ROOT, file)}: badge "stay-pin-${type}" has no colour rule — it renders blank`);
+    errors += 1;
+  }
+}
+
 walk(SITE);
 
 if (errors) {
