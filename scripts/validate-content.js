@@ -29,7 +29,7 @@ const locUrl = new URL("../src/_data/locations.js", import.meta.url);
 const { default: locations } = await import(locUrl);
 const { distanceKm, trackPoints } = await import(new URL("../lib/nearby.js", import.meta.url));
 const STAY_TYPES = ["campsite", "britstop", "park4night", "cl", "bnb", "inn", "hostel"];
-const KINDS = ["endpoint", "escape", "stay", "poi", "stop", "hospital", "vet"];
+const KINDS = ["endpoint", "escape", "stay", "poi", "stop", "hospital", "vet", "food", "shop"];
 const HOSPITAL_TYPES = ["ae", "utc"];
 const bySlug = new Map(locations.map((l) => [l.slug, l]));
 

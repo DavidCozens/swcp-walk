@@ -52,6 +52,15 @@ export default function (eleventyConfig) {
 
   // Human labels for accommodation types.
   const STAY_TYPES = {
+    food: "Food",
+    cafe: "Café",
+    pub: "Pub",
+    restaurant: "Restaurant",
+    shop: "Shop",
+    convenience: "Convenience store",
+    supermarket: "Supermarket",
+    butcher: "Butcher",
+    bakery: "Bakery",
     hospital: "Hospital",
     vet: "Vet",
     escape: "Escape point",
@@ -71,6 +80,14 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("locBadge", (loc) =>
     stayBadge(loc && loc.kind === "stay" ? (loc.stay || {}).type : (loc || {}).kind)
   );
+  // What to call this location in a given list: a pub with rooms is an "Inn"
+  // under Staying nearby and a "Pub" under Food.
+  eleventyConfig.addFilter("roleLabel", (loc, role) => {
+    const block = (loc || {})[role] || {};
+    if (block.type) return STAY_TYPES[block.type] || block.type;
+    const k = loc && loc.kind === "stay" ? (loc.stay || {}).type : (loc || {}).kind;
+    return STAY_TYPES[k] || k || "";
+  });
 
   const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 

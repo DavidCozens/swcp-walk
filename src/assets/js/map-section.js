@@ -92,19 +92,11 @@
   }
 
   function addStays(map) {
-    var near = buildLayer(el.dataset.stays);
-    // Hospitals and vets are often far enough away to be off-screen. They're
-    // added all the same and simply wait there: the map's starting view comes
-    // from the route's bounds alone, so nothing here widens it. Zoom out and
-    // they appear.
-    var emergency = buildLayer(el.dataset.emergency);
-
-    // One toggle for the lot. The emergency pins are built separately only so
-    // they're excluded from the map's starting bounds; they belong in the same
-    // switch as everything else.
-    var groups = [near, emergency].filter(Boolean);
-    if (!groups.length) return null;
-    var all = L.layerGroup(groups);
+    // Everything in one layer. Somewhere an hour's drive away doesn't widen
+    // the view — the map fits the route's bounds, never the markers — so it
+    // simply waits off-screen until you zoom out or press "Show on map".
+    var all = buildLayer(el.dataset.stays);
+    if (!all) return null;
     all.addTo(map);
     L.control.layers(null, { "Show pins": all }, { collapsed: false }).addTo(map);
 
@@ -124,7 +116,7 @@
       el.scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
-    return groups.length ? groups : null;
+    return all;
   }
 
   function escapeHtml(t) {

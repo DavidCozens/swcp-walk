@@ -30,6 +30,10 @@ export default {
     // Not a radius: the nearest A&E may be an hour away and you still need it.
     hospital: { nearest: 3 },
     vet: { nearest: 3 },
+    // Ranked by isolation, not distance: a remote café earns its place, the
+    // fortieth in Minehead doesn't.
+    food: { routeKm: 1.5, nearest: 6 },
+    shop: { routeKm: 1.5, nearest: 4 },
   },
 
   // How far you'd walk to reach a service. A stop doesn't have to be at the

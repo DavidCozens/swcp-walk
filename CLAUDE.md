@@ -163,6 +163,31 @@ from a search result, already redirects to an operator page because the service
 slug changed. Treat a route's `url` as a dated fact, like anything else with
 `verified`.
 
+## Food, drink and supplies
+
+There are over a hundred cafés, pubs and shops within reach of the first two
+sections alone, and almost all of them are in Minehead or Lynmouth where you
+don't need telling. So these are ranked by **isolation** — how far to the next
+one of the same sort — rather than by distance from the route. A lone tea room
+on a headland rises to the top; the fortieth café in a town sorts itself out of
+the way, and `site.js` caps how many are shown. Record generously on remote
+stretches and sparingly in towns; the ranking does the rest.
+
+They're matched by carrying a `food` or `shop` block, not by `kind`, so a pub
+with rooms is a place to stay *and* somewhere to eat and appears in both lists.
+The free-text `shops` and `eat` fields survive as a closing line per section,
+which is where to say what the list can't — that there's nothing at all between
+Porlock Weir and Lynmouth.
+
+## Every list looks the same
+
+`src/_includes/macros/entry.njk` holds one shape for every list on a section
+page: badge, name, role, one key fact, a jump to its pin, detail behind a
+disclosure. Sections differ in what they put inside; they shouldn't differ in
+how they look. A section with more than three entries starts collapsed and
+offers "Expand all"; three or fewer stay open, since collapsing a short list is
+pure friction. Each expand-all is scoped to its own section.
+
 ## Two utility pages
 
 **"Nearest to me"** in the header asks the browser for a position and opens

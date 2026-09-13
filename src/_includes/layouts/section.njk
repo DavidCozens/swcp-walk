@@ -1,6 +1,7 @@
 ---
 layout: layouts/base.njk
 ---
+{% from "macros/entry.njk" import row, contact, checked, heading %}
 <article class="section">
   <div class="section-head">
     <p class="section-meta">
@@ -18,9 +19,7 @@ layout: layouts/base.njk
       <span class="nav-label">{{ nav.prev.order }} · {{ nav.prev.title }}</span>
     </a>
     {% else %}<span class="nav-none"></span>{% endif %}
-
     <span class="nav-count">{{ nav.position }} of {{ nav.total }}</span>
-
     {% if nav.next %}
     <a class="nav-next" href="{{ nav.next.url }}">
       <span class="nav-label">{{ nav.next.order }} · {{ nav.next.title }}</span>
@@ -31,10 +30,12 @@ layout: layouts/base.njk
 
   <nav class="section-jump" aria-label="On this page">
     {% if content %}<a href="#notes">Notes</a>{% endif %}
-    {% if services.length or transfers.length or shops or eat or transitLink %}<a href="#transport">Transport</a>{% endif %}
+    {% if services.length or transfers.length or transitLink %}<a href="#transport">Transport</a>{% endif %}
     {% if nearby.escape.length %}<a href="#escapes">Escapes</a>{% endif %}
+    {% if nearby.food.length %}<a href="#food">Food</a>{% endif %}
+    {% if nearby.shop.length %}<a href="#shops">Shops</a>{% endif %}
     {% if nearby.stay.length %}<a href="#stays">Stays</a>{% endif %}
-    {% if nearby.hospital.length or nearby.vet.length %}<a href="#emergency">Emergency</a>{% endif %}
+    {% if nearby.hospital.length or nearby.vet.length %}<a href="#emergencies">Emergencies</a>{% endif %}
   </nav>
 
   {% if gpx %}
@@ -46,7 +47,6 @@ layout: layouts/base.njk
     data-maxzoom="{{ site.tiles.maxZoom }}"
     data-route="{{ site.route | dump }}"
     data-stays="{{ mapPins | staysForMap | dump }}"
-    data-emergency="{{ emergencyPins | staysForMap | dump }}"
     role="img"
     aria-label="Route map from {{ startPlace.name or start }} to {{ endPlace.name or end }}"
   ></div>
@@ -67,36 +67,27 @@ layout: layouts/base.njk
   <section class="notes" id="notes">{{ content | safe }}</section>
   {% endif %}
 
-  {% if services.length or transfers.length or shops or eat or transitLink %}
-  <section class="logistics" id="transport">
-    <h2>Getting there &amp; back</h2>
+  {% if services.length or transfers.length or transitLink %}
+  <section class="logistics">
+    {{ heading("Transport", "transport", services) }}
 
     {% if transitLink %}
     <p class="transit-all">
       <a class="stay-directions" href="{{ transitLink }}">All public transport from {{ startPlace.name }} to {{ endPlace.name }}</a>
-      <span class="transit-note">buses, trains and ferries, live in Google Maps. Walking distances below are straight-line, so allow a little more on the ground.</span>
+      <span class="transit-note">Walking distances below are straight-line.</span>
     </p>
     {% endif %}
 
     {% if services.length %}
-    <ul class="service-list">
+    <ul class="entry-list">
       {% for r in services %}
-      <li>
-        <p class="service-head">
-          <span class="service-number">{{ r.number }}</span>
-          <strong>{% if r.url %}<a href="{{ r.url }}">{{ r.name }}</a>{% else %}{{ r.name }}{% endif %}</strong>
-          {% if r.provider %}<span class="service-op">{{ r.provider.name }}</span>{% endif %}
-          {% if r.linksEnds %}<span class="stay-flag yes">links both ends</span>
-          {% elif r.stretch and not anyServiceLinksEnds %}<span class="stay-flag unsure">a walk at one end</span>
-          {% elif r.stretch %}<span class="stay-flag unsure">further out</span>
-          {% else %}<span class="stay-flag unsure">escape points only</span>{% endif %}
-        </p>
+      {% call row(r, "service", r.provider.name, r.number + " · " + (r.linksEnds and "links both ends" or (r.stretch and "a walk at one end" or "escape points only")), services.length <= 3) %}
         <dl class="stay-facts">
           <dt>Calls at</dt>
           <dd>{% for c in r.calling %}{{ c.name }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
           <dt>Walk to it</dt>
           <dd>
-            {% if r.fromStart.km <= 0.2 and r.fromEnd.km <= 0.2 %}Stops at both ends of the section
+            {% if r.fromStart.km <= 0.2 and r.fromEnd.km <= 0.2 %}Stops at both ends
             {% else %}
               {% if r.fromStart.km > 0.2 %}{{ r.fromStart.km }} km from {{ startPlace.name }} to {{ r.fromStart.stop.name }}{% else %}Stops at {{ startPlace.name }}{% endif %};
               {% if r.fromEnd.km > 0.2 %}{{ r.fromEnd.km }} km from {{ endPlace.name }} to {{ r.fromEnd.stop.name }}{% else %}stops at {{ endPlace.name }}{% endif %}
@@ -104,33 +95,22 @@ layout: layouts/base.njk
           </dd>
           <dt>Season</dt>
           <dd>{% if r.season %}{{ r.season | seasonText }}{% if r.frequency %} · {{ r.frequency }}{% endif %}{% else %}<span class="unsure">Not confirmed</span>{% endif %}</dd>
-          {% if r.servesEscape %}
-          <dt>Bail-out</dt>
-          <dd>Calls at escape points on this section</dd>
-          {% endif %}
+          {% if r.servesEscape %}<dt>Bail-out</dt><dd>Calls at escape points on this section</dd>{% endif %}
+          {% if r.url %}<dt>Timetable</dt><dd><a href="{{ r.url }}">{{ r.provider.name }}</a></dd>{% endif %}
         </dl>
         {% if r.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ r.notes }}</p>{% endif %}
-        <p class="stay-checked">
-          {% if r.verified %}Details checked {{ r.verified }}{% else %}<span class="unsure">Service details not confirmed — check before relying on them</span>{% endif %}
-        </p>
-      </li>
+        {{ checked(r) }}
+      {% endcall %}
       {% endfor %}
     </ul>
     {% endif %}
 
     {% if transfers.length %}
     <h3>Lifts &amp; luggage</h3>
-    <ul class="service-list">
+    <ul class="entry-list">
       {% for t in transfers %}
-      <li>
-        <p class="service-head">
-          <strong>{% if t.url %}<a href="{{ t.url }}">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}</strong>
-          {% if "passenger" in t.services %}<span class="stay-flag yes">lifts</span>{% endif %}
-          {% if "baggage" in t.services %}<span class="stay-flag">luggage</span>{% endif %}
-        </p>
+      {% call row(t, "transfer", ("passenger" in t.services) and "Lifts & luggage" or "Luggage", (t.distanceKm == null) and t.reaches or ("based " + t.distanceKm + " km from " + t.reaches), transfers.length <= 3) %}
         <dl class="stay-facts">
-          <dt>Covers</dt>
-          <dd>{% if t.distanceKm == null %}{{ t.reaches }}{% else %}Based {{ t.distanceKm }} km from {{ t.reaches }}{% endif %}</dd>
           {% if t.hours %}<dt>Hours</dt><dd>{{ t.hours }}</dd>{% endif %}
           <dt>Dogs</dt>
           <dd>
@@ -139,75 +119,84 @@ layout: layouts/base.njk
             {% else %}<span class="unsure">Not confirmed</span>{% endif %}
             {% if t.dogs_note %} — {{ t.dogs_note }}{% endif %}
           </dd>
-          {% if t.phone %}<dt>Phone</dt><dd><a href="tel:{{ t.phone | replace(" ", "") }}">{{ t.phone }}</a></dd>{% endif %}
+          {{ contact(t) }}
         </dl>
         {% if t.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ t.notes }}</p>{% endif %}
-        <p class="stay-checked">
-          {% if t.verified %}Details checked {{ t.verified }}{% else %}<span class="unsure">Details not confirmed</span>{% endif %}
-        </p>
-      </li>
+        {{ checked(t) }}
+      {% endcall %}
       {% endfor %}
     </ul>
     {% endif %}
-
-    {% if shops %}<p><strong>Shops &amp; dog food:</strong> {{ shops }}</p>{% endif %}
-    {% if eat %}<p><strong>Eating out:</strong> {{ eat }}</p>{% endif %}
   </section>
   {% endif %}
 
-  {% if nearby.escape and nearby.escape.length %}
-  <section class="escapes" id="escapes">
-    <h2>Escape points</h2>
-    <ul class="escape-list">
+  {% if nearby.escape.length %}
+  <section class="escapes">
+    {{ heading("Escape points", "escapes", nearby.escape) }}
+    <ul class="entry-list">
       {% for e in nearby.escape %}
-      <li>
-        <p class="escape-head">
-          {{ e | locBadge | safe }}
-          <span class="e-km">{{ e.kmAlong }} km in</span>
-          <strong>{{ e.name }}</strong>
-          <span class="stay-dist">{{ e.toRoute }} km off the path</span>
-          <button type="button" class="stay-focus" data-stay="{{ e.slug }}">Show on map</button>
-        </p>
-        {% if e.escape.detail %}<p class="escape-detail">{{ e.escape.detail }}</p>{% endif %}
-        {% if e | directions %}<p class="escape-detail"><a class="stay-directions" href="{{ e | directions }}">Navigate with Google Maps</a></p>{% endif %}
-      </li>
+      {% call row(e, "escape", "Escape point", e.kmAlong + " km in · " + e.toRoute + " km off the path", nearby.escape.length <= 3) %}
+        <dl class="stay-facts">
+          {% if e.escape.detail %}<dt>Getting out</dt><dd>{{ e.escape.detail }}</dd>{% endif %}
+          {{ contact(e) }}
+        </dl>
+      {% endcall %}
       {% endfor %}
     </ul>
   </section>
   {% endif %}
 
-  {% set stays = nearby.stay %}
-  {% if stays and stays.length %}
-  <section class="stays" id="stays">
-    <div class="stays-head">
-      <h2>Staying nearby</h2>
-      <button type="button" class="stays-toggle" data-expand-all>Expand all</button>
-    </div>
-    <ul class="stay-list">
-      {% for s in stays %}
-      <li>
-        <details class="stay">
-        <summary>
-          {{ s | locBadge | safe }}
-          <span class="stay-name">{{ s.name }}</span>
-          <span class="stay-kind">{{ s.stay.type | stayType }}</span>
-          <span class="stay-dist">{{ s.nearest }} km from the {% if s.atEnd %}finish{% else %}start{% endif %}{% if s.toRoute <= 0.25 %}, on the route{% elif s.toRoute < (s.nearest - 0.3) %}, {{ s.toRoute }} km off the path{% endif %}</span>
-          {% if s.stay.dogs === true %}<span class="stay-flag yes" title="Dogs welcome">dogs</span>
-          {% elif s.stay.dogs === false %}<span class="stay-flag no" title="No dogs">no dogs</span>
-          {% else %}<span class="stay-flag unsure" title="Dog policy not confirmed">dogs?</span>{% endif %}
-          <button type="button" class="stay-focus" data-stay="{{ s.slug }}">Show on map</button>
-        </summary>
-
+  {% if nearby.food.length %}
+  <section class="food">
+    {{ heading("Food & drink", "food", nearby.food) }}
+    <ul class="entry-list">
+      {% for f in nearby.food %}
+      {% call row(f, "food", f | roleLabel("food"), f.toRoute + " km off the path", nearby.food.length <= 3) %}
         <dl class="stay-facts">
-          {% if s.url %}
-          <dt>Website</dt>
-          <dd><a href="{{ s.url }}">{{ s.name }}</a></dd>
-          {% endif %}
-          {% if s.address %}
-          <dt>Address</dt>
-          <dd>{{ s.address }}</dd>
-          {% endif %}
+          {% if f.isolation %}<dt>Nearest other</dt><dd>{{ f.isolation }} km away</dd>{% endif %}
+          {{ contact(f) }}
+        </dl>
+        {% if f.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ f.notes }}</p>{% endif %}
+        {{ checked(f) }}
+      {% endcall %}
+      {% endfor %}
+    </ul>
+    {% if nearby.counts.food > nearby.food.length %}
+    <p class="more-note">{{ nearby.counts.food - nearby.food.length }} more within reach, mostly in the towns.</p>
+    {% endif %}
+    {% if eat %}<p class="more-note">{{ eat }}</p>{% endif %}
+  </section>
+  {% endif %}
 
+  {% if nearby.shop.length %}
+  <section class="shops">
+    {{ heading("Shops", "shops", nearby.shop) }}
+    <ul class="entry-list">
+      {% for sh in nearby.shop %}
+      {% call row(sh, "shop", sh | roleLabel("shop"), sh.toRoute + " km off the path", nearby.shop.length <= 3) %}
+        <dl class="stay-facts">
+          {% if sh.isolation %}<dt>Nearest other</dt><dd>{{ sh.isolation }} km away</dd>{% endif %}
+          {{ contact(sh) }}
+        </dl>
+        {% if sh.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ sh.notes }}</p>{% endif %}
+        {{ checked(sh) }}
+      {% endcall %}
+      {% endfor %}
+    </ul>
+    {% if nearby.counts.shop > nearby.shop.length %}
+    <p class="more-note">{{ nearby.counts.shop - nearby.shop.length }} more within reach.</p>
+    {% endif %}
+    {% if shops %}<p class="more-note">{{ shops }}</p>{% endif %}
+  </section>
+  {% endif %}
+
+  {% if nearby.stay.length %}
+  <section class="stays">
+    {{ heading("Staying nearby", "stays", nearby.stay) }}
+    <ul class="entry-list">
+      {% for s in nearby.stay %}
+      {% call row(s, "stay", s.stay.type | stayType, s.nearest + " km from the " + (s.atEnd and "finish" or "start"), nearby.stay.length <= 3) %}
+        <dl class="stay-facts">
           <dt>Dogs</dt>
           <dd>
             {% if s.stay.dogs === true %}<span class="yes">Welcome</span>
@@ -215,105 +204,56 @@ layout: layouts/base.njk
             {% else %}<span class="unsure">Not confirmed</span>{% endif %}
             {% if s.stay.dogs_note %} — {{ s.stay.dogs_note }}{% endif %}
           </dd>
-
           <dt>Season</dt>
           <dd>{% if s.stay.season %}{{ s.stay.season | seasonText }}{% else %}<span class="unsure">{{ s.stay.season | seasonText }}</span>{% endif %}</dd>
-
           <dt>Price</dt>
           <dd>{% if s.stay.price_per_night %}{{ s.stay.price_per_night | priceText(s.stay.price_note) }}{% else %}<span class="unsure">{{ s.stay.price_per_night | priceText(s.stay.price_note) }}</span>{% endif %}</dd>
-
-          {% if s.stay.hookup %}
-          <dt>Hook-up</dt>
-          <dd>Electric hook-up available</dd>
-          {% endif %}
-
-          {% if s.phone %}
-          <dt>Phone</dt>
-          <dd><a href="tel:{{ s.phone | replace(" ", "") }}">{{ s.phone }}</a></dd>
-          {% endif %}
-
-          {% if s | directions %}
-          <dt>Drive there</dt>
-          <dd><a class="stay-directions" href="{{ s | directions }}">Navigate with Google Maps</a></dd>
-          {% endif %}
+          {% if s.stay.hookup %}<dt>Hook-up</dt><dd>Electric hook-up available</dd>{% endif %}
+          {{ contact(s) }}
         </dl>
-
-        {% if s.notes %}
-        <p class="stay-notes"><span class="notes-label">Notes</span> {{ s.notes }}</p>
-        {% endif %}
-
-        <p class="stay-checked">
-          {% if s.verified %}Details checked {{ s.verified }}{% else %}<span class="unsure">Details not yet confirmed with the owner</span>{% endif %}
-        </p>
-        </details>
-      </li>
+        {% if s.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ s.notes }}</p>{% endif %}
+        {{ checked(s) }}
+      {% endcall %}
       {% endfor %}
     </ul>
   </section>
   {% endif %}
 
   {% if nearby.hospital.length or nearby.vet.length %}
-  <section class="emergency" id="emergency">
-    <h2>If something goes wrong</h2>
-    <p class="emergency-lead">
-      In a real emergency it's 999, wherever you are. What follows is the nearest
-      few, however far away they happen to be — they're kept off the map because
-      the nearest A&amp;E would zoom the route out to nothing. Distances are
-      straight-line from this section and the times are rough; the map link gives
-      the real answer, and routes from wherever you actually are. They do have
-      pins — the map just doesn't zoom out to them, so pinch out or use "Show on
-      map" to find one.
-    </p>
+  <section class="emergency">
+    {{ heading("Emergencies", "emergencies", nearby.hospital.concat(nearby.vet)) }}
 
     {% if nearby.hospital.length %}
     <h3>Hospitals</h3>
-    <ul class="emergency-list">
+    <ul class="entry-list">
       {% for h in nearby.hospital %}
-      <li>
-        <p class="emergency-head">
-          <span class="emergency-kind {% if h.hospital.type == 'ae' %}is-ae{% endif %}">{% if h.hospital.type == "ae" %}A&amp;E{% else %}Urgent care{% endif %}</span>
-          <strong>{{ h.name }}</strong>
-          <span class="stay-dist">{{ h.nearest }} km · {{ h.nearest | driveTime }}</span>
-          <button type="button" class="stay-focus" data-stay="{{ h.slug }}">Show on map</button>
-        </p>
+      {% call row(h, "hospital", (h.hospital.type == "ae") and "A&E" or "Urgent care", h.nearest + " km · " + (h.nearest | driveTime), false) %}
         <dl class="stay-facts">
-          {% if h.address %}<dt>Address</dt><dd>{{ h.address }}</dd>{% endif %}
           {% if h.hours %}<dt>Open</dt><dd>{{ h.hours }}</dd>{% endif %}
-          {% if h.phone %}<dt>Phone</dt><dd><a href="tel:{{ h.phone | replace(" ", "") }}">{{ h.phone }}</a></dd>{% endif %}
-          {% if h | directions %}<dt>Map</dt><dd><a class="stay-directions" href="{{ h | directions }}">Open in Google Maps</a></dd>{% endif %}
+          {{ contact(h) }}
         </dl>
         {% if h.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ h.notes }}</p>{% endif %}
-      </li>
+      {% endcall %}
       {% endfor %}
     </ul>
     {% endif %}
 
     {% if nearby.vet.length %}
     <h3>Vets</h3>
-    <ul class="emergency-list">
+    <ul class="entry-list">
       {% for v in nearby.vet %}
-      <li>
-        <p class="emergency-head">
-          <span class="emergency-kind{% if v.vet.emergency %} is-ae{% endif %}">{% if v.vet.emergency %}24 hr{% else %}Vet{% endif %}</span>
-          <strong>{% if v.url %}<a href="{{ v.url }}">{{ v.name }}</a>{% else %}{{ v.name }}{% endif %}</strong>
-          <span class="stay-dist">{{ v.nearest }} km · {{ v.nearest | driveTime }}</span>
-          <button type="button" class="stay-focus" data-stay="{{ v.slug }}">Show on map</button>
-        </p>
+      {% call row(v, "vet", v.vet.emergency and "24 hr" or "Vet", v.nearest + " km · " + (v.nearest | driveTime), false) %}
         <dl class="stay-facts">
-          {% if v.address %}<dt>Address</dt><dd>{{ v.address }}</dd>{% endif %}
           {% if v.hours %}<dt>Cover</dt><dd>{{ v.hours }}</dd>{% endif %}
-          <dt>Phone</dt>
-          <dd>{% if v.phone %}<a href="tel:{{ v.phone | replace(" ", "") }}">{{ v.phone }}</a>{% else %}<span class="unsure">Not recorded yet</span>{% endif %}</dd>
-          {% if v | directions %}<dt>Map</dt><dd><a class="stay-directions" href="{{ v | directions }}">Open in Google Maps</a></dd>{% endif %}
+          {{ contact(v) }}
         </dl>
         {% if v.notes %}<p class="stay-notes"><span class="notes-label">Notes</span> {{ v.notes }}</p>{% endif %}
-      </li>
+      {% endcall %}
       {% endfor %}
     </ul>
     {% endif %}
   </section>
   {% endif %}
-
 </article>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

@@ -9,14 +9,10 @@ ascent_m: 538
 mode: van base
 gpx: /gpx/01-minehead-porlock-weir.gpx
 os_url: "https://explore.osmaps.com/route/33801498"
-shops: "Minehead has full-size supermarkets — stock up here. Porlock village (inland of the Weir) has a Spar and butcher; Porlock Weir itself is tiny."
-eat: "The Bottom Ship at Porlock Weir; several cafés and pubs in Porlock."
+shops: "Minehead has full-size supermarkets — stock up before you start."
+eat: "Plenty of choice in Minehead; thin on the ground after Bossington."
 ---
 
-The official start. The path climbs steeply out of Minehead onto North Hill,
-then there's a choice: the rugged coastal alternative or the easier inland
-route through the trees. Gentle first day by SWCP standards — a good shake-down
-for the kit and for Bowie before the harder North Devon sections.
-
-*Route is the real OS Maps export (16.0 km, 538 m ascent, both from OS's own
-figures). These notes are still to be written.*
+The path climbs steeply out of Minehead onto North Hill, then there's a choice:
+the rugged coastal alternative or the easier inland route through the trees.
+Gentle first day by SWCP standards.

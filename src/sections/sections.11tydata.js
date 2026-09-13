@@ -15,18 +15,14 @@ export default {
     // Nunjucks `+` on two arrays concatenates them as strings.
     mapPins: (data) => {
       const near = nearbyByKind(data, data.locations, data.site.nearby);
-      return [...near.stay, ...near.escape];
+      // Everything gets a pin. Hospitals far off don't widen the view: the
+      // map fits the route's bounds, never the markers.
+      return [...near.stay, ...near.escape, ...near.food, ...near.shop,
+              ...near.hospital, ...near.vet];
     },
     // Shipped in the sections feed so a browser can work out which section
     // it's nearest to.
     samplePoints: (data) => samplePoints(data.gpx),
-    // Hospitals and vets get pins too, on their own layer. They never affect
-    // the map's starting view — fitBounds uses the route's bounds alone — so
-    // they simply sit off-screen until you zoom out far enough to find them.
-    emergencyPins: (data) => {
-      const near = nearbyByKind(data, data.locations, data.site.nearby);
-      return [...near.hospital, ...near.vet];
-    },
     // start/end name a location by slug; resolve them for the page.
     startPlace: (data) => lookup(data.locations, data.start),
     endPlace: (data) => lookup(data.locations, data.end),

@@ -1,0 +1,38 @@
+{# One shape for every list on a section page: badge, name, role, one key fact,
+   a jump to its pin, and the detail behind a disclosure. Sections differ in
+   what they put inside; they shouldn't differ in how they look. #}
+{% macro row(loc, role, label, fact, open) %}
+<li>
+  <details class="entry"{% if open %} open{% endif %}>
+    <summary>
+      {{ loc | locBadge | safe }}
+      <span class="stay-name">{{ loc.name }}</span>
+      <span class="stay-kind">{{ label }}</span>
+      <span class="stay-dist">{{ fact }}</span>
+      {% if loc.slug %}<button type="button" class="stay-focus" data-stay="{{ loc.slug }}">Show on map</button>{% endif %}
+    </summary>
+    {{ caller() }}
+  </details>
+</li>
+{% endmacro %}
+
+{# Address, phone and a map link — the three things nearly every entry needs. #}
+{% macro contact(loc) %}
+  {% if loc.address %}<dt>Address</dt><dd>{{ loc.address }}</dd>{% endif %}
+  {% if loc.phone %}<dt>Phone</dt><dd><a href="tel:{{ loc.phone | replace(" ", "") }}">{{ loc.phone }}</a></dd>{% endif %}
+  {% if loc.url %}<dt>Website</dt><dd><a href="{{ loc.url }}">{{ loc.name }}</a></dd>{% endif %}
+  {% if loc | directions %}<dt>Map</dt><dd><a class="stay-directions" href="{{ loc | directions }}">Open in Google Maps</a></dd>{% endif %}
+{% endmacro %}
+
+{% macro checked(loc) %}
+<p class="stay-checked">
+  {% if loc.verified %}Checked {{ loc.verified }}{% else %}<span class="unsure">Not confirmed</span>{% endif %}
+</p>
+{% endmacro %}
+
+{% macro heading(title, id, list) %}
+<div class="stays-head">
+  <h2 id="{{ id }}">{{ title }}</h2>
+  {% if list.length > 3 %}<button type="button" class="stays-toggle" data-expand-all>Expand all</button>{% endif %}
+</div>
+{% endmacro %}
