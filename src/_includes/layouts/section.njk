@@ -17,6 +17,7 @@ layout: layouts/base.njk
     data-tiles="{{ site.tiles.url }}"
     data-attribution="{{ site.tiles.attribution }}"
     data-maxzoom="{{ site.tiles.maxZoom }}"
+    data-route="{{ site.route | dump }}"
     role="img"
     aria-label="Route map from {{ start }} to {{ end }}"
   ></div>

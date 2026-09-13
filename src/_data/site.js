@@ -16,4 +16,13 @@ export default {
       '(<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
     maxZoom: 17,
   },
+  // How the route is drawn. The casing is a wider line underneath: on a
+  // contour map the halo does more for legibility than the colour does.
+  // Violet because nothing on OpenTopoMap's brown-and-green palette is violet.
+  route: {
+    color: "#6a0dad",
+    weight: 4,
+    opacity: 0.9,
+    casing: { color: "#ffffff", weight: 7 },
+  },
 };

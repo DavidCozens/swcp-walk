@@ -13,6 +13,45 @@
   // Sensible default view over the South West while data loads / if it fails.
   map.setView([50.6, -3.8], 8);
 
+
+  // Route styling comes from site.js via data-route.
+  var style = {};
+  try { style = JSON.parse(el.dataset.route || "{}"); } catch (e) { /* defaults below */ }
+
+  var line = {
+    color: style.color || "#6a0dad",
+    weight: style.weight || 3,
+    opacity: style.opacity == null ? 0.9 : style.opacity,
+    lineCap: "round",
+    lineJoin: "round",
+  };
+
+  // Draw a wider line underneath the route so it stays legible over contours.
+  // leaflet-gpx has no casing option, so trace the loaded track again and push
+  // the copy behind it.
+  function addCasing(map, gpxLayer) {
+    if (!style.casing) return;
+    var drawn = [];
+    (function collect(layer) {
+      if (layer.getLatLngs) {
+        var pts = layer.getLatLngs();
+        if (pts && pts.length) {
+          drawn.push(
+            L.polyline(pts, {
+              color: style.casing.color || "#ffffff",
+              weight: style.casing.weight || line.weight + 3,
+              opacity: 1,
+              lineCap: "round",
+              lineJoin: "round",
+            }).addTo(map)
+          );
+        }
+      }
+      if (layer.getLayers) layer.getLayers().forEach(collect);
+    })(gpxLayer);
+    drawn.forEach(function (d) { d.bringToBack(); });
+  }
+
   fetch(el.dataset.src)
     .then(function (r) {
       return r.json();
@@ -38,9 +77,12 @@
             endIconUrl: null,
             shadowUrl: null,
           },
-          polyline_options: { color: "#e0a010", weight: 3, opacity: 0.9 },
+          polyline_options: line,
         })
           .on("loaded", function (e) {
+            // Safe here: the map got a default view before the fetch, so the
+            // casing can render and be pushed behind the route.
+            addCasing(map, e.target);
             e.target
               .bindPopup(
                 '<a href="' + s.url + '">' + s.title + "</a>"

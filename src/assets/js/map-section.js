@@ -10,6 +10,45 @@
     maxZoom: Number(el.dataset.maxzoom) || 19,
   }).addTo(map);
 
+
+  // Route styling comes from site.js via data-route.
+  var style = {};
+  try { style = JSON.parse(el.dataset.route || "{}"); } catch (e) { /* defaults below */ }
+
+  var line = {
+    color: style.color || "#6a0dad",
+    weight: style.weight || 4,
+    opacity: style.opacity == null ? 0.9 : style.opacity,
+    lineCap: "round",
+    lineJoin: "round",
+  };
+
+  // Draw a wider line underneath the route so it stays legible over contours.
+  // leaflet-gpx has no casing option, so trace the loaded track again and push
+  // the copy behind it.
+  function addCasing(map, gpxLayer) {
+    if (!style.casing) return;
+    var drawn = [];
+    (function collect(layer) {
+      if (layer.getLatLngs) {
+        var pts = layer.getLatLngs();
+        if (pts && pts.length) {
+          drawn.push(
+            L.polyline(pts, {
+              color: style.casing.color || "#ffffff",
+              weight: style.casing.weight || line.weight + 3,
+              opacity: 1,
+              lineCap: "round",
+              lineJoin: "round",
+            }).addTo(map)
+          );
+        }
+      }
+      if (layer.getLayers) layer.getLayers().forEach(collect);
+    })(gpxLayer);
+    drawn.forEach(function (d) { d.bringToBack(); });
+  }
+
   var gpx = el.dataset.gpx;
   if (!gpx) {
     map.setView([50.6, -3.8], 8);
@@ -23,10 +62,13 @@
     // renders as a pin with an empty popup.
     gpx_options: { parseElements: ["track", "route"] },
     marker_options: { startIconUrl: null, endIconUrl: null, shadowUrl: null },
-    polyline_options: { color: "#e0a010", weight: 4, opacity: 0.9 },
+    polyline_options: line,
   })
     .on("loaded", function (e) {
+      // Set the view first: the casing can't be drawn, and so can't be pushed
+      // behind the route, until the map has a centre and zoom.
       map.fitBounds(e.target.getBounds(), { padding: [20, 20] });
+      addCasing(map, e.target);
     })
     .on("error", function () {
       map.setView([50.6, -3.8], 8);
