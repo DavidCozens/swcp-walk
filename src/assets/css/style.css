@@ -104,6 +104,39 @@ main {
 }
 
 /* Maps */
+.section-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.6rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--cond);
+  font-size: 0.92rem;
+}
+.section-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  min-width: 0;
+}
+.section-nav a:hover .nav-label { text-decoration: underline; }
+.section-nav .nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.section-nav .nav-arrow { color: var(--gorse); font-weight: 700; }
+.section-nav .nav-count { color: var(--ink-soft); white-space: nowrap; }
+.section-nav .nav-none { flex: 1; }
+.section-nav .nav-next { justify-content: flex-end; text-align: right; }
+@media (max-width: 34rem) {
+  .section-nav .nav-label { max-width: 8.5rem; }
+}
+
 .map-link {
   margin: 0.4rem 0 0;
   font-family: var(--cond);
@@ -256,6 +289,33 @@ main {
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--line);
 }
+.stay-pin {
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+  background: var(--ink-soft);
+}
+.stay-pin-campsite   { background: #1f6f3f; }
+.stay-pin-britstop   { background: #0057d9; }
+.stay-pin-park4night { background: #d97706; }
+.stay-pin-bnb        { background: #0f766e; }
+.stay-pin-inn        { background: #7c4a03; }
+.stay-pin-cl         { background: #6b7280; }
+.stay-pin-hostel     { background: #b91c1c; }
+
+.stay-focus {
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: #fff;
+  font-family: var(--cond);
+  font-size: 0.82rem;
+  color: var(--sea);
+  cursor: pointer;
+}
+.stay-focus:hover { border-color: var(--sea); color: var(--sea-deep); }
+
 .stay-list {
   list-style: none;
   margin: 0;

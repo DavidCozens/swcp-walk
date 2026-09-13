@@ -74,6 +74,14 @@ Two fields carry their weight:
   the old one.
 - `dogs` — `true`, `false`, or `null` for unknown. Never guess it.
 
+Each section map shows the nearby places as pins, coloured by type from
+`style.css` (`.stay-pin-<type>`). They're `divIcon`s rather than Leaflet's
+default marker, so nothing is fetched from a CDN and the colours stay with the
+stylesheet. A layers control toggles them, and "Show on map" beside a list
+entry pans to its pin. The data reaches the script trimmed, as JSON in
+`data-stays` — the `staysForMap` filter resolves the type label server-side so
+the browser doesn't need a second copy of the mapping.
+
 Coordinates come from postcodes via `api.postcodes.io` (free, no key). A wrong
 one doesn't error, it just silently stops the place appearing anywhere, so
 `npm run validate` range-checks them.

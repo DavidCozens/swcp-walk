@@ -10,6 +10,25 @@ layout: layouts/base.njk
     <p class="section-route">{{ start }} &rarr; {{ end }}</p>
   </div>
 
+  {% set nav = collections.sections | sectionNav(page.url) %}
+  <nav class="section-nav" aria-label="Sections">
+    {% if nav.prev %}
+    <a class="nav-prev" href="{{ nav.prev.url }}">
+      <span class="nav-arrow" aria-hidden="true">&larr;</span>
+      <span class="nav-label">{{ nav.prev.order }} · {{ nav.prev.title }}</span>
+    </a>
+    {% else %}<span class="nav-none"></span>{% endif %}
+
+    <span class="nav-count">{{ nav.position }} of {{ nav.total }}</span>
+
+    {% if nav.next %}
+    <a class="nav-next" href="{{ nav.next.url }}">
+      <span class="nav-label">{{ nav.next.order }} · {{ nav.next.title }}</span>
+      <span class="nav-arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    {% else %}<span class="nav-none"></span>{% endif %}
+  </nav>
+
   {% if gpx %}
   <div
     class="map map-section"
@@ -18,6 +37,7 @@ layout: layouts/base.njk
     data-attribution="{{ site.tiles.attribution }}"
     data-maxzoom="{{ site.tiles.maxZoom }}"
     data-route="{{ site.route | dump }}"
+    data-stays="{{ stays | staysForMap | dump }}"
     role="img"
     aria-label="Route map from {{ start }} to {{ end }}"
   ></div>
@@ -77,6 +97,7 @@ layout: layouts/base.njk
           <span class="stay-type">{{ s.type | stayType }}</span>
           <strong>{% if s.url %}<a href="{{ s.url }}">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}</strong>
           <span class="stay-dist">{{ s.nearest }} km from the {% if s.atEnd %}finish{% else %}start{% endif %}{% if s.toRoute <= 0.25 %}, on the route{% elif s.toRoute < (s.nearest - 0.3) %}, {{ s.toRoute }} km off the path{% endif %}</span>
+          <button type="button" class="stay-focus" data-stay="{{ s.slug }}">Show on map</button>
         </p>
         <p class="stay-meta">
           {% if s.address %}{{ s.address }}{% endif %}

@@ -38,6 +38,36 @@ export default function (eleventyConfig) {
   };
   eleventyConfig.addFilter("stayType", (t) => STAY_TYPES[t] || t || "");
 
+  eleventyConfig.addFilter("staysForMap", (stays) =>
+    (stays || []).map((s) => ({
+      slug: s.slug,
+      name: s.name,
+      type: s.type,
+      label: STAY_TYPES[s.type] || s.type,
+      lat: s.lat,
+      lon: s.lon,
+      url: s.url || "",
+      where: `${s.nearest} km from the ${s.atEnd ? "finish" : "start"}`,
+    }))
+  );
+
+  // Previous/next section in walking order, for the stepper on a section page.
+  eleventyConfig.addFilter("sectionNav", (sections, url) => {
+    const list = [...(sections || [])].sort(
+      (a, b) => (a.data.order || 0) - (b.data.order || 0)
+    );
+    const i = list.findIndex((s) => s.url === url);
+    if (i === -1) return { prev: null, next: null, position: 0, total: list.length };
+    const brief = (s) =>
+      s ? { url: s.url, title: s.data.title, order: s.data.order } : null;
+    return {
+      prev: brief(list[i - 1]),
+      next: brief(list[i + 1]),
+      position: i + 1,
+      total: list.length,
+    };
+  });
+
   const byOrder = (a, b) => (a.data.order || 0) - (b.data.order || 0);
 
   // All sections, in walking order.
