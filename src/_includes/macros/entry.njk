@@ -21,7 +21,15 @@
   {% if loc.address %}<dt>Address</dt><dd>{{ loc.address }}</dd>{% endif %}
   {% if loc.phone %}<dt>Phone</dt><dd><a href="tel:{{ loc.phone | replace(" ", "") }}">{{ loc.phone }}</a></dd>{% endif %}
   {% if loc.url %}<dt>Website</dt><dd><a href="{{ loc.url }}">{{ loc.name }}</a></dd>{% endif %}
-  {% if loc | directions %}<dt>Map</dt><dd><a class="stay-directions" href="{{ loc | directions }}">Open in Google Maps</a></dd>{% endif %}
+  {% if loc | directions %}
+  <dt>Get there</dt>
+  <dd class="get-there">
+    {# No origin, so Maps routes from wherever you're standing. #}
+    <a class="stay-directions" href="{{ loc | directions('driving') }}">Drive</a>
+    <a class="stay-directions" href="{{ loc | directions('transit') }}">Public transport</a>
+    <a class="stay-directions" href="{{ loc | directions('walking') }}">Walk</a>
+  </dd>
+  {% endif %}
 {% endmacro %}
 
 {% macro checked(loc) %}

@@ -130,11 +130,19 @@ export default function (eleventyConfig) {
     return `roughly ${h} hr${m ? " " + m + " min" : ""} by road`;
   });
 
-  eleventyConfig.addFilter("directions", (stay) => {
+  // Directions to a location from wherever you are — a Maps URL with no
+  // origin routes from your current position, which is the "I'm here, get me
+  // to X" case. `mode` is driving, transit or walking; omitted, Maps decides.
+  eleventyConfig.addFilter("directions", (stay, mode) => {
     if (!stay) return "";
-    if (stay.maps_url) return stay.maps_url;
-    if (typeof stay.lat !== "number" || typeof stay.lon !== "number") return "";
-    return `https://www.google.com/maps/dir/?api=1&destination=${stay.lat},${stay.lon}`;
+    let url = stay.maps_url;
+    if (!url) {
+      if (typeof stay.lat !== "number" || typeof stay.lon !== "number") return "";
+      url = `https://www.google.com/maps/dir/?api=1&destination=${stay.lat},${stay.lon}`;
+    }
+    // An override like the car park's Plus Code may already carry a mode.
+    if (mode && !/[?&]travelmode=/.test(url)) url += `&travelmode=${mode}`;
+    return url;
   });
 
   eleventyConfig.addFilter("staysForMap", (stays) =>

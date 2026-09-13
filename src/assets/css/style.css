@@ -534,6 +534,8 @@ details.entry > summary::marker { color: var(--ink-soft); }
 }
 .stay-checked .unsure { font-style: italic; }
 
+.get-there a { margin-right: 0.7rem; white-space: nowrap; }
+
 .stay-directions::after {
   content: " \2197";
   font-size: 0.85em;
