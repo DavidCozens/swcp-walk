@@ -1,9 +1,9 @@
 {# One shape for every list on a section page: badge, name, role, one key fact,
    a jump to its pin, and the detail behind a disclosure. Sections differ in
    what they put inside; they shouldn't differ in how they look. #}
-{% macro row(loc, role, label, fact, open) %}
+{% macro row(loc, role, label, fact) %}
 <li>
-  <details class="entry"{% if open %} open{% endif %}>
+  <details class="entry">
     <summary>
       {{ loc | locBadge | safe }}
       <span class="stay-name">{{ loc.name }}</span>
@@ -30,9 +30,12 @@
 </p>
 {% endmacro %}
 
-{% macro heading(title, id, list) %}
+{# Every section gets the same control, however short. Whole sections are
+   irrelevant depending on why you've opened the page — a hurt dog, a hungry
+   afternoon, two days of transport to plan — so each folds away on its own. #}
+{% macro heading(title, id) %}
 <div class="stays-head">
   <h2 id="{{ id }}">{{ title }}</h2>
-  {% if list.length > 3 %}<button type="button" class="stays-toggle" data-expand-all>Expand all</button>{% endif %}
+  <button type="button" class="stays-toggle" data-expand-all>Expand all</button>
 </div>
 {% endmacro %}

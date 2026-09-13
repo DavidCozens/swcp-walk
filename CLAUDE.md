@@ -184,9 +184,12 @@ Porlock Weir and Lynmouth.
 `src/_includes/macros/entry.njk` holds one shape for every list on a section
 page: badge, name, role, one key fact, a jump to its pin, detail behind a
 disclosure. Sections differ in what they put inside; they shouldn't differ in
-how they look. A section with more than three entries starts collapsed and
-offers "Expand all"; three or fewer stay open, since collapsing a short list is
-pure friction. Each expand-all is scoped to its own section.
+how they look. Every list starts collapsed and every section has its own
+"Expand all", however short. Which sections matter depends entirely on why the
+page was opened — a hurt dog, a hungry afternoon, two days of transport to plan
+— and in each of those most of the page is noise. That only works because a
+summary line carries the fact you'd open the entry for: a vet's summary already
+says "24 hr · 11.54 km · roughly 20 min by road". Each expand-all is scoped to its own section.
 
 ## Two utility pages
 

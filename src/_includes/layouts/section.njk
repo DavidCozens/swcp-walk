@@ -69,7 +69,7 @@ layout: layouts/base.njk
 
   {% if services.length or transfers.length or transitLink %}
   <section class="logistics">
-    {{ heading("Transport", "transport", services) }}
+    {{ heading("Transport", "transport") }}
 
     {% if transitLink %}
     <p class="transit-all">
@@ -81,7 +81,7 @@ layout: layouts/base.njk
     {% if services.length %}
     <ul class="entry-list">
       {% for r in services %}
-      {% call row(r, "service", r.provider.name, r.number + " · " + (r.linksEnds and "links both ends" or (r.stretch and "a walk at one end" or "escape points only")), services.length <= 3) %}
+      {% call row(r, "service", r.provider.name, r.number + " · " + (r.linksEnds and "links both ends" or (r.stretch and "a walk at one end" or "escape points only"))) %}
         <dl class="stay-facts">
           <dt>Calls at</dt>
           <dd>{% for c in r.calling %}{{ c.name }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
@@ -109,7 +109,7 @@ layout: layouts/base.njk
     <h3>Lifts &amp; luggage</h3>
     <ul class="entry-list">
       {% for t in transfers %}
-      {% call row(t, "transfer", ("passenger" in t.services) and "Lifts & luggage" or "Luggage", (t.distanceKm == null) and t.reaches or ("based " + t.distanceKm + " km from " + t.reaches), transfers.length <= 3) %}
+      {% call row(t, "transfer", ("passenger" in t.services) and "Lifts & luggage" or "Luggage", (t.distanceKm == null) and t.reaches or ("based " + t.distanceKm + " km from " + t.reaches)) %}
         <dl class="stay-facts">
           {% if t.hours %}<dt>Hours</dt><dd>{{ t.hours }}</dd>{% endif %}
           <dt>Dogs</dt>
@@ -132,10 +132,10 @@ layout: layouts/base.njk
 
   {% if nearby.escape.length %}
   <section class="escapes">
-    {{ heading("Escape points", "escapes", nearby.escape) }}
+    {{ heading("Escape points", "escapes") }}
     <ul class="entry-list">
       {% for e in nearby.escape %}
-      {% call row(e, "escape", "Escape point", e.kmAlong + " km in · " + e.toRoute + " km off the path", nearby.escape.length <= 3) %}
+      {% call row(e, "escape", "Escape point", e.kmAlong + " km in · " + e.toRoute + " km off the path") %}
         <dl class="stay-facts">
           {% if e.escape.detail %}<dt>Getting out</dt><dd>{{ e.escape.detail }}</dd>{% endif %}
           {{ contact(e) }}
@@ -148,10 +148,10 @@ layout: layouts/base.njk
 
   {% if nearby.food.length %}
   <section class="food">
-    {{ heading("Food & drink", "food", nearby.food) }}
+    {{ heading("Food & drink", "food") }}
     <ul class="entry-list">
       {% for f in nearby.food %}
-      {% call row(f, "food", f | roleLabel("food"), f.toRoute + " km off the path", nearby.food.length <= 3) %}
+      {% call row(f, "food", f | roleLabel("food"), f.toRoute + " km off the path") %}
         <dl class="stay-facts">
           {% if f.isolation %}<dt>Nearest other</dt><dd>{{ f.isolation }} km away</dd>{% endif %}
           {{ contact(f) }}
@@ -170,10 +170,10 @@ layout: layouts/base.njk
 
   {% if nearby.shop.length %}
   <section class="shops">
-    {{ heading("Shops", "shops", nearby.shop) }}
+    {{ heading("Shops", "shops") }}
     <ul class="entry-list">
       {% for sh in nearby.shop %}
-      {% call row(sh, "shop", sh | roleLabel("shop"), sh.toRoute + " km off the path", nearby.shop.length <= 3) %}
+      {% call row(sh, "shop", sh | roleLabel("shop"), sh.toRoute + " km off the path") %}
         <dl class="stay-facts">
           {% if sh.isolation %}<dt>Nearest other</dt><dd>{{ sh.isolation }} km away</dd>{% endif %}
           {{ contact(sh) }}
@@ -192,10 +192,10 @@ layout: layouts/base.njk
 
   {% if nearby.stay.length %}
   <section class="stays">
-    {{ heading("Staying nearby", "stays", nearby.stay) }}
+    {{ heading("Staying nearby", "stays") }}
     <ul class="entry-list">
       {% for s in nearby.stay %}
-      {% call row(s, "stay", s.stay.type | stayType, s.nearest + " km from the " + (s.atEnd and "finish" or "start"), nearby.stay.length <= 3) %}
+      {% call row(s, "stay", s.stay.type | stayType, s.nearest + " km from the " + (s.atEnd and "finish" or "start")) %}
         <dl class="stay-facts">
           <dt>Dogs</dt>
           <dd>
@@ -221,13 +221,13 @@ layout: layouts/base.njk
 
   {% if nearby.hospital.length or nearby.vet.length %}
   <section class="emergency">
-    {{ heading("Emergencies", "emergencies", nearby.hospital.concat(nearby.vet)) }}
+    {{ heading("Emergencies", "emergencies") }}
 
     {% if nearby.hospital.length %}
     <h3>Hospitals</h3>
     <ul class="entry-list">
       {% for h in nearby.hospital %}
-      {% call row(h, "hospital", (h.hospital.type == "ae") and "A&E" or "Urgent care", h.nearest + " km · " + (h.nearest | driveTime), false) %}
+      {% call row(h, "hospital", (h.hospital.type == "ae") and "A&E" or "Urgent care", h.nearest + " km · " + (h.nearest | driveTime)) %}
         <dl class="stay-facts">
           {% if h.hours %}<dt>Open</dt><dd>{{ h.hours }}</dd>{% endif %}
           {{ contact(h) }}
@@ -242,7 +242,7 @@ layout: layouts/base.njk
     <h3>Vets</h3>
     <ul class="entry-list">
       {% for v in nearby.vet %}
-      {% call row(v, "vet", v.vet.emergency and "24 hr" or "Vet", v.nearest + " km · " + (v.nearest | driveTime), false) %}
+      {% call row(v, "vet", v.vet.emergency and "24 hr" or "Vet", v.nearest + " km · " + (v.nearest | driveTime)) %}
         <dl class="stay-facts">
           {% if v.hours %}<dt>Cover</dt><dd>{{ v.hours }}</dd>{% endif %}
           {{ contact(v) }}
