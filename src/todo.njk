@@ -1,0 +1,67 @@
+---
+layout: layouts/base.njk
+title: To do
+permalink: /todo/
+eleventyExcludeFromCollections: true
+---
+{% set list = locations | todo(transport) %}
+<article class="todo">
+  <h1>To do</h1>
+  <p class="lede">
+    Everything the site records as unconfirmed. Nothing here is a guess — where a
+    detail hasn't been checked it's left blank rather than filled in hopefully,
+    which is only useful if the blanks are easy to find.
+  </p>
+
+  {% if list.total %}
+  <p class="todo-count"><strong>{{ list.total }}</strong> things to check</p>
+  {% else %}
+  <p class="todo-count">Nothing outstanding.</p>
+  {% endif %}
+
+  {% if list.places.length %}
+  <h2>Places</h2>
+  <ul class="todo-list">
+    {% for row in list.places %}
+    <li>
+      <p class="todo-head">
+        {{ row.item | locBadge | safe }}
+        <strong>{{ row.item.name }}</strong>
+        <span class="todo-kind">{% if row.item.kind == "stay" %}{{ row.item.stay.type | stayType }}{% else %}{{ row.item.kind | stayType }}{% endif %}</span>
+        {% if row.item.phone %}<a class="todo-contact" href="tel:{{ row.item.phone | replace(" ", "") }}">{{ row.item.phone }}</a>{% endif %}
+        {% if row.item.url %}<a class="todo-contact" href="{{ row.item.url }}">website</a>{% endif %}
+      </p>
+      <p class="todo-missing">{% for m in row.missing %}{{ m }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if list.services.length %}
+  <h2>Services</h2>
+  <ul class="todo-list">
+    {% for row in list.services %}
+    <li>
+      <p class="todo-head">
+        <span class="service-number">{{ row.item.number }}</span>
+        <strong>{{ row.item.name }}</strong>
+        {% if row.item.url %}<a class="todo-contact" href="{{ row.item.url }}">timetable</a>{% endif %}
+      </p>
+      <p class="todo-missing">{% for m in row.missing %}{{ m }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if list.operators.length %}
+  <h2>Operators</h2>
+  <ul class="todo-list">
+    {% for row in list.operators %}
+    <li>
+      <p class="todo-head"><strong>{{ row.item.name }}</strong></p>
+      <p class="todo-missing">{% for m in row.missing %}{{ m }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</article>

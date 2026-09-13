@@ -141,6 +141,24 @@ from a search result, already redirects to an operator page because the service
 slug changed. Treat a route's `url` as a dated fact, like anything else with
 `verified`.
 
+## Two utility pages
+
+**"Nearest to me"** in the header asks the browser for a position and opens
+whichever section is closest. Each section ships twelve evenly spaced points
+from its route in `/api/sections.json` (`samplePoints` in `lib/nearby.js`), so
+nearest means nearest to the *route*, not to a midpoint — the whole feed is
+under a kilobyte. Geolocation needs a secure context: fine on the deployed
+site, and localhost counts as secure. `assets/js/nearest.js` handles refusal,
+failure and a browser without geolocation, and reports the distance so a result
+44 km away is obviously not where you're standing.
+
+**`/todo/`** lists everything recorded as unconfirmed — places with no
+`verified` date, stays missing a dog policy, season or price, services with no
+timetable link or season. It's the payoff for recording "not confirmed" instead
+of guessing: the blanks are only useful if they're easy to find. Phone numbers
+are shown inline so the page is workable as a call list. It's a public page like
+any other; it contains no personal data, only gaps in the research.
+
 ## Paths — IMPORTANT
 
 The site is published to a GitHub Pages **project** page, so it lives under

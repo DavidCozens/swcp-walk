@@ -72,6 +72,42 @@ a:hover {
   color: var(--mist);
   text-decoration: none;
 }
+.nearest {
+  font-family: var(--cond);
+  font-size: inherit;
+  color: var(--mist);
+  background: none;
+  border: 1px solid rgba(238, 241, 240, 0.45);
+  border-radius: 3px;
+  padding: 0.05rem 0.5rem;
+  cursor: pointer;
+}
+.nearest:hover { border-color: var(--gorse); color: #fff; }
+.nearest[disabled] { opacity: 0.6; cursor: default; }
+.nearest-status {
+  margin: 0;
+  padding: 0 1rem;
+  font-family: var(--cond);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.nearest-status:empty { display: none; }
+
+.todo-list { list-style: none; margin: 0; padding: 0; }
+.todo-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
+.todo-head {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.45rem; margin: 0;
+}
+.todo-kind { font-family: var(--cond); font-size: 0.82rem; color: var(--ink-soft); }
+.todo-contact { font-family: var(--cond); font-size: 0.85rem; }
+.todo-missing {
+  margin: 0.1rem 0 0 1.7rem;
+  font-size: 0.9rem;
+  color: #8a5a00;
+}
+.todo-count { font-family: var(--cond); }
+@media (max-width: 34rem) { .todo-missing { margin-left: 0; } }
+
 .acorn {
   color: var(--gorse);
   font-size: 0.8em;

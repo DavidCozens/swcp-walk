@@ -1,6 +1,6 @@
 // Everything in this folder is a "section": it gets the section layout,
 // joins the `sections` collection, and lives under /sections/<slug>/.
-import { nearbyByKind, lookup } from "../../lib/nearby.js";
+import { nearbyByKind, lookup, samplePoints } from "../../lib/nearby.js";
 import { routesForSection, transitUrl } from "../../lib/transport.js";
 
 export default {
@@ -17,6 +17,9 @@ export default {
       const near = nearbyByKind(data, data.locations, data.site.nearby);
       return [...near.stay, ...near.escape];
     },
+    // Shipped in the sections feed so a browser can work out which section
+    // it's nearest to.
+    samplePoints: (data) => samplePoints(data.gpx),
     // start/end name a location by slug; resolve them for the page.
     startPlace: (data) => lookup(data.locations, data.start),
     endPlace: (data) => lookup(data.locations, data.end),

@@ -31,13 +31,20 @@
         {% for region in regions %}
         <a href="/regions/{{ region.slug }}/">{{ region.name }}</a>
         {% endfor %}
+        <a href="/todo/">To do</a>
+        <button type="button" class="nearest" data-nearest="{{ '/api/sections.json' | url }}">
+          Nearest to me
+        </button>
       </nav>
     </header>
+
+    <p class="nearest-status" data-nearest-status role="status" aria-live="polite"></p>
 
     <main id="main">{{ content | safe }}</main>
 
     <footer class="site-footer">
       <p>A walk in the planning. Built with Eleventy.</p>
     </footer>
+    <script src="{{ '/assets/js/nearest.js' | url }}"></script>
   </body>
 </html>

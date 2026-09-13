@@ -141,6 +141,14 @@ presented as fact.
 
 How near counts is set in `src/_data/site.js` under `nearby`.
 
+## Finding your section, and what's left to check
+
+"Nearest to me" in the header opens whichever section you're closest to, using
+the browser's location against a sample of each route.
+
+`/todo/` lists everything still unconfirmed — dog policies, opening seasons,
+prices, timetable links — with phone numbers inline, so it works as a call list.
+
 ## Maps
 
 The overview and section maps use Leaflet with OpenStreetMap tiles (free, no

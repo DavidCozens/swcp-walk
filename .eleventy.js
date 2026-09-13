@@ -1,6 +1,7 @@
 import { HtmlBasePlugin } from "@11ty/eleventy";
 import regions from "./src/_data/regions.js";
 import { badge as stayBadge } from "./lib/stay-icons.js";
+import { todoList } from "./lib/todo.js";
 
 // The site is published to a GitHub Pages *project* page, so it lives under
 // /swcp-walk/ rather than at the domain root. Everything internal must carry
@@ -116,6 +117,10 @@ export default function (eleventyConfig) {
       total: list.length,
     };
   });
+
+  eleventyConfig.addFilter("todo", (locations, transport) =>
+    todoList(locations, (transport || {}).routes, (transport || {}).providers)
+  );
 
   const byOrder = (a, b) => (a.data.order || 0) - (b.data.order || 0);
 
