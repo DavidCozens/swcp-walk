@@ -16,6 +16,11 @@ export default {
       '(<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
     maxZoom: 17,
   },
+  // How near a place to stay has to be before a section lists it.
+  // endpointKm: from where the day starts or finishes — you can drive to this.
+  // routeKm: from the route itself — near enough to reach mid-walk.
+  stays: { endpointKm: 5, routeKm: 2 },
+
   // How the route is drawn. The casing is a wider line underneath: on a
   // contour map the halo does more for legibility than the colour does.
   // Violet because nothing on OpenTopoMap's brown-and-green palette is violet.

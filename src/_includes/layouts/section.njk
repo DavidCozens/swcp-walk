@@ -67,6 +67,39 @@ layout: layouts/base.njk
   </section>
   {% endif %}
 
+  {% if stays and stays.length %}
+  <section class="stays">
+    <h2>Staying nearby</h2>
+    <ul class="stay-list">
+      {% for s in stays %}
+      <li>
+        <p class="stay-head">
+          <span class="stay-type">{{ s.type | stayType }}</span>
+          <strong>{% if s.url %}<a href="{{ s.url }}">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}</strong>
+          <span class="stay-dist">{{ s.nearest }} km from the {% if s.atEnd %}finish{% else %}start{% endif %}{% if s.toRoute <= 0.25 %}, on the route{% elif s.toRoute < (s.nearest - 0.3) %}, {{ s.toRoute }} km off the path{% endif %}</span>
+        </p>
+        <p class="stay-meta">
+          {% if s.address %}{{ s.address }}{% endif %}
+          {% if s.phone %} · <a href="tel:{{ s.phone | replace(" ", "") }}">{{ s.phone }}</a>{% endif %}
+          {% if s.email %} · <a href="mailto:{{ s.email }}">{{ s.email }}</a>{% endif %}
+        </p>
+        <p class="stay-meta">
+          {% if s.dogs === true %}<span class="yes">Dogs welcome</span>{% elif s.dogs === false %}<span class="no">No dogs</span>{% else %}<span class="unsure">Dog policy unconfirmed</span>{% endif %}
+          {% if s.dogs_note %} — {{ s.dogs_note }}{% endif %}
+          {% if s.hookup %} · Electric hook-up{% endif %}
+          {% if s.price %} · {{ s.price }}{% endif %}
+          {% if s.season %} · {{ s.season }}{% endif %}
+        </p>
+        {% if s.note %}<p class="stay-meta">{{ s.note }}</p>{% endif %}
+        <p class="stay-meta">
+          {% if s.verified %}<span class="checked">Checked {{ s.verified }}</span>{% else %}<span class="unsure">Details not yet confirmed with the owner</span>{% endif %}
+        </p>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
   {% if content %}
   <section class="notes">{{ content | safe }}</section>
   {% endif %}

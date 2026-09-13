@@ -119,6 +119,20 @@ Add more checks here as the site grows.
 3. Push to `main`. The workflow validates, builds, and deploys.
 4. Set `url` in `src/_data/site.js` to your Pages URL.
 
+## Places to stay
+
+`src/_data/accommodation.js` lists campsites, Brit Stops, park4night spots,
+B&Bs and inns as points on the map. Sections don't reference them — each
+section works out what's within reach and lists it, so adding a site once
+covers every section near it.
+
+Set `lat`/`lon` (postcode → coordinates via api.postcodes.io), `dogs` as
+`true`/`false`/`null`, and `verified` to the date you last checked the details
+against the owner's own website. Anything unverified is labelled as such on the
+page rather than presented as fact.
+
+How near counts is set in `src/_data/site.js` under `stays`.
+
 ## Maps
 
 The overview and section maps use Leaflet with OpenStreetMap tiles (free, no

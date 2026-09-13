@@ -256,6 +256,44 @@ main {
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--line);
 }
+.stay-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.stay-list li {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.stay-head {
+  margin: 0 0 0.2rem;
+}
+.stay-type {
+  display: inline-block;
+  min-width: 5.5rem;
+  font-family: var(--cond);
+  font-weight: 600;
+  color: var(--sea);
+}
+.stay-dist {
+  margin-left: 0.4rem;
+  font-family: var(--cond);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+.stay-meta {
+  margin: 0.1rem 0 0 5.5rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.stay-meta .yes { color: #1f6f3f; }
+.stay-meta .no { color: #a12; }
+.stay-meta .unsure { font-style: italic; }
+.stay-meta .checked { font-size: 0.85rem; }
+@media (max-width: 34rem) {
+  .stay-meta { margin-left: 0; }
+}
+
 .t-season {
   display: inline-block;
   margin-left: 0.4rem;

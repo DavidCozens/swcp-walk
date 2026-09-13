@@ -25,8 +25,42 @@ const regionsUrl = new URL("../src/_data/regions.js", import.meta.url);
 const { default: regions } = await import(regionsUrl);
 const regionSlugs = new Set(regions.map((r) => r.slug));
 
+const stayUrl = new URL("../src/_data/accommodation.js", import.meta.url);
+const { default: accommodation } = await import(stayUrl);
+const STAY_TYPES = ["campsite", "britstop", "park4night", "cl", "bnb", "inn", "hostel"];
+
 let errors = 0;
 const seenOrders = new Map();
+
+// Accommodation is matched to sections by position, so a missing or wrong
+// coordinate doesn't error — it just silently fails to appear anywhere.
+const seenSlugs = new Set();
+for (const a of accommodation) {
+  const where = `accommodation "${a.slug || a.name || "?"}"`;
+  if (!a.slug) fail("accommodation.js", `${where} has no slug`);
+  else if (seenSlugs.has(a.slug)) fail("accommodation.js", `duplicate slug "${a.slug}"`);
+  else seenSlugs.add(a.slug);
+
+  if (!a.name) fail("accommodation.js", `${where} has no name`);
+  if (!STAY_TYPES.includes(a.type)) {
+    fail("accommodation.js", `${where} has unknown type "${a.type}" (expected one of ${STAY_TYPES.join(", ")})`);
+  }
+  for (const [key, lo, hi] of [["lat", 49.8, 56], ["lon", -6.5, 2]]) {
+    const v = a[key];
+    if (typeof v !== "number" || Number.isNaN(v)) {
+      fail("accommodation.js", `${where} needs a numeric ${key}`);
+    } else if (v < lo || v > hi) {
+      fail("accommodation.js", `${where} ${key} ${v} is outside Great Britain`);
+    }
+  }
+  // true / false / null only — "probably" helps nobody standing in the rain.
+  if (a.dogs !== true && a.dogs !== false && a.dogs !== null && a.dogs !== undefined) {
+    fail("accommodation.js", `${where} dogs must be true, false or null, got ${JSON.stringify(a.dogs)}`);
+  }
+  if (a.verified && !/^\d{4}-\d{2}-\d{2}$/.test(a.verified)) {
+    fail("accommodation.js", `${where} verified should be YYYY-MM-DD, got ${JSON.stringify(a.verified)}`);
+  }
+}
 
 function fail(file, msg) {
   console.error(`  ✗ ${file}: ${msg}`);

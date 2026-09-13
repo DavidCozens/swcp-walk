@@ -52,6 +52,32 @@ The importer never copies the route's `createdBy` (an OS account id) or its
 `os_url` is optional front matter holding the OS Maps link; when set, the
 section page shows an "Open in OS Maps" link under the map.
 
+## Accommodation
+
+`src/_data/accommodation.js` holds places to stay as points on the map, not as
+entries against a section. Each section works out what's near it at build time
+(`lib/nearby.js`, wired in via `eleventyComputed` in
+`src/sections/sections.11tydata.js`), so one entry covers every section it
+suits — the Porlock sites serve the end of section 1 and the start of section 2
+without being listed twice, and a base on a peninsula will cover several days.
+
+Thresholds live in `site.js` under `stays`: `endpointKm` (from where the day
+starts or finishes — drivable) and `routeKm` (from the route itself — reachable
+mid-walk). A place qualifies on either, and the page shows both distances.
+
+Two fields carry their weight:
+
+- `verified` — the date the details were last checked against the business's
+  own site. `null` means they came from a directory and are shown as
+  unconfirmed. These go stale quietly: porlockcaravanpark.co.uk now resolves to
+  a differently-named park at a different address while directories still list
+  the old one.
+- `dogs` — `true`, `false`, or `null` for unknown. Never guess it.
+
+Coordinates come from postcodes via `api.postcodes.io` (free, no key). A wrong
+one doesn't error, it just silently stops the place appearing anywhere, so
+`npm run validate` range-checks them.
+
 ## Paths — IMPORTANT
 
 The site is published to a GitHub Pages **project** page, so it lives under

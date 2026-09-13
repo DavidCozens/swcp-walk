@@ -26,6 +26,18 @@ export default function (eleventyConfig) {
     return r ? r.name : "";
   });
 
+  // Human labels for accommodation types.
+  const STAY_TYPES = {
+    campsite: "Campsite",
+    britstop: "Brit Stops",
+    park4night: "park4night",
+    cl: "CL / CS",
+    bnb: "B&B",
+    inn: "Inn",
+    hostel: "Hostel",
+  };
+  eleventyConfig.addFilter("stayType", (t) => STAY_TYPES[t] || t || "");
+
   const byOrder = (a, b) => (a.data.order || 0) - (b.data.order || 0);
 
   // All sections, in walking order.
