@@ -99,7 +99,10 @@ starting view comes from the route's bounds alone, so a hospital 42 km away
 simply waits off-screen until you zoom out or press "Show on map". Each also
 carries a Google Maps link, which routes from wherever you actually are. `hospital.type`
 separates a full 24/7 `ae` from a `utc` urgent treatment centre, because that
-decides whether you drive ten minutes or an hour. Drive times are estimated
+decides whether you drive ten minutes or an hour. A third, `minor`, is a GP
+practice's minor injuries service: weekdays, ring first, no walk-ins. Lynton's
+is on the doorstep of section 3 and still no use on a Saturday, so it must never
+read as "Urgent care". Drive times are estimated
 from straight-line distance and the page says they're rough.
 
 **Nothing near a section is listed by hand.** Because every location has

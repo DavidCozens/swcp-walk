@@ -153,6 +153,9 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("driveTime", (km) => {
     if (typeof km !== "number" || !(km > 0)) return "";
     const minutes = Math.round(((km * 1.3) / 45) * 60 / 5) * 5;
+    // Rounding to five minutes takes anything under 1.5 km to zero, which
+    // reads as a mistake. Lynton's minor injuries service is 0.6 km away.
+    if (minutes < 5) return "a few minutes by road";
     if (minutes < 60) return `roughly ${minutes} min by road`;
     const h = Math.floor(minutes / 60);
     const m = minutes % 60;
