@@ -89,18 +89,30 @@ layout: layouts/base.njk
 
   {% if stays and stays.length %}
   <section class="stays">
-    <h2>Staying nearby</h2>
+    <div class="stays-head">
+      <h2>Staying nearby</h2>
+      <button type="button" class="stays-toggle" data-expand-all>Expand all</button>
+    </div>
     <ul class="stay-list">
       {% for s in stays %}
       <li>
-        <p class="stay-head">
-          <span class="stay-type">{{ s.type | stayType }}</span>
-          <strong>{% if s.url %}<a href="{{ s.url }}">{{ s.name }}</a>{% else %}{{ s.name }}{% endif %}</strong>
+        <details class="stay">
+        <summary>
+          <span class="stay-dot stay-pin-{{ s.type }}" aria-hidden="true"></span>
+          <span class="stay-name">{{ s.name }}</span>
+          <span class="stay-kind">{{ s.type | stayType }}</span>
           <span class="stay-dist">{{ s.nearest }} km from the {% if s.atEnd %}finish{% else %}start{% endif %}{% if s.toRoute <= 0.25 %}, on the route{% elif s.toRoute < (s.nearest - 0.3) %}, {{ s.toRoute }} km off the path{% endif %}</span>
+          {% if s.dogs === true %}<span class="stay-flag yes" title="Dogs welcome">dogs</span>
+          {% elif s.dogs === false %}<span class="stay-flag no" title="No dogs">no dogs</span>
+          {% else %}<span class="stay-flag unsure" title="Dog policy not confirmed">dogs?</span>{% endif %}
           <button type="button" class="stay-focus" data-stay="{{ s.slug }}">Show on map</button>
-        </p>
+        </summary>
 
         <dl class="stay-facts">
+          {% if s.url %}
+          <dt>Website</dt>
+          <dd><a href="{{ s.url }}">{{ s.name }}</a></dd>
+          {% endif %}
           {% if s.address %}
           <dt>Address</dt>
           <dd>{{ s.address }}</dd>
@@ -143,6 +155,7 @@ layout: layouts/base.njk
         <p class="stay-checked">
           {% if s.verified %}Details checked {{ s.verified }}{% else %}<span class="unsure">Details not yet confirmed with the owner</span>{% endif %}
         </p>
+        </details>
       </li>
       {% endfor %}
     </ul>
@@ -159,3 +172,4 @@ layout: layouts/base.njk
   crossorigin=""></script>
 <script src="https://unpkg.com/leaflet-gpx@1.7.0/gpx.js"></script>
 <script src="/assets/js/map-section.js"></script>
+<script src="/assets/js/stays.js"></script>

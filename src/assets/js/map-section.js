@@ -91,6 +91,9 @@
     document.addEventListener("click", function (ev) {
       var btn = ev.target.closest ? ev.target.closest("[data-stay]") : null;
       if (!btn) return;
+      // The button lives in a <summary>; don't open/close the entry as well.
+      ev.preventDefault();
+      ev.stopPropagation();
       var marker = byslug[btn.getAttribute("data-stay")];
       if (!marker) return;
       if (!map.hasLayer(group)) group.addTo(map);

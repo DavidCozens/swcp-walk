@@ -79,8 +79,16 @@ Dogs, season and price always render, including their unknown state — an
 unconfirmed field is a to-do, so hiding it would hide the work.
 
 A Google Maps directions link is generated from lat/lon (`directions` filter),
-so there's no address to type when driving. Set `maps_url` only where the
-postcode centroid isn't where you'd actually drive to.
+so there's no address to type when driving. Google routes to the coordinate
+correctly but labels the destination with whatever named business is nearest,
+which at somewhere like Porlock Weir — six within 60 m — looks alarming even
+though the navigation is right. Set `maps_url` to override; a Plus Code
+resolves to the point itself and is what the car park uses.
+
+Each nearby place collapses to one line — coloured dot matching its map pin,
+name, type, distance, dog status — and opens for the detail. "Expand all" is in
+`assets/js/stays.js`. The "Show on map" button sits inside the `<summary>`, so
+`map-section.js` stops its click toggling the disclosure.
 
 Two fields carry their weight:
 

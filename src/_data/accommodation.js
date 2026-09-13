@@ -114,6 +114,11 @@ export default [
     season: null,
     price_per_night: 15,
     price_note: "per 24 hours, ticket machine or QR code",
+    // The generated lat/lon link labelled itself "Locanda on the Weir" — the
+    // coordinate is right (2 m from the car park in OSM) but Google snaps the
+    // label to the nearest named business, and there are six within 60 m. A
+    // Plus Code resolves to the point itself.
+    maps_url: "https://www.google.com/maps/dir/?api=1&destination=9C3R699F%2BG6",
     notes: "Public car park with public toilets; bars and restaurants alongside. Reported quiet overnight",
     // A park4night listing is user-reported, not the operator.
     verified: null,
