@@ -1,5 +1,7 @@
+// The whole path on the overview, or one region's sections when the element
+// carries data-region.
 (function () {
-  var el = document.querySelector(".map-overview");
+  var el = document.querySelector(".map-overview, .map-region");
   if (!el || typeof L === "undefined") return;
 
   var map = L.map(el, { scrollWheelZoom: false });
@@ -57,13 +59,47 @@
       return r.json();
     })
     .then(function (sections) {
+      var region = el.dataset.region;
+      if (region) {
+        sections = sections.filter(function (s) {
+          return s.region === region;
+        });
+      }
       var withGpx = sections.filter(function (s) {
         return s.gpx;
       });
-      if (!withGpx.length) return;
 
       var group = L.featureGroup().addTo(map);
+
+      // On a region map, a section with no route yet still marks its two
+      // ends, so the region has a shape before anything is plotted. No line
+      // between them: a straight one would look like a route and isn't.
+      if (region) {
+        var seen = {};
+        sections.forEach(function (s) {
+          if (s.gpx) return;
+          (s.ends || []).forEach(function (p) {
+            var key = p.lat + "," + p.lon;
+            if (seen[key]) return;
+            seen[key] = true;
+            L.circleMarker([p.lat, p.lon], {
+              radius: 6,
+              color: style.casing ? style.casing.color : "#ffffff",
+              weight: 2,
+              fillColor: line.color,
+              fillOpacity: 1,
+            })
+              .bindTooltip(p.name)
+              .addTo(group);
+          });
+        });
+      }
+
       var pending = withGpx.length;
+      if (!pending) {
+        done();
+        return;
+      }
 
       withGpx.forEach(function (s) {
         new L.GPX(s.gpx, {

@@ -214,6 +214,21 @@ export default function (eleventyConfig) {
     }))
   );
 
+  // Distance and ascent across a region's sections. Only plotted sections
+  // have figures, so the total says how many it covers rather than passing a
+  // part for the whole. A crossing is a ferry: not a stage, and not walked.
+  eleventyConfig.addFilter("regionTotals", (sections) => {
+    const stages = (sections || []).filter((s) => !s.data.crossing);
+    const plotted = stages.filter((s) => s.data.distance_km != null);
+    const sum = (key) => plotted.reduce((t, s) => t + (Number(s.data[key]) || 0), 0);
+    return {
+      stages: stages.length,
+      plotted: plotted.length,
+      km: Math.round(sum("distance_km") * 10) / 10,
+      ascent: Math.round(sum("ascent_m")),
+    };
+  });
+
   // Previous/next section in walking order, for the stepper on a section page.
   eleventyConfig.addFilter("sectionNav", (sections, url) => {
     const list = [...(sections || [])].sort(

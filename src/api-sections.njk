@@ -12,6 +12,7 @@ eleventyExcludeFromCollections: true
     "crossing": {{ "true" if s.data.crossing else "false" }},
     "region": {{ (s.data.region or "") | dump | safe }},
     "gpx": {{ gpxUrl | dump | safe }},
+    "ends": {{ [s.data.startPlace, s.data.endPlace] | endsForMap | dump | safe }},
     "points": {{ (s.data.samplePoints or []) | dump | safe }}
   }{% if not loop.last %},{% endif %}
 {%- endfor -%}

@@ -13,6 +13,10 @@ Three levels: **overview → region → section**.
 - **Regions** are defined once in `src/_data/regions.js`. A section joins one
   via its `region:` slug.
 - The overview map is fed by `/api/sections.json`, generated from all sections.
+  Region pages use the same feed and script, narrowed by `data-region`: routes
+  where plotted, and each unplotted section's two ends as dots, so a region has
+  a shape before anything is drawn. Their distance and ascent add up plotted
+  sections only, and say how many that covers.
 - Region→section grouping is done in `.eleventy.js` (a JS collection), not in
   templates — Nunjucks `selectattr` was unreliable for this, so keep grouping
   logic in the config.

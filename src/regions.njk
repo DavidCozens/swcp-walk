@@ -15,6 +15,34 @@ eleventyComputed:
 <article class="region-page">
   <h1>{{ region.name }}</h1>
   {% if region.sections | length %}
+  {% set totals = region.sections | regionTotals %}
+  {# The sections feed, narrowed to this region: routes where plotted, the two
+     ends of each section where not. #}
+  <div
+    class="map map-region"
+    data-src="{{ '/api/sections.json' | url }}"
+    data-region="{{ region.slug }}"
+    data-tiles="{{ site.tiles.url }}"
+    data-attribution="{{ site.tiles.attribution }}"
+    data-maxzoom="{{ site.tiles.maxZoom }}"
+    data-route="{{ site.route | dump }}"
+    role="img"
+    aria-label="Map of the {{ region.name }} sections"
+  ></div>
+  <dl class="facts">
+    <dt>Sections</dt><dd>{{ totals.stages }}</dd>
+    {% if totals.plotted %}
+    <dt>Distance</dt><dd>{{ totals.km }} km</dd>
+    <dt>Ascent</dt><dd>{{ totals.ascent }} m</dd>
+    {% endif %}
+  </dl>
+  {% if totals.plotted and totals.plotted < totals.stages %}
+  <p class="facts-note">Distance and ascent cover the {{ totals.plotted }} of {{ totals.stages }} sections with a route plotted.</p>
+  {% elif not totals.plotted %}
+  <p class="facts-note">No routes plotted here yet.</p>
+  {% endif %}
+  {% endif %}
+  {% if region.sections | length %}
   <ol class="section-list">
     {% for s in region.sections %}{{ sectionRow(s) }}{% endfor %}
   </ol>
@@ -22,3 +50,11 @@ eleventyComputed:
   <p class="empty">No sections planned here yet. Add one and it appears automatically.</p>
   {% endif %}
 </article>
+
+{% if region.sections | length %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-gpx@1.7.0/gpx.js"></script>
+<script src="{{ '/assets/js/map-overview.js' | asset }}"></script>
+{% endif %}
