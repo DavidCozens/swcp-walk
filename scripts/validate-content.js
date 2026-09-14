@@ -29,7 +29,7 @@ const regionSlugs = new Set(regions.map((r) => r.slug));
 
 const locUrl = new URL("../src/_data/locations.js", import.meta.url);
 const { default: locations } = await import(locUrl);
-const { distanceKm, trackPoints, crossesWater } = await import(new URL("../lib/nearby.js", import.meta.url));
+const { distanceKm, trackPoints, waterCrossed } = await import(new URL("../lib/nearby.js", import.meta.url));
 const { default: water } = await import(new URL("../lib/water.js", import.meta.url));
 const STAY_TYPES = ["campsite", "britstop", "park4night", "aire", "cl", "bnb", "inn", "hotel", "hostel"];
 const KINDS = ["endpoint", "escape", "stay", "poi", "stop", "hospital", "vet", "food", "shop"];
@@ -298,6 +298,17 @@ for (const file of files) {
   // A crossing (a ferry between two sections) sits between two numbered stages
   // rather than being one, so it takes a fractional order and a numbered
   // stage takes a whole one. Mixing the two would miscount "36 of 52".
+  if (data.ferries !== undefined) {
+    const waterSlugs = new Set(water.map((w) => w.slug));
+    if (!Array.isArray(data.ferries) || !data.ferries.length) {
+      fail(file, `"ferries" should be a list of water slugs from lib/water.js, got ${JSON.stringify(data.ferries)}`);
+    } else {
+      for (const slug of data.ferries) {
+        if (!waterSlugs.has(slug)) fail(file, `"ferries" names unknown water "${slug}"`);
+      }
+    }
+    if (data.crossing) fail(file, `a crossing is a ferry already; "ferries" is for a section that takes one partway`);
+  }
   if (data.crossing !== undefined && data.crossing !== true) {
     fail(file, `"crossing" should be true or left out, got ${JSON.stringify(data.crossing)}`);
   }
@@ -351,14 +362,27 @@ for (const file of files) {
     // A walked route never crosses an estuary line, because the line stops
     // short of the lowest bridge. If one does, the line runs on past a bridge
     // the path uses, and everything across that bridge is wrongly cut off.
-    // Only a ferry crossing is meant to.
+    // Only a ferry is meant to: a crossing section, or a section whose route
+    // takes a ferry partway and names that water in `ferries`.
     if (!data.crossing) {
+      const ferries = new Set(Array.isArray(data.ferries) ? data.ferries : []);
+      const used = new Set();
       for (let i = 1; i < points.length; i += 1) {
         const [a, b] = [points[i - 1], points[i]];
-        if (crossesWater(a[0], a[1], b[0], b[1])) {
-          fail(file, `route crosses water near ${a[0].toFixed(5)}, ${a[1].toFixed(5)} — does a line in lib/water.js run past a bridge?`);
+        const wrong = waterCrossed(a[0], a[1], b[0], b[1]).filter((slug) => {
+          if (!ferries.has(slug)) return true;
+          used.add(slug);
+          return false;
+        });
+        if (wrong.length) {
+          fail(file, `route crosses water "${wrong[0]}" near ${a[0].toFixed(5)}, ${a[1].toFixed(5)} — does a line in lib/water.js run past a bridge? A ferry on the route belongs in "ferries"`);
           break;
         }
+      }
+      // A ferry the route never takes is a stale claim, or a line drawn in the
+      // wrong place.
+      for (const slug of ferries) {
+        if (!used.has(slug)) fail(file, `"ferries" names "${slug}", but the route never crosses that water`);
       }
     }
   }
