@@ -74,6 +74,7 @@ export default function (eleventyConfig) {
     supermarket: "Supermarket",
     butcher: "Butcher",
     bakery: "Bakery",
+    farm: "Farm shop",
     hospital: "Hospital",
     vet: "Vet",
     escape: "Escape point",
