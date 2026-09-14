@@ -214,6 +214,19 @@ export default function (eleventyConfig) {
     }))
   );
 
+  // Previous/next region, for the same stepper on a region page.
+  eleventyConfig.addFilter("regionNav", (regionList, slug) => {
+    const list = (regionList || []).filter((r) => (r.sections || []).length);
+    const i = list.findIndex((r) => r.slug === slug);
+    const brief = (r) => (r ? { url: `/regions/${r.slug}/`, name: r.name } : null);
+    return {
+      prev: i > 0 ? brief(list[i - 1]) : null,
+      next: i !== -1 ? brief(list[i + 1]) : null,
+      position: i + 1,
+      total: list.length,
+    };
+  });
+
   // Distance and ascent across a region's sections. Only plotted sections
   // have figures, so the total says how many it covers rather than passing a
   // part for the whole. A crossing is a ferry: not a stage, and not walked.

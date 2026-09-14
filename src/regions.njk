@@ -14,6 +14,23 @@ eleventyComputed:
 {% from "macros/section-row.njk" import sectionRow %}
 <article class="region-page">
   <h1>{{ region.name }}</h1>
+
+  {% set nav = collections.regionsWithSections | regionNav(region.slug) %}
+  <nav class="section-nav" aria-label="Regions">
+    {% if nav.prev %}
+    <a class="nav-prev" href="{{ nav.prev.url }}">
+      <span class="nav-arrow" aria-hidden="true">&larr;</span>
+      <span class="nav-label">{{ nav.prev.name }}</span>
+    </a>
+    {% else %}<span class="nav-none"></span>{% endif %}
+    <span class="nav-count">{{ nav.position }} of {{ nav.total }}</span>
+    {% if nav.next %}
+    <a class="nav-next" href="{{ nav.next.url }}">
+      <span class="nav-label">{{ nav.next.name }}</span>
+      <span class="nav-arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    {% else %}<span class="nav-none"></span>{% endif %}
+  </nav>
   {% if region.sections | length %}
   {% set totals = region.sections | regionTotals %}
   {# The sections feed, narrowed to this region: routes where plotted, the two
