@@ -108,7 +108,9 @@ separates a full 24/7 `ae` from a `utc` urgent treatment centre, because that
 decides whether you drive ten minutes or an hour. A third, `minor`, is a GP
 practice's minor injuries service: weekdays, ring first, no walk-ins. Lynton's
 is on the doorstep of section 3 and still no use on a Saturday, so it must never
-read as "Urgent care". Drive times are estimated
+read as "Urgent care". A few GP services do take walk-ins on weekdays, as St
+Ives's Stennack Surgery does; `walk_in: true` on the `hospital` block says so
+instead of "by appointment". Drive times are estimated
 from straight-line distance and the page says they're rough.
 
 **Nothing near a section is listed by hand.** Because every location has

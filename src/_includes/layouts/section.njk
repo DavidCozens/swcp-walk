@@ -249,7 +249,7 @@ layout: layouts/base.njk
     <h3>Hospitals</h3>
     <ul class="entry-list">
       {% for h in nearby.hospital %}
-      {% call row(h, "hospital", (h.hospital.type == "ae") and "A&E" or ((h.hospital.type == "minor") and "Minor injuries, by appointment" or "Urgent care"), h.nearest + " km · " + (h.nearest | driveTime)) %}
+      {% call row(h, "hospital", (h.hospital.type == "ae") and "A&E" or ((h.hospital.type == "minor") and (h.hospital.walk_in and "Minor injuries, walk in" or "Minor injuries, by appointment") or "Urgent care"), h.nearest + " km · " + (h.nearest | driveTime)) %}
         <dl class="stay-facts">
           {% if h.hours %}<dt>Open</dt><dd>{{ h.hours }}</dd>{% endif %}
           {{ contact(h) }}
