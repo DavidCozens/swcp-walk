@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="swcp-walk (OpenStreetMap ways 43993324 and 352272841, the St Mawes and Place ferries)"
+     xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>St Mawes and Place ferries</name>
+  </metadata>
+  <trk>
+    <name>St Mawes and Place ferries</name>
+    <trkseg>
+      <trkpt lat="50.15672" lon="-5.06976"></trkpt>
+      <trkpt lat="50.15683" lon="-5.06958"></trkpt>
+      <trkpt lat="50.15724" lon="-5.06843"></trkpt>
+      <trkpt lat="50.15685" lon="-5.06578"></trkpt>
+      <trkpt lat="50.15672" lon="-5.06333"></trkpt>
+      <trkpt lat="50.15707" lon="-5.06038"></trkpt>
+      <trkpt lat="50.15716" lon="-5.05875"></trkpt>
+      <trkpt lat="50.15725" lon="-5.05693"></trkpt>
+      <trkpt lat="50.15738" lon="-5.05541"></trkpt>
+      <trkpt lat="50.15744" lon="-5.05249"></trkpt>
+      <trkpt lat="50.15741" lon="-5.05090"></trkpt>
+      <trkpt lat="50.15744" lon="-5.04832"></trkpt>
+      <trkpt lat="50.15725" lon="-5.04536"></trkpt>
+      <trkpt lat="50.15590" lon="-5.04210"></trkpt>
+      <trkpt lat="50.15502" lon="-5.03927"></trkpt>
+      <trkpt lat="50.15428" lon="-5.03665"></trkpt>
+      <trkpt lat="50.15378" lon="-5.03442"></trkpt>
+      <trkpt lat="50.15265" lon="-5.02897"></trkpt>
+      <trkpt lat="50.15142" lon="-5.02460"></trkpt>
+      <trkpt lat="50.15142" lon="-5.02310"></trkpt>
+      <trkpt lat="50.15221" lon="-5.02115"></trkpt>
+      <trkpt lat="50.15370" lon="-5.01991"></trkpt>
+      <trkpt lat="50.15425" lon="-5.01833"></trkpt>
+      <trkpt lat="50.15483" lon="-5.01725"></trkpt>
+      <trkpt lat="50.15560" lon="-5.01614"></trkpt>
+      <trkpt lat="50.15631" lon="-5.01524"></trkpt>
+      <trkpt lat="50.15705" lon="-5.01446"></trkpt>
+      <trkpt lat="50.15765" lon="-5.01402"></trkpt>
+      <trkpt lat="50.15805" lon="-5.01389"></trkpt>
+      <trkpt lat="50.15826" lon="-5.01381"></trkpt>
+      <trkpt lat="50.15832" lon="-5.01399"></trkpt>
+      <trkpt lat="50.15825" lon="-5.01417"></trkpt>
+      <trkpt lat="50.15814" lon="-5.01406"></trkpt>
+      <trkpt lat="50.15822" lon="-5.01401"></trkpt>
+      <trkpt lat="50.15460" lon="-5.00846"></trkpt>
+      <trkpt lat="50.15233" lon="-5.00467"></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
