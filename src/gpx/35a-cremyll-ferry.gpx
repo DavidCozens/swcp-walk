@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="swcp-walk (OpenStreetMap way 9644007, the Cremyll ferry)"
+     xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Cremyll ferry</name>
+  </metadata>
+  <trk>
+    <name>Cremyll ferry</name>
+    <trkseg>
+      <trkpt lat="50.36083" lon="-4.17389"></trkpt>
+      <trkpt lat="50.36088" lon="-4.17344"></trkpt>
+      <trkpt lat="50.3623" lon="-4.16763"></trkpt>
+      <trkpt lat="50.3625" lon="-4.16721"></trkpt>
+      <trkpt lat="50.36265" lon="-4.16696"></trkpt>
+      <trkpt lat="50.36295" lon="-4.16654"></trkpt>
+      <trkpt lat="50.3632" lon="-4.16632"></trkpt>
+      <trkpt lat="50.36509" lon="-4.16522"></trkpt>
+      <trkpt lat="50.36533" lon="-4.16489"></trkpt>
+      <trkpt lat="50.3655" lon="-4.16459"></trkpt>
+      <trkpt lat="50.36558" lon="-4.16438"></trkpt>
+      <trkpt lat="50.3656" lon="-4.16424"></trkpt>
+      <trkpt lat="50.36559" lon="-4.16409"></trkpt>
+      <trkpt lat="50.36561" lon="-4.16403"></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

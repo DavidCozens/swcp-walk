@@ -39,14 +39,15 @@ unplotted section is listed on `/todo/`.
 section starts at the very endpoint the previous one finished at, and that
 stages run 1–52 with none missing. Where water separates two sections — the
 Helford between 28 and 29, the Fal between 29 and 30 (two ferries, by St Mawes
-to Place), and the Yealm between 36 and 37 — the ferry is a **crossing**: a
-section file with `crossing: true` and a fractional `order` (36.5), its own GPX
-taken from the OSM ferry ways, and a page for the ferry's details. It sits in
-prev/next and on the overview, drawn dashed, but not in the count: the path is
-still 52 sections. Two endpoints on either bank, rather than one at the ferry,
-because the banks are 180 m apart on foot and a long way round by road. Section
-49 (Portland) is a circuit: `start` and `end` are the same, and it gets no
-transit link, since there's no journey to plan.
+to Place), the Tamar between 35 and 36 (the Cremyll ferry), and the Yealm
+between 36 and 37 — the ferry is a **crossing**: a section file with `crossing:
+true` and a fractional `order` (36.5), its own GPX taken from the OSM ferry
+ways, and a page for the ferry's details. It sits in prev/next and on the
+overview, drawn dashed, but not in the count: the path is still 52 sections.
+Two endpoints on either bank, rather than one at the ferry, because the banks
+are 180 m apart on foot and a long way round by road. Section 49 (Portland) is
+a circuit: `start` and `end` are the same, and it gets no transit link, since
+there's no journey to plan.
 
 `escape_points` is a list of places you can leave the path mid-section: `name`
 required, optional `km` (how far along the route it sits, validated against
@@ -232,9 +233,12 @@ better exists, and as "a walk at one end" when it's the only option — a sole
 option shouldn't be presented apologetically. A stop within `walk.onRouteKm`
 (1.5) of the route, and the section's own far end, are measured along the path;
 anything further off is straight-line, and the page says so. Straight-line
-alone called the Instow bus "a walk at one end" of section 6, because Fremington
-is 4.3 km from Braunton — across the Taw. Along the path it's 13.9 km. Measuring
-by the path overstates where a road cuts a headland, which is the safer error.
+alone called the Instow bus "a walk at one end" of section 6, because
+Fremington is 4.3 km from Braunton — across the Taw. Along the path it's 13.9
+km. Measuring by the path overstates where a road cuts a headland, which is the
+safer error. On a crossing only a ferry is measured along the route, since
+nobody walks across the water; buses there are straight-line and nothing on the
+far bank is in reach.
 
 `transitLink` is a generated Google Maps transit link between a section's two
 endpoints: every bus, train and ferry option, nothing typed, opens the app on a

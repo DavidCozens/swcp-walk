@@ -35,6 +35,7 @@ export default {
         transport: data.transport,
         locations: data.locations,
         walk: data.site.walk,
+        crossing: data.crossing,
       }),
     // Whether anything reaches both ends within the usual walking reach. If
     // nothing does, a longer walk isn't a compromise — it's the only way, and
@@ -48,6 +49,7 @@ export default {
         transport: data.transport,
         locations: data.locations,
         walk: data.site.walk,
+        crossing: data.crossing,
       }).some((r) => r.linksEnds),
     // Taxis and luggage firms that reach this section.
     transfers: (data) =>
