@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="swcp-walk (OpenStreetMap way 148393378, the Helford ferry)"
+     xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Helford ferry</name>
+  </metadata>
+  <trk>
+    <name>Helford ferry</name>
+    <trkseg>
+      <trkpt lat="50.09556" lon="-5.13405"></trkpt>
+      <trkpt lat="50.09693" lon="-5.1326"></trkpt>
+      <trkpt lat="50.09749" lon="-5.13153"></trkpt>
+      <trkpt lat="50.09806" lon="-5.13065"></trkpt>
+      <trkpt lat="50.09859" lon="-5.12936"></trkpt>
+      <trkpt lat="50.09935" lon="-5.1288"></trkpt>
+      <trkpt lat="50.09982" lon="-5.12868"></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
