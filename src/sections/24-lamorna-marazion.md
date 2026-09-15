@@ -20,8 +20,8 @@ Michael's Mount.
 
 Back from Marazion, the 2 to Penzance and the 1 or 1A to Lamorna Turn, about
 hourly Mon–Sat, the last reaching Lamorna Turn at 18:57; then 1.6 km down the
-valley. The 6 runs between Mousehole and Penzance every half hour. Dogs are
-banned in July and August, 10am–6pm, from the beaches at Mousehole, from
-Wherrytown to Battery Rocks in Penzance, and from Long Rock to Marazion.
-Marazion Station car park sells self-contained vans an overnight ticket;
-Penzance's council car parks ban them.
+valley. The 6 runs between Mousehole and Penzance every half hour Mon–Sat,
+hourly on Sundays. Dogs are banned in July and August, 10am–6pm, from the
+beaches at Mousehole, from Wherrytown to Battery Rocks in Penzance, and from
+Long Rock to Marazion. Marazion Station car park sells self-contained vans an
+overnight ticket; Penzance's council car parks ban them.
