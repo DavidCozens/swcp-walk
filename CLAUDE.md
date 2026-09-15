@@ -22,7 +22,7 @@ Three levels: **overview → region → section**.
   logic in the config.
 
 Required section front matter: `title`, `order`, `region`, `start`, `end`.
-Everything else (`gpx`, `distance_km`, `ascent_m`, `os_url`, `ferries`, `mode`,
+Everything else (`gpx`, `distance_km`, `ascent_m`, `os_url`, `crosses`, `mode`,
 `transport`, `escape_points`, `shops`, `eat`, body text) is optional and only
 renders when present.
 
@@ -129,10 +129,13 @@ still the nearest, though its rough drive time understates. Add a river's line
 when the path first reaches it, from OSM's `waterway=river` ways, and stop it
 short of the lowest bridge with a footway; `npm run validate` fails if a
 plotted route crosses a line, which is how a line running past a bridge shows
-up. Only a ferry may: a `crossing` section, or a section whose route takes a
-ferry partway and names that water in `ferries` — section 14 crosses the Camel
-from Rock to Padstow, so it has `ferries: [camel]`. Validate also fails on a
-named ferry the route never takes. Where the banks are mapped as coastline
+up. Only a crossing you can't always make may: a `crossing` section, or a
+section whose route takes a ferry or a tidal bridge partway and names that
+water in `crosses` — section 14 takes the Rock ferry over the Camel and section
+17 the Penpol tidal footbridge over the Gannel, so they have `crosses: [camel]`
+and `crosses: [gannel]`. Such water stays a line, because the far bank isn't
+near at high tide or out of season. Validate also fails on named water the
+route never crosses. Where the banks are mapped as coastline
 rather than a river way, as the Camel and Boscastle harbour are, draw the line
 between the two banks. A straight line can also clip a bend where
 both ends are on the same bank; that's rare and errs towards leaving something

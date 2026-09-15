@@ -8,7 +8,7 @@ distance_km: 20.0
 ascent_m: 797
 gpx: /gpx/14-port-isaac-padstow.gpx
 os_url: "https://explore.osmaps.com/route/33832107"
-ferries: [camel]
+crosses: [camel]
 shops: "Spar in Polzeath; Spar and Tesco in Padstow."
 eat: "Nothing before the Pentyr Café at Pentireglaze, 8 km on. Then Polzeath, a beach shop at Daymer Bay, the Rock Inn at Rock, and all of Padstow."
 ---

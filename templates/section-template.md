@@ -9,7 +9,7 @@ ascent_m:                           # optional
 mode:                              # optional: "van base", "backpack", "undecided"
 gpx: /gpx/02-start-end.gpx          # optional until plotted; drop the file in src/gpx/
 os_url:                             # optional; the OS Maps route link
-ferries:                          # optional; water slugs from lib/water.js the route crosses by ferry, e.g. [camel]
+crosses:                          # optional; water slugs from lib/water.js the route crosses by ferry or tidal bridge, e.g. [camel]
 transport:                        # optional; repeat the block per option
   - type: bus
     detail: "Operator / route — describe the link"
