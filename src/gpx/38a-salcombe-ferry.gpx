@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="swcp-walk (OpenStreetMap way 14020574, the Salcombe – East Portlemouth ferry)"
+     xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Salcombe ferry</name>
+  </metadata>
+  <trk>
+    <name>Salcombe ferry</name>
+    <trkseg>
+      <trkpt lat="50.23635" lon="-3.7661"></trkpt>
+      <trkpt lat="50.23629" lon="-3.76561"></trkpt>
+      <trkpt lat="50.23599" lon="-3.76515"></trkpt>
+      <trkpt lat="50.23568" lon="-3.76473"></trkpt>
+      <trkpt lat="50.23515" lon="-3.76427"></trkpt>
+      <trkpt lat="50.23489" lon="-3.76393"></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
