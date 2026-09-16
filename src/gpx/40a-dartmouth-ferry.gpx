@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="swcp-walk (OpenStreetMap way 151746723, the Dartmouth Lower Ferry)"
+     xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Dartmouth Lower Ferry</name>
+  </metadata>
+  <trk>
+    <name>Dartmouth Lower Ferry</name>
+    <trkseg>
+      <trkpt lat="50.34894" lon="-3.57753"></trkpt>
+      <trkpt lat="50.34838" lon="-3.57317"></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
