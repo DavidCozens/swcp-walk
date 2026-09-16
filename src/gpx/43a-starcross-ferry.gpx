@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="swcp-walk (OpenStreetMap ways 1018527171 and 12654807, the Starcross ferry)"
+     xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Starcross ferry</name>
+  </metadata>
+  <trk>
+    <name>Starcross ferry</name>
+    <trkseg>
+      <trkpt lat="50.62686" lon="-3.44538"></trkpt>
+      <trkpt lat="50.62685" lon="-3.44525"></trkpt>
+      <trkpt lat="50.62618" lon="-3.44429"></trkpt>
+      <trkpt lat="50.62553" lon="-3.44364"></trkpt>
+      <trkpt lat="50.62482" lon="-3.44299"></trkpt>
+      <trkpt lat="50.62379" lon="-3.44227"></trkpt>
+      <trkpt lat="50.62271" lon="-3.44162"></trkpt>
+      <trkpt lat="50.62164" lon="-3.44125"></trkpt>
+      <trkpt lat="50.62058" lon="-3.44084"></trkpt>
+      <trkpt lat="50.61918" lon="-3.44036"></trkpt>
+      <trkpt lat="50.61778" lon="-3.43968"></trkpt>
+      <trkpt lat="50.61648" lon="-3.43903"></trkpt>
+      <trkpt lat="50.61542" lon="-3.43855"></trkpt>
+      <trkpt lat="50.61443" lon="-3.43776"></trkpt>
+      <trkpt lat="50.61365" lon="-3.43691"></trkpt>
+      <trkpt lat="50.61286" lon="-3.43578"></trkpt>
+      <trkpt lat="50.61235" lon="-3.43421"></trkpt>
+      <trkpt lat="50.61204" lon="-3.43288"></trkpt>
+      <trkpt lat="50.61221" lon="-3.43168"></trkpt>
+      <trkpt lat="50.61273" lon="-3.43056"></trkpt>
+      <trkpt lat="50.61334" lon="-3.42936"></trkpt>
+      <trkpt lat="50.61395" lon="-3.42834"></trkpt>
+      <trkpt lat="50.61447" lon="-3.42748"></trkpt>
+      <trkpt lat="50.61515" lon="-3.42666"></trkpt>
+      <trkpt lat="50.61590" lon="-3.42554"></trkpt>
+      <trkpt lat="50.61640" lon="-3.42483"></trkpt>
+      <trkpt lat="50.61678" lon="-3.42442"></trkpt>
+      <trkpt lat="50.61684" lon="-3.42423"></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
