@@ -26,12 +26,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # The Dockerfile is the single source of truth for the Node line, because
+      # that is the one Dependabot watches. Reading it here means CI and the dev
+      # container cannot drift: a Dependabot bump to the base image moves both.
+      - id: node
+        name: Read the Node version from the Dockerfile
+        run: |
+          major=$(sed -n 's/^FROM node:\([0-9][0-9]*\)[-.].*/\1/p' Dockerfile | head -1)
+          if [ -z "$major" ]; then
+            echo "::error file=Dockerfile::No 'FROM node:<major>-...' line found, so CI has no version to match."
+            exit 1
+          fi
+          echo "Building on Node $major, from the Dockerfile."
+          echo "major=$major" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v7
         with:
-          # Keep in step with the Dockerfile's base image. Dependabot bumps
-          # that but not this: here the version is an action input, not a
-          # dependency, so nothing watches it.
-          node-version: 24
+          node-version: ${{ steps.node.outputs.major }}
           cache: npm
       - run: npm ci
       - name: Validate content
@@ -43,6 +53,28 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
+
+  # The dev container is where the work actually happens, and nothing else
+  # tested it: the build job above installs Node directly, so a Dependabot bump
+  # to the Dockerfile's base image used to go green without the image ever being
+  # built. This job builds it and runs the toolchain inside it.
+  #
+  # Deploy deliberately does not wait for this. A broken dev container should
+  # not stop the site publishing — it is not in the path that serves the site.
+  container:
+    name: Dev container
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build the image
+        run: docker build -t swcp-walk-site .
+      - name: Run the checks inside it
+        # Mounted the way compose.yaml does it: the working copy over /app, with
+        # an anonymous volume keeping the image's node_modules from being hidden
+        # by the bind mount.
+        run: |
+          docker run --rm -v "$PWD":/app -v /app/node_modules -w /app \
+            swcp-walk-site sh -c 'node --version && npm run validate'
 
   # Deploy only runs on pushes to main, not on pull requests.
   deploy:
