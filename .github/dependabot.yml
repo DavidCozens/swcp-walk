@@ -1,0 +1,68 @@
+# Dependabot watches the three things this repo pins: the Eleventy toolchain in
+# package.json, the actions the deploy workflow runs, and the Node image the dev
+# container is built from.
+#
+# Updates are grouped and weekly. This is a one-person site, and a pull request
+# per package per week is noise — noise is how a security update comes to be
+# ignored. Majors stay ungrouped and arrive on their own, because an Eleventy 4
+# is something to read about rather than merge.
+#
+# Every Dependabot pull request runs .github/workflows/deploy.yml, which
+# validates the content, builds the site and checks the built output. A green
+# one has therefore proved that all 52 sections still validate, the chain is
+# unbroken, no route crosses a water line, and every internal path still carries
+# the /swcp-walk/ prefix — which is most of what a dependency bump could break
+# here. Deploy itself is skipped on pull requests.
+#
+# NOTE: Dependabot does not read `node-version:` in a workflow — it is an input
+# to actions/setup-node, not a dependency. So the docker updater below will move
+# the Dockerfile's base image while CI stays on whatever deploy.yml pins. Keep
+# those two the same by hand.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: deps
+    groups:
+      # All three are devDependencies; nothing ships to the browser.
+      eleventy-toolchain:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: ci
+    groups:
+      # checkout, setup-node, upload-pages-artifact and deploy-pages are
+      # versioned together in practice, and a Pages deploy wants them in step.
+      actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: docker

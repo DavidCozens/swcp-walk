@@ -12,7 +12,13 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  # Keyed by ref, not a bare "pages". Every pull request runs this workflow, so
+  # a single shared group means an opening pull request cancels whatever is
+  # running — including a deploy of main that is halfway through publishing.
+  # Pushes to main still share one group and still serialise, which is what
+  # Pages wants; a Monday morning's Dependabot pull requests no longer cancel
+  # each other, or the live site going out.
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
