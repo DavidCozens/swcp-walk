@@ -21,3 +21,22 @@ The Otter has no crossing at its mouth: the path turns inland for about a
 kilometre each way to the footbridge. East Devon allows overnight motorhome
 parking at two car parks in Exmouth, Maer Road and the Queen's Drive echelon,
 and nowhere else along this coast.
+
+The way back is the 157, Sidmouth to Exmouth in about an hour with no change —
+but check the day first. Mon–Sat it runs hourly and the last bus leaves Sidmouth
+Triangle at 19:15. **On a Sunday there are four through journeys and no more**:
+back from Sidmouth at 10:35, 12:40, 15:35 and 17:35, the last reaching Exmouth
+at 18:28. Miss it and there is nothing. Between Exmouth and Budleigh Salterton
+alone the service is far better — the 357 as well as the 157, into the evening
+seven days a week — so a shorter day ending at Budleigh is much easier to get
+home from than the full one. Starting the day without the van is easy: the
+Avocet Line runs every half hour from Exeter to Exmouth station, 800 m from the
+start, from before six in the morning until nearly midnight.
+
+Two of the escape points are worse served than they look. **Sandy Bay's only
+bus is the summer open-topper**, the 95, which stops dead at the end of October
+— nothing at all from 1 November, and nothing else comes within two kilometres.
+**Ladram Bay has no bus of any kind**; the nearest is Otterton, 1.2 km up the
+lane from the cove, on the 157. Budleigh Salterton's only vet opens four
+mornings a week and never on a Friday, which is worth knowing before carrying a
+hurt dog into the town.
