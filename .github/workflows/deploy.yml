@@ -28,7 +28,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # Keep in step with the Dockerfile's base image. Dependabot bumps
+          # that but not this: here the version is an action input, not a
+          # dependency, so nothing watches it.
+          node-version: 24
           cache: npm
       - run: npm ci
       - name: Validate content
