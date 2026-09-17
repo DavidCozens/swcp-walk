@@ -5,7 +5,7 @@
 # life on 30 April 2026. Keep this in step with `node-version` in
 # .github/workflows/deploy.yml by hand — Dependabot updates this line but not
 # that one, because there it is an action input rather than a dependency.
-FROM node:24-bookworm-slim
+FROM node:26-bookworm-slim
 
 WORKDIR /app
 
